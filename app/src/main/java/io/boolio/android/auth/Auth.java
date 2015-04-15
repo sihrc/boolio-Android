@@ -50,6 +50,16 @@ public abstract class Auth {
     }
 
     /**
+     * LifeCycle callbacks *
+     */
+    public abstract void onCreate(Activity activity, Bundle savedInstanceState);
+
+    public void onResume() {
+        isResumed = true;
+        checkAuth();
+    }
+
+    /**
      * Authentication *
      */
     public void checkAuth() {
@@ -61,16 +71,6 @@ public abstract class Auth {
     }
 
     public abstract boolean isAuthed();
-
-    /**
-     * LifeCycle callbacks *
-     */
-    public abstract void onCreate(Activity activity, Bundle savedInstanceState);
-
-    public void onResume() {
-        isResumed = true;
-        checkAuth();
-    }
 
     public void onPause() {
         isResumed = false;

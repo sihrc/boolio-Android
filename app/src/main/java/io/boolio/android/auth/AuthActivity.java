@@ -16,9 +16,9 @@ public class AuthActivity extends FragmentActivity {
     boolean isResumed = false;
 
     @Override
-    protected void onResumeFragments() {
-        super.onResumeFragments();
-        Auth.getAuth().onResumeFragments();
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Auth.getAuth().onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -58,10 +58,9 @@ public class AuthActivity extends FragmentActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        isResumed = true;
-        Auth.getAuth().onResume();
+    public void onDestroy() {
+        super.onDestroy();
+        Auth.getAuth().onDestroy();
     }
 
     @Override
@@ -71,17 +70,17 @@ public class AuthActivity extends FragmentActivity {
         Auth.getAuth().onPause();
     }
 
-
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Auth.getAuth().onActivityResult(requestCode, resultCode, data);
+    protected void onResume() {
+        super.onResume();
+        isResumed = true;
+        Auth.getAuth().onResume();
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Auth.getAuth().onDestroy();
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+        Auth.getAuth().onResumeFragments();
     }
 
     @Override

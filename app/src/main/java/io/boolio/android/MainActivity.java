@@ -1,39 +1,40 @@
 package io.boolio.android;
 
+import android.graphics.Point;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 
 import io.boolio.android.auth.AuthActivity;
+import io.boolio.android.fragments.tutorials.TutorialPagerFragment;
 
 
 public class MainActivity extends AuthActivity {
+    public static int SCREEN_WIDTH, SCREEN_HEIGHT;
+    FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        fragmentManager = getSupportFragmentManager();
+        if (savedInstanceState == null) {
+            Fragment fragment = TutorialPagerFragment.newInstance();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, fragment, fragment.getClass().getName())
+                    .commit();
         }
 
-        return super.onOptionsItemSelected(item);
+        Point size = new Point();
+        getWindowManager().getDefaultDisplay().getSize(size);
+        SCREEN_WIDTH = size.x;
+        SCREEN_HEIGHT = size.y;
+    }
+
+    public void switchFragment(Fragment fragment) {
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, fragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
     }
 }

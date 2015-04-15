@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import io.boolio.android.auth.Auth;
-
 /**
  * Created by Chris on 3/18/15.
  */
