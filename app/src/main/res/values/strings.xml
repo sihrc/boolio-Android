@@ -1,0 +1,7 @@
+<resources>
+    <!-- General -->
+    <string name="app_name">Boolio</string>
+
+    <!-- Content Descriptions -->
+    <string name="content_desc_tutorial_image">Fragment tutorial image</string>
+</resources>
