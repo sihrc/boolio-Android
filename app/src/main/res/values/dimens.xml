@@ -9,5 +9,14 @@
 
     <!-- Login Fragments -->
     <dimen name="login_input_length">200dp</dimen>
-    <dimen name="login_text_padding">12dp</dimen>
+    <dimen name="login_facebook_height">48dp</dimen>
+    <dimen name="login_facebook_button_xshadow">3dp</dimen>
+    <dimen name="login_facebook_button_yshadow">3dp</dimen>
+    <dimen name="facebook_login_padding">16dp</dimen>
+
+    <!-- Button -->
+    <dimen name="button_text_size">16sp</dimen>
+    <dimen name="button_margin">16dp</dimen>
+    <dimen name="input_text_padding">16dp</dimen>
+    <dimen name="input_text_margin">16dp</dimen>
 </resources>

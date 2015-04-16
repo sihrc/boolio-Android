@@ -5,4 +5,16 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="facebook_button" parent="@android:style/Widget.Button">
+        <item name="android:background">@drawable/facebook_button</item>
+        <item name="android:drawablePadding">@dimen/facebook_login_padding</item>
+        <item name="android:paddingLeft">@dimen/facebook_login_padding</item>
+        <item name="android:paddingRight">@dimen/facebook_login_padding</item>
+        <item name="android:text">@string/login_button_facebook</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_margin">@dimen/button_margin</item>
+        <item name="android:textSize">@dimen/button_text_size</item>
+    </style>
+
 </resources>

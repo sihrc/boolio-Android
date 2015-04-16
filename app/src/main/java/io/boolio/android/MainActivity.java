@@ -13,7 +13,6 @@ import io.boolio.android.fragments.tutorials.TutorialPagerFragment;
 public class MainActivity extends AuthActivity {
     public static int SCREEN_WIDTH, SCREEN_HEIGHT;
     FragmentManager fragmentManager;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

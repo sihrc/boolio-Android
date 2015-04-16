@@ -3,7 +3,8 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:gravity="center_vertical"
-              android:orientation="vertical">
+              android:orientation="vertical"
+              android:padding="@dimen/activity_horizontal_margin">
 
     <ImageView
         android:id="@+id/fragment_tutorial_image"
@@ -15,7 +16,7 @@
         android:id="@+id/fragment_tutorial_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/tutorial_fragment_text_margin"
         android:gravity="center"
-        android:lineSpacingMultiplier="1.2"
-        android:layout_margin="@dimen/tutorial_fragment_text_margin"/>
+        android:lineSpacingMultiplier="1.2"/>
 </LinearLayout>
