@@ -38,12 +38,29 @@ public class LoginFragment extends BoolioFragment {
         EditText loginEmail = (EditText) rootView.findViewById(R.id.login_email);
         EditText loginPassword = (EditText) rootView.findViewById(R.id.login_password);
         Button loginButton = (Button) rootView.findViewById(R.id.login_button);
+
+        // Facebook Login
+        setupFacebookLogin(rootView);
+        return rootView;
+    }
+
+    private void setupFacebookLogin(View rootView) {
+        // Custom Facebook Login Button
         Button loginFacebook = (Button) rootView.findViewById(R.id.facebook_login);
-        LoginButton fbButton = (LoginButton) rootView.findViewById(R.id.fb_login);
-        fbButton.invalidate();
+
+        // Facebook packaged Login Button for Login Functionality
+        final LoginButton fbButton = (LoginButton) rootView.findViewById(R.id.fb_login);
+
+        // Steal Facebook Login Drawable
         loginFacebook.setCompoundDrawablesWithIntrinsicBounds(
                 fbButton.getCompoundDrawables()[0], null, null, null);
-        loginFacebook.invalidate();
-        return rootView;
+
+        // Link Functionality
+        loginFacebook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fbButton.callOnClick();
+            }
+        });
     }
 }

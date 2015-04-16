@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import io.boolio.android.auth.AuthActivity;
+import io.boolio.android.fragments.FeedFragment;
 import io.boolio.android.fragments.tutorials.TutorialPagerFragment;
 
 
@@ -35,5 +36,10 @@ public class MainActivity extends AuthActivity {
     public void switchFragment(Fragment fragment) {
         fragmentManager.beginTransaction()
                 .replace(R.id.container, fragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
+    }
+
+    @Override
+    protected void postLoginCallback() {
+        switchFragment(FeedFragment.getInstance());
     }
 }
