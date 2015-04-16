@@ -3,6 +3,7 @@ package io.boolio.android.fragments.tutorials;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.boolio.android.R;
 import io.boolio.android.fragments.BoolioFragment;
 
 /**
@@ -15,13 +16,16 @@ public class TutorialPagerFragment extends BoolioFragment {
         TutorialPagerFragment tutorialPagerFragment = new TutorialPagerFragment();
         tutorialPagerFragment.setTutorials(
                 // Tutorial I
+                R.drawable.logo, R.string.tutorial_1,
 
                 // Tutorial II
+                R.drawable.logo, R.string.tutorial_1,
 
                 // Tutorial III
+                R.drawable.logo, R.string.tutorial_1,
 
                 // Tutorial IV
-                
+                R.drawable.logo, R.string.tutorial_1
         );
         return tutorialPagerFragment;
     }
