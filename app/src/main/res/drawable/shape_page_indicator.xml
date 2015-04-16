@@ -5,7 +5,8 @@
 
     <stroke
         android:color="@color/white"/>
-
+    <solid
+        android:color="@color/in_active_pager_indicator"/>
     <size
         android:width="@dimen/page_indicator_size"
         android:height="@dimen/page_indicator_size"/>

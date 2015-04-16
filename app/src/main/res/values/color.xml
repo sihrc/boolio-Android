@@ -3,4 +3,7 @@
     <color name="white">#ffdedede</color>
     <color name="black">#FF000000</color>
 
+    <!-- Tutorial Fragments -->
+    <color name="active_pager_indicator">#00B3E7</color>
+    <color name="in_active_pager_indicator">#77005770</color>
 </resources>

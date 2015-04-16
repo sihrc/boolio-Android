@@ -2,9 +2,12 @@
     <!-- General -->
     <string name="app_name">Boolio</string>
 
+    <!-- Facebook App -->
+    <string name="facebook_app_id">952143318149883</string>
+
     <!-- Content Descriptions -->
     <string name="content_desc_tutorial_image">Fragment tutorial image</string>
 
     <!-- Tutorial -->
-    <string name="tutorial_1">Welcome to boolio. Your source of simple and instant feedback about topics you are interested in from people you care about.</string>
+    <string name="tutorial_1">Welcome to boolio.\nYour source of simple and instant feedback about topics you are interested in from people you care about.</string>
 </resources>
