@@ -4,4 +4,10 @@
 
     <!-- Content Descriptions -->
     <string name="content_desc_tutorial_image">Fragment tutorial image</string>
+
+    <!-- Login Fragment -->
+    <string name="login_button">Login</string>
+    <string name="login_email">email</string>
+    <string name="login_password">password</string>
+    <string name="login_with_facebook">or Login with</string>
 </resources>
