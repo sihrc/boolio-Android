@@ -6,4 +6,8 @@
     <!-- Tutorial Fragments -->
     <dimen name="page_indicator_size">16dp</dimen>
     <dimen name="tutorial_fragment_text_margin">16dp</dimen>
+
+    <!-- Login Fragments -->
+    <dimen name="login_input_length">200dp</dimen>
+    <dimen name="login_text_padding">12dp</dimen>
 </resources>

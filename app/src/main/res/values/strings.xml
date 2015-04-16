@@ -10,4 +10,10 @@
 
     <!-- Tutorial -->
     <string name="tutorial_1">Welcome to boolio.\nYour source of simple and instant feedback about topics you are interested in from people you care about.</string>
+
+    <!-- Login Fragment -->
+    <string name="login_button">Login</string>
+    <string name="login_email">email</string>
+    <string name="login_password">password</string>
+    <string name="login_with_facebook">or Login with</string>
 </resources>
