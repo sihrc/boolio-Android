@@ -99,6 +99,7 @@ public class BoolioServer {
                     public void onResponse(JSONArray response) {
                         JSONArrayParser<Question> parser = new JSONArrayParser<>();
                         try {
+                            adapter.clear();
                             adapter.addAll(parser.toArray(response, QuestionParser.getInstance()));
                             adapter.notifyDataSetChanged();
                             Log.v("adapter", adapter.getCount() + "");

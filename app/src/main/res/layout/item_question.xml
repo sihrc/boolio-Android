@@ -69,7 +69,8 @@
             android:layout_height="fill_parent"
             android:layout_weight="1"
             android:background="@drawable/left_answer_button"
-            android:textColor="@color/feed_question_left_color"/>
+            android:textColor="@color/feed_question_left_color"
+            android:textStyle="bold"/>
 
         <Button
             android:id="@+id/question_right_answer"
@@ -77,7 +78,8 @@
             android:layout_height="fill_parent"
             android:layout_weight="1"
             android:background="@drawable/right_answer_button"
-            android:textColor="@color/feed_question_right_color"/>
+            android:textColor="@color/feed_question_right_color"
+            android:textStyle="bold"/>
     </LinearLayout>
 
 </RelativeLayout>
