@@ -116,6 +116,22 @@ public class BoolioServer {
         queue.add(req);
     }
 
+    public void createQuestion(JSONObject jsonObject) {
+        JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, API.CREATE_QUESTION_ENDPOINT,
+                jsonObject, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+    }
+
     public ImageLoader getImageLoader() {
         return imageLoader;
     }
