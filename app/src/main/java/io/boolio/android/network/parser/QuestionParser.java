@@ -30,7 +30,7 @@ public class QuestionParser extends Parser<Question> {
             question.image = getString("image");
             question.left = getString("left");
             question.right = getString("right");
-            question.dateCreated = getInt("dateCreated");
+            question.dateCreated = getString("dateCreated");
             question.leftCount = getInt("leftCount");
             question.rightCount = getInt("rightCount");
             question.usersWhoLeft = userArray.toArray(getJSONArray("usersWhoLeft"), UserParser.getInstance());
