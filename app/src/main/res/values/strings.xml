@@ -11,6 +11,7 @@
     <string name="question_image_description">Image of the question</string>
     <string name="content_desc_nav_bar_button">Navigation Bar Button</string>
     <string name="content_description_header">Header for App</string>
+    <string name="content_desc_settings">Settings Button on Profile Page</string>
 
     <!-- Tutorial -->
     <string name="tutorial_1">Welcome to boolio.\nYour source of simple and instant feedback about topics you are interested in from people you care about.</string>
@@ -29,4 +30,11 @@
     <string name="create_question_answer_left_hint">No</string>
     <string name="create_question_answer_right_hint">Yes</string>
 
+    <!-- Profile Fragment -->
+    <string name="answered">ANSWERED</string>
+    <string name="asked">ASKED</string>
+    <string name="karma">KARMA</string>
+    <string name="my_profile_page">My Profile Page</string>
+    <string name="profile_page">Profile Page</string>
+    <string name="settings">Settings</string>
 </resources>

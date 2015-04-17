@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.boolio.android.MainActivity;
 import io.boolio.android.R;
 import io.boolio.android.fragments.BoolioFragment;
 import io.boolio.android.fragments.LoginFragment;
@@ -56,6 +57,7 @@ public class TutorialPagerFragment extends BoolioFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         context = activity;
+        ((MainActivity) activity).showNavigationbar(false);
         inactiveIndicator = getResources().getDrawable(R.drawable.inactive_indicator);
         activeIndicator = getResources().getDrawable(R.drawable.active_indicator);
     }

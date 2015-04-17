@@ -21,6 +21,7 @@ import org.json.JSONObject;
 import java.util.List;
 
 import io.boolio.android.adapters.QuestionAdapter;
+import io.boolio.android.callbacks.UserCallback;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.models.Question;
 import io.boolio.android.network.parser.JSONArrayParser;
@@ -47,6 +48,7 @@ public class BoolioServer {
             instance = new BoolioServer(context);
             instance.imageLoader = new ImageLoader(instance.queue, new ImageLoader.ImageCache() {
                 LruCache<String, Bitmap> cache = new LruCache<>(40);
+
                 @Override
                 public Bitmap getBitmap(String url) {
                     return cache.get(url);
@@ -99,9 +101,9 @@ public class BoolioServer {
                     public void onResponse(JSONArray response) {
                         JSONArrayParser<Question> parser = new JSONArrayParser<>();
                         try {
+                            adapter.clear();
                             adapter.addAll(parser.toArray(response, QuestionParser.getInstance()));
                             adapter.notifyDataSetChanged();
-                            Log.v("adapter", adapter.getCount() + "");
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -113,6 +115,35 @@ public class BoolioServer {
                 error.printStackTrace();
             }
         });
+        queue.add(req);
+    }
+
+
+    public void getUserProfile(String userId, final UserCallback callback) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("userId", userId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET,
+                API.GET_USER_ENDPOINT(userId),
+                jsonObject, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                callback.handleUser(UserParser.getInstance().parse(response));
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                Log.e("GetUserProfile", "We done fucked it, " + error.getMessage());
+            }
+        });
+
+
         queue.add(req);
     }
 
@@ -132,6 +163,7 @@ public class BoolioServer {
         });
         queue.add(req);
     }
+
 
     public ImageLoader getImageLoader() {
         return imageLoader;

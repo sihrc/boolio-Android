@@ -23,11 +23,12 @@ public class AuthActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        fragmentManager = getSupportFragmentManager();
-
         /** Initialize Auth Handlers **/
         FacebookAuth.newInstance(this);
         BoolioAuth.newInstance();
+        super.onCreate(savedInstanceState);
+
+        fragmentManager = getSupportFragmentManager();
 
         Auth.setCallbacks(new AuthCallback() {
             @Override
@@ -42,7 +43,6 @@ public class AuthActivity extends FragmentActivity {
         });
 
         Auth.getAuth().onCreate(this, savedInstanceState);
-        super.onCreate(savedInstanceState);
     }
 
     /**

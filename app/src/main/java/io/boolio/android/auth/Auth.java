@@ -3,6 +3,7 @@ package io.boolio.android.auth;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import io.boolio.android.models.UserType;
 

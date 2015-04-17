@@ -54,6 +54,10 @@ public class FacebookAuth extends Auth {
                 if (sessionState.isOpened()) {
                     getMe(session);
                 }
+
+                if (sessionState.isClosed()) {
+                    ((AuthActivity) activity).postLogoutCallback();
+                }
             }
         });
         fbUIHelper.onCreate(savedInstanceState);

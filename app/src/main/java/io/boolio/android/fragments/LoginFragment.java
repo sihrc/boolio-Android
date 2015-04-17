@@ -13,6 +13,8 @@ import android.widget.EditText;
 import com.facebook.widget.LoginButton;
 
 import io.boolio.android.R;
+import io.boolio.android.auth.Auth;
+import io.boolio.android.models.UserType;
 
 /**
  * Created by Chris on 4/16/15.
@@ -59,6 +61,7 @@ public class LoginFragment extends BoolioFragment {
         loginFacebook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Auth.setAuth(UserType.FACEBOOK);
                 fbButton.callOnClick();
             }
         });

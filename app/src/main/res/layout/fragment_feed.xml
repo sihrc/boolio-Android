@@ -1,13 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="@dimen/question_feed_padding">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/header_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/header_height"
+        android:background="@color/theme_blue"
+        android:padding="@dimen/general_padding">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/content_description_header"
+            android:src="@drawable/logo_white"/>
+
+    </FrameLayout>
 
     <ListView
         android:id="@+id/question_feed"
-        android:dividerHeight="@dimen/question_feed_padding"
-        android:divider="@color/feed_list_divider_color"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_below="@id/header_bar"
+        android:divider="@color/feed_list_divider_color"
+        android:dividerHeight="@dimen/question_feed_padding"
+        android:padding="@dimen/question_feed_padding"/>
 </RelativeLayout>

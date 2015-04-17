@@ -13,4 +13,8 @@ public class API {
     final static public String FEED_ENDPOINT = BASE + "/questions";
     final static public String CREATE_QUESTION_ENDPOINT = BASE + "/questions/create";
 
+    static public String GET_USER_ENDPOINT(String id) {
+        return BASE + "/users/" + id;
+    }
+
 }

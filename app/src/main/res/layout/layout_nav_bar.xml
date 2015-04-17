@@ -13,8 +13,10 @@
         android:id="@+id/nav_bar_feed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/feed"
-        android:contentDescription="@string/content_desc_nav_bar_button"/>
+        android:alpha=".5"
+        android:background="@drawable/nav_bar_button"
+        android:contentDescription="@string/content_desc_nav_bar_button"
+        android:src="@drawable/feed"/>
 
     <View
         android:layout_width="0dp"
@@ -26,8 +28,10 @@
         android:id="@+id/nav_bar_search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/search"
-        android:contentDescription="@string/content_desc_nav_bar_button"/>
+        android:alpha=".5"
+        android:background="@drawable/nav_bar_button"
+        android:contentDescription="@string/content_desc_nav_bar_button"
+        android:src="@drawable/search"/>
 
     <View
         android:layout_width="0dp"
@@ -36,11 +40,12 @@
     </View>
 
     <ImageView
-        android:id="@+id/nav_bar_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/plus"
-        android:contentDescription="@string/content_desc_nav_bar_button"/>
+        android:layout_margin="@dimen/button_margin"
+        android:background="@drawable/nav_bar_button"
+        android:contentDescription="@string/content_desc_nav_bar_button"
+        android:src="@drawable/search"/>
 
     <View
         android:layout_width="0dp"
@@ -52,8 +57,10 @@
         android:id="@+id/nav_bar_category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/categories"
-        android:contentDescription="@string/content_desc_nav_bar_button"/>
+        android:alpha=".5"
+        android:background="@drawable/nav_bar_button"
+        android:contentDescription="@string/content_desc_nav_bar_button"
+        android:src="@drawable/categories"/>
 
     <View
         android:layout_width="0dp"
@@ -65,7 +72,9 @@
         android:id="@+id/nav_bar_profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/profile"
-        android:contentDescription="@string/content_desc_nav_bar_button"/>
+        android:alpha=".5"
+        android:background="@drawable/nav_bar_button"
+        android:contentDescription="@string/content_desc_nav_bar_button"
+        android:src="@drawable/profile"/>
 
 </LinearLayout>

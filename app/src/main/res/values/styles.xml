@@ -24,4 +24,24 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+
+    <style name="profile_big_text" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@color/profile_text_color</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textSize">@dimen/profile_large_size</item>
+    </style>
+
+    <style name="profile_medium_text" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@color/profile_text_color</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/profile_medium_size</item>
+    </style>
+
+    <style name="profile_small_text" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/profile_small_size</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/profile_text_color</item>
+        <item name="android:alpha">.5</item>
+    </style>
+
 </resources>
