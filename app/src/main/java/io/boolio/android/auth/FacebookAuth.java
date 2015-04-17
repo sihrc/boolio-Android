@@ -64,7 +64,7 @@ public class FacebookAuth extends Auth {
             @Override
             public void onCompleted(GraphUser user, Response response) {
                 // If the response is successful
-                if (session == Session.getActiveSession()) {
+                if (session == Session.getActiveSession() && user != null) {
                     facebookId = user.getId();
                     PrefsHelper.getInstance(activity).saveString("facebookId", facebookId);
                     // Session is open - user is logged in via facebook
