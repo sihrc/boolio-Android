@@ -69,7 +69,11 @@ public class BoolioServer {
     public void getQuestionFeed(final QuestionAdapter adapter, List<String> prevSeenQuestions) {
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("prevSeenQuestions", prevSeenQuestions);
+            JSONArray seenQuestionIds = new JSONArray();
+            for (String id : prevSeenQuestions) {
+                seenQuestionIds.put(id);
+            }
+            jsonObject.put("prevSeenQuestions", seenQuestionIds);
             jsonObject.put("id", BoolioUserHandler.getInstance(context).getUser().userId);
         } catch (JSONException e) {
             e.printStackTrace();
