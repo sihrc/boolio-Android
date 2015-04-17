@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,6 +32,7 @@ import java.util.List;
 public class CreateQuestionFragment extends BoolioFragment {
     static CreateQuestionFragment instance;
     Context context;
+    EditText questionText, left, right, tags;
 
     public static CreateQuestionFragment getInstance() {
         if (instance == null) {
@@ -50,37 +52,44 @@ public class CreateQuestionFragment extends BoolioFragment {
         View rootView = inflater.inflate(R.layout.fragment_create_question, container, false);
 
         // Find Views and Buttons
-        final EditText questionText = (EditText) rootView.findViewById(R.id.create_question_text);
-        final EditText left = (EditText) rootView.findViewById(R.id.create_question_left_answer);
-        final EditText right = (EditText) rootView.findViewById(R.id.create_question_right_answer);
-        final EditText tags = (EditText) rootView.findViewById(R.id.create_question_tag);
+        questionText = (EditText) rootView.findViewById(R.id.create_question_text);
+        left = (EditText) rootView.findViewById(R.id.create_question_left_answer);
+        right = (EditText) rootView.findViewById(R.id.create_question_right_answer);
+        tags = (EditText) rootView.findViewById(R.id.create_question_tag);
         Button submit = (Button) rootView.findViewById(R.id.create_question_submit);
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                JSONObject jsonObject = new JSONObject();
-                try {
-                    jsonObject.put("question", questionText.getText().toString());
-                    jsonObject.put("left", left.getText().toString().equals("") ? "No" : left.getText().toString());
-                    jsonObject.put("right", right.getText().toString().equals("") ? "Yes" : right.getText().toString());
-                    JSONArray array = new JSONArray(Arrays.asList(tags.getText().toString().split(", ")));
-                    jsonObject.put("tags", array);
-                    jsonObject.put("dateCreated", System.currentTimeMillis());
-                    jsonObject.put("creator", BoolioUserHandler.getInstance(context).getUser().userId);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                BoolioServer.getInstance(context).createQuestion(jsonObject);
-                questionText.setText("");
-                left.setText("");
-                right.setText("");
-                tags.setText("");
-
+                submitOnClickSetup(v);
             }
         });
 
         return rootView;
+    }
+
+    private void submitOnClickSetup(View view) {
+        JSONObject jsonObject = new JSONObject();
+        if (questionText.getText().toString().length() == 0) {
+            Toast.makeText(context, "Please enter a question", Toast.LENGTH_SHORT).show();
+        } else {
+            try {
+                jsonObject.put("question", questionText.getText().toString());
+                jsonObject.put("left", left.getText().toString().equals("") ? "No" : left.getText().toString());
+                jsonObject.put("right", right.getText().toString().equals("") ? "Yes" : right.getText().toString());
+                JSONArray array = new JSONArray(Arrays.asList(tags.getText().toString().split(", ")));
+                jsonObject.put("tags", array);
+                jsonObject.put("dateCreated", System.currentTimeMillis());
+                jsonObject.put("creator", BoolioUserHandler.getInstance(context).getUser().userId);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            BoolioServer.getInstance(context).createQuestion(jsonObject);
+            questionText.setText("");
+            left.setText("");
+            right.setText("");
+            tags.setText("");
+        }
     }
 }
