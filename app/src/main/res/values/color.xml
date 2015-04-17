@@ -2,6 +2,9 @@
 <resources>
     <color name="white">#ffdedede</color>
     <color name="black">#FF000000</color>
-
+    <color name="theme_blue">#3AB8F1</color>
+    <color name="theme_blue_pressed">#d53ac5ff</color>
     <!-- Tutorial Fragments -->
+
+    <!-- Buttons -->
 </resources>

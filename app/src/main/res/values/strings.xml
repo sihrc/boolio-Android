@@ -19,4 +19,6 @@
     <string name="login_password">password</string>
     <string name="login_with_facebook">or Login with</string>
     <string name="login_button_facebook">facebook</string>
+    <string name="nav_bar_feed_text">FEED</string>
+    <string name="content_desc_nav_bar_button">Navigation Bar Button</string>
 </resources>

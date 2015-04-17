@@ -2,6 +2,7 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="general_padding">8dp</dimen>
 
     <!-- Tutorial Fragments -->
     <dimen name="page_indicator_size">16dp</dimen>
@@ -23,4 +24,11 @@
     <!-- Question Item -->
     <dimen name="question_creator_padding">16dp</dimen>
     <dimen name="question_image_padding">16dp</dimen>
+
+    <dimen name="button_rounded">6dp</dimen>
+
+    <!-- Nav Bar -->
+    <dimen name="nav_bar_height">48dp</dimen>
+
+>>>>>>> master
 </resources>
