@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.boolio.android.R;
+import io.boolio.android.helpers.Utils;
 import io.boolio.android.models.Question;
 import io.boolio.android.network.BoolioServer;
 import io.boolio.android.views.BoolioProfileImage;
@@ -62,11 +63,11 @@ public class QuestionAdapter extends ArrayAdapter<Question> {
         holder.question.setText(question.question);
         holder.leftAnswer.setText(question.left);
         holder.rightAnswer.setText(question.right);
-        holder.creator.setText(question.creator);
-        holder.date.setText(question.dateCreated);
+        holder.creator.setText(question.creator.name);
+        holder.date.setText(Utils.formatTimeDifferences(question.dateCreated));
 
         holder.questionImage.setImageUrl(question.image, BoolioServer.getInstance(context).getImageLoader());
-        holder.creatorImage.setImageUrl(question.creatorImage, BoolioServer.getInstance(context).getImageLoader());
+        holder.creatorImage.setImageUrl(question.creator.profilePic, BoolioServer.getInstance(context).getImageLoader());
 
     }
 

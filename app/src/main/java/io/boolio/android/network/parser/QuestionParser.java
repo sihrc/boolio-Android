@@ -25,7 +25,7 @@ public class QuestionParser extends Parser<Question> {
     public Question parse() {
         Question question = new Question();
         try {
-            question.creator = UserParser.getInstance().parse(getJSONObject("creator")).name;
+            question.creator = UserParser.getInstance().parse(getJSONObject("creator"));
             question.question = getString("question");
             question.image = getString("image") == null ? "" : getString("image");
             question.left = getString("left");
@@ -41,10 +41,6 @@ public class QuestionParser extends Parser<Question> {
             Log.e("UserParser", e.getMessage());
             e.printStackTrace();
         }
-
-
-        Log.v("questionImage?", "working?");
-        Log.v("questionImage", question.image);
 
         return question;
     }
