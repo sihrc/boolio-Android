@@ -3,6 +3,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="general_padding">8dp</dimen>
+    <dimen name="header_height">48dp</dimen>
 
     <!-- Tutorial Fragments -->
     <dimen name="page_indicator_size">16dp</dimen>
