@@ -1,12 +1,15 @@
 package io.boolio.android.network;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.Log;
+import android.util.LruCache;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -23,12 +26,25 @@ import io.boolio.android.network.parser.UserParser;
 public class BoolioServer {
     static BoolioServer instance;
 
+    ImageLoader imageLoader;
     Context context;
     RequestQueue queue;
 
     public static BoolioServer getInstance(Context context) {
         if (instance == null) {
             instance = new BoolioServer(context);
+            instance.imageLoader = new ImageLoader(instance.queue, new ImageLoader.ImageCache() {
+                LruCache<String, Bitmap> cache = new LruCache<>(40);
+                @Override
+                public Bitmap getBitmap(String url) {
+                    return cache.get(url);
+                }
+
+                @Override
+                public void putBitmap(String url, Bitmap bitmap) {
+                    cache.put(url, bitmap);
+                }
+            });
         }
 
         return instance;
@@ -58,4 +74,7 @@ public class BoolioServer {
         queue.add(req);
     }
 
+    public ImageLoader getImageLoader() {
+        return imageLoader;
+    }
 }

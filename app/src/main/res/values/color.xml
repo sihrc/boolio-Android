@@ -7,4 +7,7 @@
     <!-- Tutorial Fragments -->
 
     <!-- Buttons -->
+
+    <!-- Feed Fragment -->
+    <color name="feed_list_divider_color">#e5e5e5</color>
 </resources>
