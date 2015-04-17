@@ -3,11 +3,19 @@ package io.boolio.android.auth;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.facebook.AppEventsLogger;
+import com.facebook.HttpMethod;
+import com.facebook.Request;
+import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
+import com.facebook.model.GraphUser;
+
+import io.boolio.android.helpers.PrefsHelper;
+import io.boolio.android.network.BoolioServer;
 
 /**
  * Created by Chris on 3/18/15.
@@ -17,6 +25,8 @@ public class FacebookAuth extends Auth {
 
     Activity activity;
     UiLifecycleHelper fbUIHelper;
+    String facebookId;
+
 
     public static FacebookAuth newInstance(Activity activity) {
         instance = new FacebookAuth();
@@ -33,22 +43,73 @@ public class FacebookAuth extends Auth {
         return (session != null && session.isOpened());
     }
 
-    public void onCreate(Activity activity, Bundle savedInstanceState) {
+    public void onCreate(final Activity activity, Bundle savedInstanceState) {
         fbUIHelper = new UiLifecycleHelper(activity, new Session.StatusCallback() {
             @Override
-            public void call(Session session, SessionState sessionState, Exception e) {
+            public void call(final Session session, SessionState sessionState, Exception e) {
                 if (!isResumed)
                     return;
-                // Session is open - user is logged in via facebook
-                checkAuth();
+
+                if (sessionState.isOpened()) {
+                    getMe(session);
+                }
             }
         });
         fbUIHelper.onCreate(savedInstanceState);
     }
 
+    // Facebook Get OAuthID From Me Request
+    private void getMe(final Session session) {
+        Request request = Request.newMeRequest(session, new Request.GraphUserCallback() {
+            @Override
+            public void onCompleted(GraphUser user, Response response) {
+                // If the response is successful
+                if (session == Session.getActiveSession()) {
+                    facebookId = user.getId();
+                    PrefsHelper.getInstance(activity).saveString("facebookId", facebookId);
+                    // Session is open - user is logged in via facebook
+                    checkAuth();
+                    updateInformation();
+                }
+            }
+        });
+        Request.executeBatchAsync(request);
+    }
+
+    // Get Profile Information for Facebook Profile
+    private void updateInformation() {
+        if (facebookId != null && !facebookId.equals("")) {
+            new Request(
+                    Session.getActiveSession(),
+                    "/me",
+                    null,
+                    HttpMethod.GET,
+                    new Request.Callback() {
+                        public void onCompleted(Response response) {
+                            /* handle the result */
+                            if (response.getError() != null) {
+                                Log.e("Facebook Request", response.getError().toString());
+                                return;
+                            }
+
+                            BoolioServer.getInstance(activity).getBoolioUserFromFacebook(response.getGraphObject().getInnerJSONObject());
+                        }
+                    }
+            ).executeAsync();
+        } else {
+            facebookId = PrefsHelper.getInstance(activity).getString("facebookId");
+            if (facebookId.equals("")) {
+                getMe(Session.getActiveSession());
+            } else {
+                updateInformation();
+            }
+        }
+    }
+
     @Override
     public void onResume() {
         fbUIHelper.onResume();
+        updateInformation();
 
         // Facebook Logger
         AppEventsLogger.activateApp(activity);
