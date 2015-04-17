@@ -31,4 +31,16 @@
         android:layout_above="@id/nav_bar"
         android:layout_below="@id/header_bar"/>
 
+
+    <ImageView
+        android:id="@+id/nav_bar_add"
+        android:src="@drawable/plus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="-8dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/blue_border_button"
+        android:contentDescription="@string/content_desc_nav_bar_button"/>
+
 </RelativeLayout>

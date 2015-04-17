@@ -59,7 +59,7 @@ public class MainActivity extends AuthActivity {
 
         // Initially Selected
         curNavButton = feedButton;
-        curNavButton.setAlpha(selectedAlpha);
+        curNavButton.setAlpha(1f);
 
         feedButton.setOnClickListener(getNavClickListener(null, null));
         navBar.findViewById(R.id.nav_bar_search).setOnClickListener(getNavClickListener(null, null));
@@ -72,6 +72,9 @@ public class MainActivity extends AuthActivity {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (v == curNavButton) {
+                    return;
+                }
                 selectNavBar(v);
                 if (fragment != null)
                     switchFragment(fragment);
@@ -82,8 +85,8 @@ public class MainActivity extends AuthActivity {
     }
 
     private void selectNavBar(View v) {
-        v.setAlpha(selectedAlpha);
-        curNavButton.setAlpha(1f);
+        v.setAlpha(1f);
+        curNavButton.setAlpha(selectedAlpha);
         curNavButton = v;
     }
 }
