@@ -82,6 +82,25 @@ public class BoolioServer {
         queue.add(req);
     }
 
+    public void postAnswer(JSONObject jsonObject) {
+        JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, API.POST_ANSWER_ENDPOINT,
+                jsonObject, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d("Boolio Server Success", "Success" + response.toString());
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Boolio Server Error", "Posting Answer failed");
+                error.printStackTrace();
+            }
+        });
+
+        queue.add(req);
+    }
+
     public void getQuestionFeed(final QuestionAdapter adapter, List<String> prevSeenQuestions) {
         JSONObject jsonObject = new JSONObject();
         try {

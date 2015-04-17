@@ -5,12 +5,15 @@ package io.boolio.android.network;
  */
 public class API {
     //    final static private String BASE = "http://beta.boolio.io";
-    final static private String BASE = "http://10.7.64.118:3000/api";
+    final static private String BASE = "http://10.26.68.22:3000/api";
 
     // Auth Routes
     final static public String FACEBOOK_USER_ENDPOINT = BASE + "/users/facebook";
 
     final static public String FEED_ENDPOINT = BASE + "/questions";
+
+    final static public String POST_ANSWER_ENDPOINT = BASE + "/questions/answer";
+
 
     static public String GET_USER_ENDPOINT(String id) {
         return BASE + "/users/" + id;
