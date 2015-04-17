@@ -2,6 +2,7 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="#e5e5e5"
                 tools:context=".MainActivity">
 
     <include
@@ -28,7 +29,6 @@
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:layout_above="@id/nav_bar"
-        android:layout_below="@id/header_bar"
-        android:padding="@dimen/general_padding"/>
+        android:layout_below="@id/header_bar"/>
 
 </RelativeLayout>

@@ -7,6 +7,8 @@
 
     <!-- Content Descriptions -->
     <string name="content_desc_tutorial_image">Fragment tutorial image</string>
+    <string name="question_creator_image_description">Image of the creator</string>
+    <string name="question_image_description">Image of the question</string>
     <string name="content_desc_nav_bar_button">Navigation Bar Button</string>
     <string name="content_description_header">Header for App</string>
 

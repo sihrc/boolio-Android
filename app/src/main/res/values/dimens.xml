@@ -23,8 +23,24 @@
     <dimen name="input_text_margin">16dp</dimen>
     <dimen name="button_rounded">6dp</dimen>
 
+    <!-- Question Item -->
+    <dimen name="question_creator_image_margin">12dp</dimen>
+    <dimen name="question_creator_padding">16dp</dimen>
+    <dimen name="question_creator_sub_size">12sp</dimen>
+    <dimen name="question_creator_text_size">16sp</dimen>
+    <dimen name="question_feed_padding">12dp</dimen>
+    <dimen name="question_image_height">240dp</dimen>
+    <dimen name="question_image_padding">16dp</dimen>
+    <dimen name="question_padding">16dp</dimen>
+    <dimen name="question_text_size">20sp</dimen>
+
+    <!-- Feed Fragment -->
+    <dimen name="question_user_profile_size">40dp</dimen>
+    <dimen name="question_text_margin">6dp</dimen>
+    <dimen name="question_text_image_padding">6dp</dimen>
 
     <!-- Nav Bar -->
-    <dimen name="nav_bar_height">48dp</dimen>
+    <dimen name="nav_bar_height">56dp</dimen>
+
 
 </resources>
