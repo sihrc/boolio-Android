@@ -25,12 +25,11 @@ public class FeedFragment extends BoolioFragment {
 
     Context context;
     List<String> prevSeenQuestions;
-
+    Runnable afterOpen;
 
     public static FeedFragment getInstance() {
-        if (instance == null) {
+        if (instance == null)
             instance = new FeedFragment();
-        }
         return instance;
     }
 
@@ -56,5 +55,19 @@ public class FeedFragment extends BoolioFragment {
         listView.setAdapter(questionAdapter);
 
         return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (afterOpen != null)
+            afterOpen.run();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (afterOpen != null)
+            afterOpen.run();
     }
 }

@@ -2,8 +2,8 @@
 <resources>
     <color name="white">#ffdedede</color>
     <color name="black">#FF000000</color>
-    <color name="theme_blue">#3AB8F1</color>
-    <color name="theme_blue_pressed">#d52fd0ff</color>
+    <color name="theme_blue">#ff277da3</color>
+    <color name="theme_blue_pressed">#ff277da3</color>
     <!-- Tutorial Fragments -->
 
     <!-- Buttons -->
@@ -12,4 +12,8 @@
     <color name="feed_list_divider_color">#e5e5e5</color>
     <color name="feed_question_left_color">#2196F3</color>
     <color name="feed_question_right_color">#fff79004</color>
+
+    <!-- Profile Fragment -->
+    <color name="profile_cover_background">#66d8e0e8</color>
+    <color name="profile_text_color">#d5425ad2</color>
 </resources>
