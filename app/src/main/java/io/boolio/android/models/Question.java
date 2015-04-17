@@ -10,8 +10,7 @@ public class Question {
     public String dateCreated, image, left, right, question, creatorImage;
     public User creator;
     public int leftCount, rightCount;
-    public List<User> usersWhoLeft, usersWhoRight;
-    public List<String> tags;
+    public List<String> usersWhoLeft, usersWhoRight, tags;
 
     public Question() {
 

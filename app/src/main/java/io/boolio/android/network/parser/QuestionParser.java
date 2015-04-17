@@ -33,8 +33,8 @@ public class QuestionParser extends Parser<Question> {
             question.dateCreated = getString("dateCreated");
             question.leftCount = getInt("leftCount");
             question.rightCount = getInt("rightCount");
-            question.usersWhoLeft = userArray.toArray(getJSONArray("usersWhoLeft"), UserParser.getInstance());
-            question.usersWhoRight = userArray.toArray(getJSONArray("usersWhoRight"), UserParser.getInstance());
+            question.usersWhoLeft = stringArray.toArray(getJSONArray("usersWhoLeft"));
+            question.usersWhoRight = stringArray.toArray(getJSONArray("usersWhoRight"));
             question.tags = stringArray.toArray(getJSONArray("tags"));
 
         } catch (JSONException e) {
