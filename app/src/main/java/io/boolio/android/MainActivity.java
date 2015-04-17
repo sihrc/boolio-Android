@@ -12,6 +12,7 @@ import io.boolio.android.fragments.BoolioFragment;
 import io.boolio.android.fragments.FeedFragment;
 import io.boolio.android.fragments.ProfileFragment;
 import io.boolio.android.fragments.tutorials.TutorialPagerFragment;
+import io.boolio.android.network.BoolioServer;
 
 
 public class MainActivity extends AuthActivity {
@@ -91,8 +92,11 @@ public class MainActivity extends AuthActivity {
                     return;
                 }
                 selectNavBar(v);
-                if (fragment != null)
+                if (fragment != null) {
                     switchFragment(fragment);
+                    fragment.onResume();
+                }
+
                 if (callback != null)
                     callback.run();
             }

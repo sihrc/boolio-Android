@@ -103,7 +103,6 @@ public class BoolioServer {
                             adapter.clear();
                             adapter.addAll(parser.toArray(response, QuestionParser.getInstance()));
                             adapter.notifyDataSetChanged();
-                            Log.v("adapter", adapter.getCount() + "");
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

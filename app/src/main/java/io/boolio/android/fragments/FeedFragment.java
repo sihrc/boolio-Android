@@ -24,6 +24,7 @@ public class FeedFragment extends BoolioFragment {
     static FeedFragment instance;
 
     Context context;
+    QuestionAdapter questionAdapter;
     List<String> prevSeenQuestions;
     Runnable afterOpen;
 
@@ -45,11 +46,11 @@ public class FeedFragment extends BoolioFragment {
         View rootView = inflater.inflate(R.layout.fragment_feed, container, false);
 
         ListView listView = (ListView) rootView.findViewById(R.id.question_feed);
-        final QuestionAdapter questionAdapter = new QuestionAdapter(context, R.layout.item_question);
+        questionAdapter = new QuestionAdapter(context, R.layout.item_question);
         BoolioUserHandler.getInstance(context).setUserCallback(new Runnable() {
             @Override
             public void run() {
-                BoolioServer.getInstance(context).getQuestionFeed(questionAdapter, prevSeenQuestions);
+                pullQuestions();
             }
         });
         listView.setAdapter(questionAdapter);
@@ -67,7 +68,12 @@ public class FeedFragment extends BoolioFragment {
     @Override
     public void onResume() {
         super.onResume();
+        pullQuestions();
         if (afterOpen != null)
             afterOpen.run();
+    }
+
+    private void pullQuestions() {
+        BoolioServer.getInstance(context).getQuestionFeed(questionAdapter, prevSeenQuestions);
     }
 }
