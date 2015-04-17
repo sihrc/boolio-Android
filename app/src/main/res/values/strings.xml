@@ -7,6 +7,8 @@
 
     <!-- Content Descriptions -->
     <string name="content_desc_tutorial_image">Fragment tutorial image</string>
+    <string name="question_creator_image_description">Image of the creator</string>
+    <string name="question_image_description">Image of the question</string>
 
     <!-- Tutorial -->
     <string name="tutorial_1">Welcome to boolio.\nYour source of simple and instant feedback about topics you are interested in from people you care about.</string>

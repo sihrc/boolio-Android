@@ -19,4 +19,8 @@
     <dimen name="button_margin">16dp</dimen>
     <dimen name="input_text_padding">16dp</dimen>
     <dimen name="input_text_margin">16dp</dimen>
+
+    <!-- Question Item -->
+    <dimen name="question_creator_padding">16dp</dimen>
+    <dimen name="question_image_padding">16dp</dimen>
 </resources>

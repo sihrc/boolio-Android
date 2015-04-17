@@ -21,6 +21,7 @@ import java.util.List;
 
 import io.boolio.android.R;
 import io.boolio.android.fragments.BoolioFragment;
+import io.boolio.android.fragments.FeedFragment;
 import io.boolio.android.fragments.LoginFragment;
 
 /**
@@ -67,6 +68,7 @@ public class TutorialPagerFragment extends BoolioFragment {
         while (index < total)
             fragmentList.add(TutorialFragment.newInstance(args[index++], args[index++]));
         fragmentList.add(LoginFragment.newInstance());
+        fragmentList.add(FeedFragment.getInstance());
     }
 
     @Override
