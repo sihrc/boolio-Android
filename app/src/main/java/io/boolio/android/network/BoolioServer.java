@@ -121,7 +121,7 @@ public class BoolioServer {
                 jsonObject, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Log.e("Boolio Server stuff", response.toString());
+                Log.d("Boolio Server stuff", response.toString());
             }
         }, new Response.ErrorListener() {
             @Override

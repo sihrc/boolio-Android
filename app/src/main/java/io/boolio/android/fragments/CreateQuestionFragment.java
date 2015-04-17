@@ -8,6 +8,7 @@ import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.network.BoolioServer;
 
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,25 +46,27 @@ public class CreateQuestionFragment extends BoolioFragment {
         final EditText questionText = (EditText) rootView.findViewById(R.id.create_question_text);
         final EditText left = (EditText) rootView.findViewById(R.id.create_question_left_answer);
         final EditText right = (EditText) rootView.findViewById(R.id.create_question_right_answer);
-        EditText tags = (EditText) rootView.findViewById(R.id.create_question_tag);
+        final EditText tags = (EditText) rootView.findViewById(R.id.create_question_tag);
         Button submit = (Button) rootView.findViewById(R.id.create_question_submit);
 
-        final JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("question", questionText.getText().toString());
-            jsonObject.put("left ", left.getText().toString());
-            jsonObject.put("right", right.getText().toString());
-            jsonObject.put("tags", "");
-            jsonObject.put("dateCreated", System.currentTimeMillis());
-            jsonObject.put("creator", BoolioUserHandler.getInstance(context).getUser().userId);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("question", questionText.getText().toString());
+                    jsonObject.put("left", left.getText().toString());
+                    jsonObject.put("right", right.getText().toString());
+                    jsonObject.put("tags", tags.getText().toString());
+                    jsonObject.put("dateCreated", System.currentTimeMillis());
+                    jsonObject.put("creator", BoolioUserHandler.getInstance(context).getUser().userId);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                Log.d("DebugDebug", jsonObject.toString());
                 BoolioServer.getInstance(context).createQuestion(jsonObject);
                 questionText.setText("");
                 left.setText("");
