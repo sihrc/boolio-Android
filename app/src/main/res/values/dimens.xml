@@ -20,15 +20,18 @@
     <dimen name="button_margin">16dp</dimen>
     <dimen name="input_text_padding">16dp</dimen>
     <dimen name="input_text_margin">16dp</dimen>
+    <dimen name="button_rounded">6dp</dimen>
 
     <!-- Question Item -->
     <dimen name="question_creator_padding">16dp</dimen>
     <dimen name="question_image_padding">16dp</dimen>
-
-    <dimen name="button_rounded">6dp</dimen>
+    <dimen name="question_padding">16dp</dimen>
+    <dimen name="question_item_padding">16dp</dimen>
+    <dimen name="question_text_size">20sp</dimen>
+    <dimen name="question_creator_text_size">16sp</dimen>
 
     <!-- Nav Bar -->
     <dimen name="nav_bar_height">48dp</dimen>
 
->>>>>>> master
+
 </resources>

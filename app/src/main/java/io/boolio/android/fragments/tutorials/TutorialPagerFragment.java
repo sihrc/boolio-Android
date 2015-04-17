@@ -68,7 +68,6 @@ public class TutorialPagerFragment extends BoolioFragment {
         while (index < total)
             fragmentList.add(TutorialFragment.newInstance(args[index++], args[index++]));
         fragmentList.add(LoginFragment.newInstance());
-        fragmentList.add(FeedFragment.getInstance());
     }
 
     @Override
