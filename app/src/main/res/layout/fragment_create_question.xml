@@ -15,16 +15,27 @@
     <EditText
         android:id="@+id/create_question_text"
         android:layout_width="match_parent"
+        android:hint=""
         android:layout_height="wrap_content"
         android:layout_below="@id/create_question_image"
         android:gravity="center"
         android:padding="@dimen/question_padding"
         android:textSize="@dimen/question_text_size"/>
 
-    <LinearLayout
-        android:layout_width="fill_parent"
+    <EditText
+        android:id="@+id/create_question_tag"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/create_question_text"
+        android:gravity="center"
+        android:padding="@dimen/question_padding"
+        android:textSize="@dimen/question_text_size"/>
+
+    <LinearLayout
+        android:id="@+id/create_question_buttons"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/create_question_tag"
         android:orientation="horizontal">
 
         <EditText
@@ -32,6 +43,7 @@
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="1"
+            android:textSize="@dimen/button_text_size"
             android:background="@drawable/left_answer_button"
             android:textColor="#2196F3"/>
 
@@ -40,7 +52,15 @@
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="1"
+            android:textSize="@dimen/button_text_size"
             android:background="@drawable/right_answer_button"
             android:textColor="#0D47A1"/>
     </LinearLayout>
+    <Button
+        android:id="@+id/create_question_submit"
+        android:layout_width="fill_parent"
+        android:text="@string/create_question_submit"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/create_question_buttons"
+        />
 </RelativeLayout>

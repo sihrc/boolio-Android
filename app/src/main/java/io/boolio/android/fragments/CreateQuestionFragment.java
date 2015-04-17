@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import io.boolio.android.R;
 import io.boolio.android.helpers.BoolioUserHandler;
+import io.boolio.android.network.BoolioServer;
 
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -23,7 +24,7 @@ public class CreateQuestionFragment extends BoolioFragment {
     static CreateQuestionFragment instance;
     Context context;
 
-    public static CreateQuestionFragment newInstance() {
+    public static CreateQuestionFragment getInstance() {
         if (instance == null){
             instance = new CreateQuestionFragment();
         }
@@ -41,22 +42,35 @@ public class CreateQuestionFragment extends BoolioFragment {
         View rootView = inflater.inflate(R.layout.fragment_create_question, container, false);
 
         // Find Views and Buttons
-        EditText questionText = (EditText) rootView.findViewById(R.id.create_question_text);
-        EditText left = (EditText) rootView.findViewById(R.id.create_question_left_answer);
-        EditText right = (EditText) rootView.findViewById(R.id.create_question_right_answer);
+        final EditText questionText = (EditText) rootView.findViewById(R.id.create_question_text);
+        final EditText left = (EditText) rootView.findViewById(R.id.create_question_left_answer);
+        final EditText right = (EditText) rootView.findViewById(R.id.create_question_right_answer);
+        EditText tags = (EditText) rootView.findViewById(R.id.create_question_tag);
+        Button submit = (Button) rootView.findViewById(R.id.create_question_submit);
 
-        JSONObject obj = new JSONObject();
+        final JSONObject jsonObject = new JSONObject();
         try {
-            obj.put("question", questionText.getText().toString());
-            obj.put("left ", left.getText().toString());
-            obj.put("right", right.getText().toString());
-            obj.put("tags", "");
-            obj.put("dateCreated", System.currentTimeMillis());
-            obj.put("creator", BoolioUserHandler.getInstance(context).getUser().userId);
+            jsonObject.put("question", questionText.getText().toString());
+            jsonObject.put("left ", left.getText().toString());
+            jsonObject.put("right", right.getText().toString());
+            jsonObject.put("tags", "");
+            jsonObject.put("dateCreated", System.currentTimeMillis());
+            jsonObject.put("creator", BoolioUserHandler.getInstance(context).getUser().userId);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
+
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BoolioServer.getInstance(context).createQuestion(jsonObject);
+                questionText.setText("");
+                left.setText("");
+                right.setText("");
+
+            }
+        });
 
         return rootView;
     }
