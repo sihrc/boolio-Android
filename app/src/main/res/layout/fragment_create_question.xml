@@ -10,17 +10,17 @@
         android:id="@+id/create_question_image"
         android:layout_width="match_parent"
         android:layout_height="@dimen/question_image_height"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop" />
 
     <EditText
         android:id="@+id/create_question_text"
         android:layout_width="match_parent"
-        android:hint=""
         android:layout_height="wrap_content"
         android:layout_below="@id/create_question_image"
         android:gravity="center"
+        android:hint="@string/create_question_text_hint"
         android:padding="@dimen/question_padding"
-        android:textSize="@dimen/question_text_size"/>
+        android:textSize="@dimen/question_text_size" />
 
     <EditText
         android:id="@+id/create_question_tag"
@@ -28,8 +28,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/create_question_text"
         android:gravity="center"
+        android:hint="@string/create_question_tags_hint"
         android:padding="@dimen/question_padding"
-        android:textSize="@dimen/question_text_size"/>
+        android:textSize="@dimen/question_text_size" />
 
     <LinearLayout
         android:id="@+id/create_question_buttons"
@@ -42,25 +43,27 @@
             android:id="@+id/create_question_left_answer"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
+            android:gravity="center"
             android:layout_weight="1"
-            android:textSize="@dimen/button_text_size"
             android:background="@drawable/left_answer_button"
-            android:textColor="#2196F3"/>
+            android:hint="@string/create_question_answer_left_hint"
+            android:textColor="#2196F3" />
 
         <EditText
             android:id="@+id/create_question_right_answer"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
+            android:gravity="center"
             android:layout_weight="1"
-            android:textSize="@dimen/button_text_size"
             android:background="@drawable/right_answer_button"
-            android:textColor="#0D47A1"/>
+            android:hint="@string/create_question_answer_right_hint"
+            android:textColor="#0D47A1" />
     </LinearLayout>
+
     <Button
         android:id="@+id/create_question_submit"
         android:layout_width="fill_parent"
-        android:text="@string/create_question_submit"
         android:layout_height="wrap_content"
         android:layout_below="@+id/create_question_buttons"
-        />
+        android:text="@string/create_question_submit" />
 </RelativeLayout>

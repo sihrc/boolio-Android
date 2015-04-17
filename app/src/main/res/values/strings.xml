@@ -21,6 +21,12 @@
     <string name="login_password">password</string>
     <string name="login_with_facebook">or Login with</string>
     <string name="login_button_facebook">facebook</string>
+
+    <!-- CreateQuestion Fragment -->
     <string name="create_question_submit">Send</string>
+    <string name="create_question_text_hint">Enter your question</string>
+    <string name="create_question_tags_hint">Enter your categories</string>
+    <string name="create_question_answer_left_hint">No</string>
+    <string name="create_question_answer_right_hint">Yes</string>
 
 </resources>
