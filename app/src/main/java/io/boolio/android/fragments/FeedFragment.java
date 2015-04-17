@@ -49,18 +49,6 @@ public class FeedFragment extends BoolioFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_feed, container, false);
 
-        Question q = new Question();
-        q.creator = "Ryan";
-        q.question = "What is up?";
-        q.left = "Yes";
-        q.right = "No";
-        Question q1 = new Question();
-        q1.creator = "Ryan";
-        q1.question = "What is up?";
-        q1.left = "Yes";
-        q1.right = "No";
-
-
         ListView listView = (ListView) rootView.findViewById(R.id.question_feed);
         final QuestionAdapter questionAdapter = new QuestionAdapter(context, R.layout.question_item);
         BoolioUserHandler.getInstance(context).setUserCallback(new Runnable() {
@@ -69,8 +57,6 @@ public class FeedFragment extends BoolioFragment {
                 BoolioServer.getInstance(context).getQuestionFeed(questionAdapter, prevSeenQuestions);
             }
         });
-        questionAdapter.addQuestion(q);
-        questionAdapter.addQuestion(q1);
         listView.setAdapter(questionAdapter);
 
         return rootView;

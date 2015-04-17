@@ -2,19 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/question_item_padding">
-
-    <!-- FIXME - REMOVE -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Feed" />
+    android:layout_margin="@dimen/question_feed_padding">
 
     <ListView
         android:id="@+id/question_feed"
+        android:dividerHeight="@dimen/question_feed_padding"
+        android:divider="@color/feed_list_divider_color"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:divider="#e5e5e5"
-        android:dividerHeight="@dimen/question_item_padding"
-        />
+        android:layout_height="match_parent"/>
 </RelativeLayout>

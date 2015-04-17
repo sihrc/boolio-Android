@@ -29,7 +29,6 @@
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:layout_above="@id/nav_bar"
-        android:layout_below="@id/header_bar"
-        android:padding="@dimen/general_padding"/>
+        android:layout_below="@id/header_bar"/>
 
 </RelativeLayout>

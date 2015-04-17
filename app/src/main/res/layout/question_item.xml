@@ -1,62 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#fcfcfc"
-    android:gravity="center"
-    android:orientation="vertical">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#fcfcfc"
+                android:gravity="center"
+                android:orientation="vertical">
 
     <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight=".1"
-        >
+        android:id="@+id/question_profile_pane"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:padding="@dimen/question_creator_image_margin">
 
-        <ImageView
+        <io.boolio.android.views.BoolioProfileImage
             android:id="@+id/question_creator_picture"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center"
-            android:layout_margin="5dp"
-            android:background="@drawable/rounded_profile_image"
-            android:contentDescription="@string/question_creator_image_description" />
+            android:layout_width="@dimen/question_user_profile_size"
+            android:layout_height="@dimen/question_user_profile_size"
+            android:layout_marginRight="@dimen/question_text_image_padding"
+            android:contentDescription="@string/question_creator_image_description"
+            android:scaleType="fitCenter"
+            android:src="@drawable/bear"/>
 
         <TextView
             android:id="@+id/question_creator"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_toRightOf="@+id/question_creator_picture"
-            android:gravity="center_vertical"
-            android:text="Chris Lee"
-            android:textSize="@dimen/question_creator_text_size" />
+            android:layout_marginLeft="@dimen/question_text_margin"
+            android:layout_toEndOf="@id/question_creator_picture"
+            android:layout_toRightOf="@id/question_creator_picture"
+            android:textSize="@dimen/question_creator_text_size"/>
 
+        <TextView
+            android:id="@+id/question_date"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_alignLeft="@id/question_creator"
+            android:layout_below="@id/question_creator"
+            android:textSize="@dimen/question_creator_sub_size"/>
     </RelativeLayout>
 
-    <ImageView
+    <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/question_image"
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_gravity="center"
-        android:layout_weight=".6"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/question_image_height"
+        android:layout_below="@id/question_profile_pane"
         android:contentDescription="@string/question_image_description"
-        android:padding="@dimen/question_image_padding" />
+        android:scaleType="centerCrop"/>
 
     <TextView
-        android:id="@+id/question"
+        android:id="@+id/question_text"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight=".2"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/question_image"
         android:gravity="center"
         android:padding="@dimen/question_padding"
-        android:text="What is the question?"
-        android:textSize="@dimen/question_text_size" />
+        android:textSize="@dimen/question_text_size"/>
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight=".15"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/question_text"
         android:orientation="horizontal">
 
         <Button
@@ -65,7 +69,7 @@
             android:layout_height="fill_parent"
             android:layout_weight="1"
             android:background="@drawable/left_answer_button"
-            android:textColor="#2196F3" />
+            android:textColor="#2196F3"/>
 
         <Button
             android:id="@+id/question_right_answer"
@@ -80,7 +84,6 @@
         android:id="@+id/shadow"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight=".1"
-        android:background="@drawable/shadow_question" />
+        android:background="@drawable/shadow_question"/>
 
-</LinearLayout>
+</RelativeLayout>
