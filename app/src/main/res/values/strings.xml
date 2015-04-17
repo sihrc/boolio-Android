@@ -9,6 +9,8 @@
     <string name="content_desc_tutorial_image">Fragment tutorial image</string>
     <string name="question_creator_image_description">Image of the creator</string>
     <string name="question_image_description">Image of the question</string>
+    <string name="content_desc_nav_bar_button">Navigation Bar Button</string>
+    <string name="content_description_header">Header for App</string>
 
     <!-- Tutorial -->
     <string name="tutorial_1">Welcome to boolio.\nYour source of simple and instant feedback about topics you are interested in from people you care about.</string>
@@ -19,6 +21,5 @@
     <string name="login_password">password</string>
     <string name="login_with_facebook">or Login with</string>
     <string name="login_button_facebook">facebook</string>
-    <string name="nav_bar_feed_text">FEED</string>
-    <string name="content_desc_nav_bar_button">Navigation Bar Button</string>
+
 </resources>
