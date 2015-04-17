@@ -77,7 +77,7 @@
             android:layout_height="fill_parent"
             android:layout_weight="1"
             android:background="@drawable/right_answer_button"
-            android:textColor="#0D47A1"/>
+            android:textColor="#0D47A1" />
     </LinearLayout>
 
     <View

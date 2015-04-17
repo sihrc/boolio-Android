@@ -26,6 +26,13 @@ public abstract class Parser<T> {
         return 0;
     }
 
+    JSONObject getJSONObject(String key) throws JSONException {
+        if (object.has(key))
+            return object.getJSONObject(key);
+        Log.e("Parser", "Missing Key: " + key);
+        return null;
+    }
+
     JSONArray getJSONArray(String key) throws JSONException {
         if (object.has(key))
             return object.getJSONArray(key);

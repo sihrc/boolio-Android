@@ -20,7 +20,7 @@ import io.boolio.android.R;
 public class LoginFragment extends BoolioFragment {
     Context context;
 
-    public static LoginFragment newInstance(){
+    public static LoginFragment newInstance() {
         return new LoginFragment();
     }
 

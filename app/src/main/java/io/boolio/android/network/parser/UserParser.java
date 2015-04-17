@@ -11,7 +11,7 @@ import io.boolio.android.models.User;
  */
 public class UserParser extends Parser<User> {
     static UserParser instance;
-    static  JSONArrayParser<String> stringArray = new JSONArrayParser<>();
+    static JSONArrayParser<String> stringArray = new JSONArrayParser<>();
 
     public static UserParser getInstance() {
         if (instance == null)
@@ -26,7 +26,7 @@ public class UserParser extends Parser<User> {
             user.userId = getString("_id");
             user.name = getString("name");
             user.profilePic = getString("profilePic");
-            user.questionsAsked = stringArray.toArray(getJSONArray("questionAnswered"));
+            user.questionsAsked = stringArray.toArray(getJSONArray("questionAsked"));
             user.questionsAnswered = stringArray.toArray(getJSONArray("questionsAnswered"));
             user.questionsSkipped = stringArray.toArray(getJSONArray("questionsSkipped"));
         } catch (JSONException e) {

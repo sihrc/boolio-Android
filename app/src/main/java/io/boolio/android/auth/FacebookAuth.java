@@ -14,6 +14,7 @@ import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
 
+import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.PrefsHelper;
 import io.boolio.android.network.BoolioServer;
 
@@ -88,7 +89,6 @@ public class FacebookAuth extends Auth {
                         public void onCompleted(Response response) {
                             /* handle the result */
                             if (response.getError() != null) {
-                                Log.e("Facebook Request", response.getError().toString());
                                 return;
                             }
 

@@ -12,6 +12,11 @@ public class BoolioUserHandler {
 
     Context context;
     User user;
+    Runnable callback;
+
+    public BoolioUserHandler(Context context) {
+        this.context = context;
+    }
 
     public static BoolioUserHandler getInstance(final Context context) {
         if (instance == null) {
@@ -20,22 +25,23 @@ public class BoolioUserHandler {
         return instance;
     }
 
-    public BoolioUserHandler(Context context) {
-        this.context = context;
+    /**
+     * Getters *
+     */
+    public User getUser() {
+        return user;
     }
-
 
     /**
      * Setters *
      */
     public void setUser(User user) {
         this.user = user;
+        if (callback != null)
+            callback.run();
     }
 
-    /**
-     * Getters *
-     */
-    public User getUser() {
-        return user;
+    public void setUserCallback(Runnable runnable) {
+        callback = runnable;
     }
 }

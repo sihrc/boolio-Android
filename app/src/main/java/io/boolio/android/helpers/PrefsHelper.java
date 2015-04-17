@@ -23,12 +23,16 @@ public class PrefsHelper {
         return instance;
     }
 
-    /** Getters **/
+    /**
+     * Getters *
+     */
     public String getString(String key) {
         return prefs.getString(key, "");
     }
 
-    /** Setters **/
+    /**
+     * Setters *
+     */
     public void saveString(String key, String value) {
         if (value == null) {
             Log.e("PreferenceHandler", key + ", value is null");
