@@ -79,7 +79,11 @@ public class FacebookAuth extends Auth {
 
     // Get Profile Information for Facebook Profile
     private void updateInformation() {
+        Log.i("DebugDebug", facebookId ==  null ? "null" : facebookId);
+
         if (facebookId != null && !facebookId.equals("")) {
+            Log.i("DebugDebug", "Here");
+
             new Request(
                     Session.getActiveSession(),
                     "/me",
@@ -89,10 +93,11 @@ public class FacebookAuth extends Auth {
                         public void onCompleted(Response response) {
                             /* handle the result */
                             if (response.getError() != null) {
+                                Log.i("DebugDebug Here", response.getError().toString());
                                 Log.e("Facebook Request", response.getError().toString());
                                 return;
                             }
-                            Log.i("DebugDebug", "Bithc I'm irunning");
+                            Log.i("DebugDebug", "Bitch I'm running");
 
                             BoolioServer.getInstance(activity).getBoolioUserFromFacebook(response.getGraphObject().getInnerJSONObject());
                         }

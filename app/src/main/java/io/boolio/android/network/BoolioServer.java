@@ -15,6 +15,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
+
 import io.boolio.android.adapters.QuestionAdapter;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.models.Question;
@@ -64,7 +66,14 @@ public class BoolioServer {
         queue.add(req);
     }
 
-    public void getQuestionFeed(final QuestionAdapter adapter, JSONObject jsonObject) {
+    public void getQuestionFeed(final QuestionAdapter adapter, List<String> prevSeenQuestions) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("prevSeenQuestions", prevSeenQuestions);
+            jsonObject.put("id", BoolioUserHandler.getInstance(context).getUser().userId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         JsonArrayRequest req = new JsonArrayRequest(Request.Method.POST, API.FEED_ENDPOINT, jsonObject,
                 new Response.Listener<JSONArray>() {
                     @Override

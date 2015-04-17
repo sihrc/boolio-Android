@@ -12,6 +12,9 @@ import android.widget.ListView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.boolio.android.R;
 import io.boolio.android.adapters.QuestionAdapter;
 import io.boolio.android.helpers.BoolioUserHandler;
@@ -23,7 +26,10 @@ import io.boolio.android.network.BoolioServer;
  */
 public class FeedFragment extends BoolioFragment {
     static FeedFragment instance;
+
     Context context;
+    List<String> prevSeenQuestions;
+
 
     public static FeedFragment getInstance() {
         if (instance == null) {
@@ -35,6 +41,7 @@ public class FeedFragment extends BoolioFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        prevSeenQuestions = new ArrayList<>();
         context = activity;
     }
 
@@ -55,16 +62,13 @@ public class FeedFragment extends BoolioFragment {
 
 
         ListView listView = (ListView) rootView.findViewById(R.id.question_feed);
-        QuestionAdapter questionAdapter = new QuestionAdapter(context, R.layout.question_item);
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("prevSeenQuestions", "");
-            jsonObject.put("id", BoolioUserHandler.getInstance(context).getUser().userId);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        BoolioServer.getInstance(context).getQuestionFeed(questionAdapter, jsonObject);
-
+        final QuestionAdapter questionAdapter = new QuestionAdapter(context, R.layout.question_item);
+        BoolioUserHandler.getInstance(context).setUserCallback(new Runnable() {
+            @Override
+            public void run() {
+                BoolioServer.getInstance(context).getQuestionFeed(questionAdapter, prevSeenQuestions);
+            }
+        });
         questionAdapter.addQuestion(q);
         questionAdapter.addQuestion(q1);
         listView.setAdapter(questionAdapter);

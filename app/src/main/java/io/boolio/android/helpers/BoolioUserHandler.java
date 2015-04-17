@@ -12,6 +12,7 @@ public class BoolioUserHandler {
 
     Context context;
     User user;
+    Runnable callback;
 
     public BoolioUserHandler(Context context) {
         this.context = context;
@@ -36,5 +37,11 @@ public class BoolioUserHandler {
      */
     public void setUser(User user) {
         this.user = user;
+        if (callback != null)
+            callback.run();
+    }
+
+    public void setUserCallback(Runnable runnable) {
+        callback = runnable;
     }
 }
