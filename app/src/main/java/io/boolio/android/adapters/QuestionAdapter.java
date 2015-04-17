@@ -21,7 +21,6 @@ import io.boolio.android.views.BoolioProfileImage;
  * Created by james on 4/17/15.
  */
 public class QuestionAdapter extends ArrayAdapter<Question> {
-    List<Question> questions = new ArrayList<Question>();
     int resource;
     Context context;
 
@@ -55,18 +54,8 @@ public class QuestionAdapter extends ArrayAdapter<Question> {
             holder = (QuestionHolder) view.getTag();
         }
 
-        fillViews(holder, questions.get(position));
+        fillViews(holder, getItem(position));
         return view;
-    }
-
-    @Override
-    public int getCount() {
-        return this.questions.size();
-    }
-
-    @Override
-    public Question getItem(int position) {
-        return this.questions.get(position);
     }
 
     private void fillViews(QuestionHolder holder, Question question) {
@@ -76,16 +65,9 @@ public class QuestionAdapter extends ArrayAdapter<Question> {
         holder.creator.setText(question.creator);
         holder.date.setText(question.dateCreated);
 
-        holder.questionImage.setImageUrl(
-                "http://upload.wikimedia.org/wikipedia/en/archive/9/9b/20041203215243!Olin_College_Great_Lawn.jpg"
-                , BoolioServer.getInstance(context).getImageLoader());
+        holder.questionImage.setImageUrl(question.image, BoolioServer.getInstance(context).getImageLoader());
         holder.creatorImage.setImageUrl(question.creatorImage, BoolioServer.getInstance(context).getImageLoader());
 
-    }
-
-    public void addQuestion(Question question) {
-        this.questions.add(question);
-        notifyDataSetChanged();
     }
 
     private class QuestionHolder {

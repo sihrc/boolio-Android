@@ -25,9 +25,9 @@ public class QuestionParser extends Parser<Question> {
     public Question parse() {
         Question question = new Question();
         try {
-            question.creator = getString("creator");
+            question.creator = UserParser.getInstance().parse(getJSONObject("creator")).name;
             question.question = getString("question");
-            question.image = getString("image");
+            question.image = getString("image") == null ? "" : getString("image");
             question.left = getString("left");
             question.right = getString("right");
             question.dateCreated = getString("dateCreated");
@@ -42,6 +42,10 @@ public class QuestionParser extends Parser<Question> {
             e.printStackTrace();
         }
 
-        return null;
+
+        Log.v("questionImage?", "working?");
+        Log.v("questionImage", question.image);
+
+        return question;
     }
 }
