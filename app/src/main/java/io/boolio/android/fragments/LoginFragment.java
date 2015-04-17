@@ -50,7 +50,7 @@ public class LoginFragment extends BoolioFragment {
 
         // Facebook packaged Login Button for Login Functionality
         final LoginButton fbButton = (LoginButton) rootView.findViewById(R.id.fb_login);
-
+        fbButton.setReadPermissions("public_profile", "email", "user_friends");
         // Steal Facebook Login Drawable
         loginFacebook.setCompoundDrawablesWithIntrinsicBounds(
                 fbButton.getCompoundDrawables()[0], null, null, null);

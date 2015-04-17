@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import io.boolio.android.auth.AuthActivity;
 import io.boolio.android.fragments.FeedFragment;
 import io.boolio.android.fragments.tutorials.TutorialPagerFragment;
+import io.boolio.android.helpers.BoolioUserHandler;
 
 
 public class MainActivity extends AuthActivity {
