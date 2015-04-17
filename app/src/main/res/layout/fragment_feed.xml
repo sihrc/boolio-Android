@@ -12,9 +12,9 @@
 
     <ListView
         android:id="@+id/question_feed"
-        android:dividerHeight="@dimen/question_item_padding"
-        android:divider="#e5e5e5"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
+        android:divider="#e5e5e5"
+        android:dividerHeight="@dimen/question_item_padding"
         />
 </RelativeLayout>

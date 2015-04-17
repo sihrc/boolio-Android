@@ -13,6 +13,10 @@ public class BoolioUserHandler {
     Context context;
     User user;
 
+    public BoolioUserHandler(Context context) {
+        this.context = context;
+    }
+
     public static BoolioUserHandler getInstance(final Context context) {
         if (instance == null) {
             instance = new BoolioUserHandler(context);
@@ -20,22 +24,17 @@ public class BoolioUserHandler {
         return instance;
     }
 
-    public BoolioUserHandler(Context context) {
-        this.context = context;
+    /**
+     * Getters *
+     */
+    public User getUser() {
+        return user;
     }
-
 
     /**
      * Setters *
      */
     public void setUser(User user) {
         this.user = user;
-    }
-
-    /**
-     * Getters *
-     */
-    public User getUser() {
-        return user;
     }
 }

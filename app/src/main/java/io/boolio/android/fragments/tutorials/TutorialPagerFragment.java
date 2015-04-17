@@ -21,7 +21,6 @@ import java.util.List;
 
 import io.boolio.android.R;
 import io.boolio.android.fragments.BoolioFragment;
-import io.boolio.android.fragments.FeedFragment;
 import io.boolio.android.fragments.LoginFragment;
 
 /**
@@ -64,7 +63,7 @@ public class TutorialPagerFragment extends BoolioFragment {
     // Set the Tutorial Fragments
     private void setTutorials(Integer... args) {
         fragmentList = new ArrayList<>();
-        int total = args.length, index= 0;
+        int total = args.length, index = 0;
         while (index < total)
             fragmentList.add(TutorialFragment.newInstance(args[index++], args[index++]));
         fragmentList.add(LoginFragment.newInstance());
@@ -116,8 +115,13 @@ public class TutorialPagerFragment extends BoolioFragment {
             }
         });
         pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            int prev, curr, next;
+            int prev
+                    ,
+                    curr
+                    ,
+                    next;
             boolean dragging;
+
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 curr = position;
@@ -125,14 +129,16 @@ public class TutorialPagerFragment extends BoolioFragment {
                 if (!dragging) {
                     return;
                 }
-                boolean forward = positionOffset > 0; positionOffset = Math.abs(positionOffset)/.5f;
+                boolean forward = positionOffset > 0;
+                positionOffset = Math.abs(positionOffset) / .5f;
                 next = forward ? position + 1 : position - 1;
                 activeIndicators.getChildAt(position).setAlpha(1 - positionOffset);
                 View view = activeIndicators.getChildAt(next);
                 if (view != null)
-                    view.setAlpha(positionOffset/2f);
+                    view.setAlpha(positionOffset / 2f);
 
             }
+
             @Override
             public void onPageSelected(int position) {
                 // Switch Page Indicators

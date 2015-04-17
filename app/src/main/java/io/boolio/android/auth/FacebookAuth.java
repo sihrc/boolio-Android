@@ -14,6 +14,7 @@ import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
 
+import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.PrefsHelper;
 import io.boolio.android.network.BoolioServer;
 
@@ -91,6 +92,7 @@ public class FacebookAuth extends Auth {
                                 Log.e("Facebook Request", response.getError().toString());
                                 return;
                             }
+                            Log.i("DebugDebug", "Bithc I'm irunning");
 
                             BoolioServer.getInstance(activity).getBoolioUserFromFacebook(response.getGraphObject().getInnerJSONObject());
                         }

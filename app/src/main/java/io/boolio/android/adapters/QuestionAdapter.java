@@ -1,7 +1,6 @@
 package io.boolio.android.adapters;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,11 +22,10 @@ public class QuestionAdapter extends ArrayAdapter<Question> {
     int resource;
     Context context;
 
-    public QuestionAdapter(Context context, int resource, List<Question> objects) {
-        super(context, resource, objects);
+    public QuestionAdapter(Context context, int resource) {
+        super(context, resource);
         this.context = context;
         this.resource = resource;
-        this.questions = objects;
 
     }
 
