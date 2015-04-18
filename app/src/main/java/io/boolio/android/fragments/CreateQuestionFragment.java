@@ -1,7 +1,12 @@
 package io.boolio.android.fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -11,6 +16,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.toolbox.NetworkImageView;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,7 +25,10 @@ import org.json.JSONObject;
 import java.util.Arrays;
 
 import io.boolio.android.R;
+import io.boolio.android.custom.BoolioNetworkImageView;
 import io.boolio.android.helpers.BoolioUserHandler;
+import io.boolio.android.helpers.PictureHelper;
+import io.boolio.android.helpers.Utils;
 import io.boolio.android.network.BoolioServer;
 
 /**
@@ -28,6 +38,11 @@ public class CreateQuestionFragment extends BoolioFragment {
     static CreateQuestionFragment instance;
     Context context;
     EditText questionText, left, right, tags;
+    BoolioNetworkImageView networkImageView;
+    PictureHelper helper;
+
+    String imageSaved = "";
+    String imageType = "";
 
     public static CreateQuestionFragment getInstance() {
         if (instance == null) {
@@ -40,6 +55,7 @@ public class CreateQuestionFragment extends BoolioFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         this.context = activity;
+        this.helper = new PictureHelper();
     }
 
     @Override
@@ -51,19 +67,21 @@ public class CreateQuestionFragment extends BoolioFragment {
         left = (EditText) rootView.findViewById(R.id.create_question_left_answer);
         right = (EditText) rootView.findViewById(R.id.create_question_right_answer);
         tags = (EditText) rootView.findViewById(R.id.create_question_tag);
-        Button submit = (Button) rootView.findViewById(R.id.create_question_submit);
 
-        submit.setOnClickListener(new View.OnClickListener() {
+        rootView.findViewById(R.id.create_question_submit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                submitOnClickSetup(v);
+                submitOnClickSetup();
             }
         });
+
+        networkImageView = (BoolioNetworkImageView) rootView.findViewById(R.id.create_question_image);
+        setupImageView();
 
         return rootView;
     }
 
-    private void submitOnClickSetup(View view) {
+    private void submitOnClickSetup() {
         JSONObject jsonObject = new JSONObject();
         if (questionText.getText().toString().length() == 0) {
             Toast.makeText(context, "Please enter a question", Toast.LENGTH_SHORT).show();
@@ -76,6 +94,8 @@ public class CreateQuestionFragment extends BoolioFragment {
                 jsonObject.put("tags", array);
                 jsonObject.put("dateCreated", System.currentTimeMillis());
                 jsonObject.put("creator", BoolioUserHandler.getInstance(context).getUser().userId);
+                jsonObject.put("imageType", imageType);
+                jsonObject.put("image", imageSaved);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -86,5 +106,56 @@ public class CreateQuestionFragment extends BoolioFragment {
             right.setText("");
             tags.setText("");
         }
+    }
+
+    private void setupImageView() {
+        final Dialog alert = new AlertDialog.Builder(context).setItems(
+                new CharSequence[]{"Load from Gallery", "Take a picture", "Search", "Cancel"},
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case 0: // Load from Gallery
+                                helper.dispatchChoosePictureIntent(getActivity(), CreateQuestionFragment.this);
+                                imageType = "string";
+                                break;
+                            case 1: // Take a picture
+                                helper.dispatchTakePictureIntent(getActivity(), CreateQuestionFragment.this);
+                                imageType="string";
+                                break;
+                            case 2: // Search
+                                imageType = "url";
+                                break;
+                            case 3:
+                            default:
+                                break;
+                        }
+                        dialog.dismiss();
+                    }
+                }).setTitle(R.string.picture).create();
+
+        networkImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alert.show();
+            }
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        helper.onActivityResult(this, requestCode, resultCode, data, networkImageView, new PictureHelper.BitmapCallback() {
+            @Override
+            public void onBitmap(Bitmap bitmap) {
+                networkImageView.setLocalImageBitmap(bitmap);
+                if (imageType.equals("string")) {
+                    imageSaved = Utils.bitmapTo64String(bitmap);
+                } else {
+                    // TODO URL
+                }
+            }
+        });
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

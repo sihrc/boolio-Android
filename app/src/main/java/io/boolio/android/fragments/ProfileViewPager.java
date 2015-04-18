@@ -7,15 +7,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,15 +20,15 @@ import io.boolio.android.R;
 /**
  * Created by james on 4/18/15.
  */
-public class ProfileViewPager extends BoolioFragment{
+public class ProfileViewPager extends BoolioFragment {
     static ProfileViewPager instance;
     Context context;
     List<BoolioFragment> fragmentList;
     ViewPager pager;
     TextView askedView, answerView;
 
-    public static ProfileViewPager getInstance(){
-        if(instance == null){
+    public static ProfileViewPager getInstance() {
+        if (instance == null) {
             instance = new ProfileViewPager();
             instance.setProfilePager();
         }
@@ -62,13 +57,14 @@ public class ProfileViewPager extends BoolioFragment{
 
         return rootView;
     }
-    private void setProfilePager(){
+
+    private void setProfilePager() {
         fragmentList = new ArrayList<>();
         fragmentList.add(ProfileAskedFragment.getInstance());
         fragmentList.add(ProfileAnsweredFragment.getInstance());
     }
 
-    private void setUpViewPager(){
+    private void setUpViewPager() {
         pager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
@@ -81,8 +77,11 @@ public class ProfileViewPager extends BoolioFragment{
             }
         });
         pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            boolean forward, dragging ;
+            boolean forward
+                    ,
+                    dragging;
             int curr;
+
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 curr = position;
@@ -106,10 +105,10 @@ public class ProfileViewPager extends BoolioFragment{
 
             @Override
             public void onPageSelected(int position) {
-                if(position == 0) {
+                if (position == 0) {
                     askedView.setAlpha(1f);
                     answerView.setAlpha(.1f);
-                } else{
+                } else {
                     askedView.setAlpha(.1f);
                     answerView.setAlpha(1f);
                 }

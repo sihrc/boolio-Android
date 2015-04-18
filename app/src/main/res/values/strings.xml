@@ -14,7 +14,9 @@
     <string name="content_desc_settings">Settings Button on Profile Page</string>
 
     <!-- Tutorial -->
-    <string name="tutorial_1">Welcome to boolio.\nYour source of simple and instant feedback about topics you are interested in from people you care about.</string>
+    <string name="tutorial_1"><![CDATA[<h1>Welcome</h1>]]>Swipe to learn more about Boolio.</string>
+    <string name="tutorial_2">Pose any question and get feedback\nfrom your friends and the world.</string>
+    <string name="tutorial_3">Help people out by answering their questions.\n Boolio populates your feed\n only with what matters to you</string>
 
     <!-- Login Fragment -->
     <string name="login_button">Login</string>
@@ -29,6 +31,7 @@
     <string name="create_question_tags_hint">Enter your categories</string>
     <string name="create_question_answer_left_hint">No</string>
     <string name="create_question_answer_right_hint">Yes</string>
+    <string name="place_image">Tap to place an image</string>
 
     <!-- Profile Fragment -->
     <string name="answered">ANSWERED</string>
@@ -39,4 +42,10 @@
     <string name="settings">Settings</string>
     <string name="profile_asked_view_text">ASKED</string>
     <string name="profile_answered_view_text">ANSWERED</string>
+
+
+    <!-- Feed Fragment -->
+    <string name="empty_feed_message">Great Job! Your question feed is empty. Pull down to see if there are more.</string>
+    <string name="content_desc_good_job">good job bear</string>
+    <string name="picture">Picture</string>
 </resources>
