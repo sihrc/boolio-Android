@@ -31,6 +31,7 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/profile_karma"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/header_bar"
@@ -130,5 +131,11 @@
                 android:textStyle="normal" />
         </LinearLayout>
     </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/asked_answered_view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/profile_karma" />
 
 </RelativeLayout>

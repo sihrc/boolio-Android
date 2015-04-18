@@ -137,6 +137,40 @@ public class BoolioServer {
         queue.add(req);
     }
 
+    public void getProfileFeed(final QuestionAdapter adapter, List<String> listQuestions) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            JSONArray questionIds = new JSONArray();
+            for (String id : listQuestions) {
+                questionIds.put(id);
+            }
+            jsonObject.put("listOfQuestions", questionIds);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        JsonArrayRequest req = new JsonArrayRequest(Request.Method.POST, API.LIST_QUESTIONS_ENDPOINT, jsonObject,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        JSONArrayParser<Question> parser = new JSONArrayParser<>();
+                        try {
+                            adapter.clear();
+                            adapter.addAll(parser.toArray(response, QuestionParser.getInstance()));
+                            adapter.notifyDataSetChanged();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Boolio Server Error", "Getting List of Question Failed");
+                error.printStackTrace();
+            }
+        });
+        queue.add(req);
+    }
+
 
     public void getUserProfile(String userId, final UserCallback callback) {
         JSONObject jsonObject = new JSONObject();

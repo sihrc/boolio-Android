@@ -9,6 +9,9 @@ public class API {
     // Auth Routes
     final static public String FACEBOOK_USER_ENDPOINT = BASE + "/users/facebook";
 
+    //  FIX ME
+    final static public String LIST_QUESTIONS_ENDPOINT = BASE + "/questions/selected";
+
     final static public String FEED_ENDPOINT = BASE + "/questions";
     final static public String CREATE_QUESTION_ENDPOINT = BASE + "/questions/create";
 

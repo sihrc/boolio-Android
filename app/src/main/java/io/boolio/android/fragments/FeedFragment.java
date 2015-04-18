@@ -29,7 +29,6 @@ public class FeedFragment extends BoolioFragment {
     PullToRefreshView pullToRefreshLayout;
     QuestionAdapter questionAdapter;
     List<String> prevSeenQuestions;
-    Runnable afterOpen;
 
     public static FeedFragment getInstance() {
         if (instance == null)
@@ -74,19 +73,11 @@ public class FeedFragment extends BoolioFragment {
         return rootView;
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        if (afterOpen != null)
-            afterOpen.run();
-    }
 
     @Override
     public void onResume() {
         super.onResume();
         pullQuestions();
-        if (afterOpen != null)
-            afterOpen.run();
     }
 
     private void pullQuestions() {
