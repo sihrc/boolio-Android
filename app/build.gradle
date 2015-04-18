@@ -17,6 +17,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    repositories {
+        maven {
+            url 'https://github.com/bsphere/aws-android-sdk-mvn-repo/raw/master/releases'
+        }
+    }
 }
 
 dependencies {
@@ -27,4 +32,6 @@ dependencies {
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.5'
     compile 'com.github.castorflex.smoothprogressbar:library-circular:1.0.0'
     compile 'com.soundcloud.android:android-crop:0.9.10@aar'
+    compile 'com.amazonaws:android-sdk-core:1.7.0'
+    compile 'com.amazonaws:android-sdk-s3:1.7.0'
 }
