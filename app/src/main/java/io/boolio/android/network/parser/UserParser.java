@@ -26,7 +26,7 @@ public class UserParser extends Parser<User> {
             user.userId = getString("_id");
             user.name = getString("name");
             user.profilePic = getString("profilePic");
-            user.questionsAsked = stringArray.toArray(getJSONArray("questionAsked"));
+            user.questionsAsked = stringArray.toArray(getJSONArray("questionsAsked"));
             user.questionsAnswered = stringArray.toArray(getJSONArray("questionsAnswered"));
             user.questionsSkipped = stringArray.toArray(getJSONArray("questionsSkipped"));
         } catch (JSONException e) {

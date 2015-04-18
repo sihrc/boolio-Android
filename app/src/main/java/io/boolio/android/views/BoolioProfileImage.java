@@ -8,7 +8,6 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 
 import com.android.volley.toolbox.NetworkImageView;
@@ -28,12 +27,6 @@ public class BoolioProfileImage extends NetworkImageView {
     public BoolioProfileImage(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
-
-    @Override
-    public void setImageBitmap(Bitmap bm) {
-        super.setImageBitmap(getCroppedBitmap(bm, getWidth()));
-    }
-
 
     public static Bitmap getCroppedBitmap(Bitmap bmp, int radius) {
         Bitmap sbmp;
@@ -62,6 +55,11 @@ public class BoolioProfileImage extends NetworkImageView {
 
 
         return output;
+    }
+
+    @Override
+    public void setImageBitmap(Bitmap bm) {
+        super.setImageBitmap(getCroppedBitmap(bm, getWidth()));
     }
 
 }

@@ -9,8 +9,8 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -130,6 +130,40 @@ public class BoolioServer {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("Boolio Server Error", "Getting Question Feed Failed");
+                error.printStackTrace();
+            }
+        });
+        queue.add(req);
+    }
+
+    public void getProfileFeed(final QuestionAdapter adapter, List<String> listQuestions) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            JSONArray questionIds = new JSONArray();
+            for (String id : listQuestions) {
+                questionIds.put(id);
+            }
+            jsonObject.put("listOfQuestions", questionIds);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        JsonArrayRequest req = new JsonArrayRequest(Request.Method.POST, API.LIST_QUESTIONS_ENDPOINT, jsonObject,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        JSONArrayParser<Question> parser = new JSONArrayParser<>();
+                        try {
+                            adapter.clear();
+                            adapter.addAll(parser.toArray(response, QuestionParser.getInstance()));
+                            adapter.notifyDataSetChanged();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Boolio Server Error", "Getting List of Question Failed");
                 error.printStackTrace();
             }
         });

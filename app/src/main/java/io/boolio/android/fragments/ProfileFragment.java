@@ -6,15 +6,19 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import io.boolio.android.MainActivity;
 import io.boolio.android.R;
 import io.boolio.android.callbacks.UserCallback;
 import io.boolio.android.helpers.BoolioUserHandler;
@@ -76,6 +80,10 @@ public class ProfileFragment extends BoolioFragment {
         headerBar = (RelativeLayout) rootView.findViewById(R.id.header_bar);
         profileDisplayName = (TextView) rootView.findViewById(R.id.profile_user_name);
         karmaCount = (TextView) rootView.findViewById(R.id.karma_count);
+        Log.v("DebugDebug", "profile Frag");
+
+        getChildFragmentManager().beginTransaction().add(R.id.asked_answered_view_pager, ProfileViewPager.getInstance()).commit();
+
 
         setupViews();
 

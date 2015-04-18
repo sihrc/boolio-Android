@@ -38,16 +38,6 @@ public class BoolioUserHandler {
         return user;
     }
 
-    public void logout() {
-        user = null;
-        PrefsHelper.getInstance(context).saveString("facebookId", "");
-        PrefsHelper.getInstance(context).saveString("userId", "");
-        Session session = Session.getActiveSession();
-        if (session.isOpened()) {
-            session.closeAndClearTokenInformation();
-        }
-    }
-
     /**
      * Setters *
      */
@@ -56,6 +46,16 @@ public class BoolioUserHandler {
         PrefsHelper.getInstance(context).saveString("userId", user.userId);
         if (callback != null)
             callback.run();
+    }
+
+    public void logout() {
+        user = null;
+        PrefsHelper.getInstance(context).saveString("facebookId", "");
+        PrefsHelper.getInstance(context).saveString("userId", "");
+        Session session = Session.getActiveSession();
+        if (session.isOpened()) {
+            session.closeAndClearTokenInformation();
+        }
     }
 
     public void setUserCallback(Runnable runnable) {

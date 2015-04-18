@@ -24,14 +24,12 @@ import io.boolio.android.network.BoolioServer;
  * Created by Chris on 4/16/15.
  */
 public class FeedFragment extends BoolioFragment {
-    static FeedFragment instance;
     final public static int REFRESH_DELAY = 2000;
-
+    static FeedFragment instance;
     Context context;
     PullToRefreshView pullToRefreshLayout;
     QuestionAdapter questionAdapter;
     List<String> prevSeenQuestions;
-    Runnable afterOpen;
 
     public static FeedFragment getInstance() {
         if (instance == null)
@@ -84,23 +82,15 @@ public class FeedFragment extends BoolioFragment {
             }
         });
         listView.setAdapter(questionAdapter);
-        
+
         return rootView;
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        if (afterOpen != null)
-            afterOpen.run();
-    }
 
     @Override
     public void onResume() {
         super.onResume();
         pullQuestions();
-        if (afterOpen != null)
-            afterOpen.run();
     }
 
     private void pullQuestions() {

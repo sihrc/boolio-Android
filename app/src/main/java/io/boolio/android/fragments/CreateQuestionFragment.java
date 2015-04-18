@@ -3,13 +3,7 @@ package io.boolio.android.fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-
-import io.boolio.android.R;
-import io.boolio.android.helpers.BoolioUserHandler;
-import io.boolio.android.network.BoolioServer;
-
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,10 +15,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+
+import io.boolio.android.R;
+import io.boolio.android.helpers.BoolioUserHandler;
+import io.boolio.android.network.BoolioServer;
 
 /**
  * Created by james on 4/17/15.
