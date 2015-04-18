@@ -109,7 +109,7 @@ public class CreateQuestionFragment extends BoolioFragment {
                 @Override
                 public void run() {
                     progress.setVisibility(View.GONE);
-                    ((MainActivity) getActivity()).switchFragment(FeedFragment.getInstance());
+                    ((MainActivity) getActivity()).switchFragment(0);
                 }
             });
 
