@@ -81,5 +81,4 @@
             android:textColor="@color/feed_question_right_color"
             android:textStyle="bold"/>
     </LinearLayout>
-
 </RelativeLayout>

@@ -9,6 +9,7 @@ import android.view.View;
 
 import io.boolio.android.auth.AuthActivity;
 import io.boolio.android.fragments.BoolioFragment;
+import io.boolio.android.fragments.CreateQuestionFragment;
 import io.boolio.android.fragments.FeedFragment;
 import io.boolio.android.fragments.ProfileFragment;
 import io.boolio.android.fragments.tutorials.TutorialPagerFragment;
@@ -76,7 +77,7 @@ public class MainActivity extends AuthActivity {
         curNavButton.setAlpha(1f);
 
         navBarAdd = findViewById(R.id.nav_bar_add);
-        navBarAdd.setOnClickListener(getNavClickListener(null, null));
+        navBarAdd.setOnClickListener(getNavClickListener(CreateQuestionFragment.getInstance(), null));
         feedButton.setOnClickListener(getNavClickListener(FeedFragment.getInstance(), null));
         navBar.findViewById(R.id.nav_bar_search).setOnClickListener(getNavClickListener(null, null));
         navBar.findViewById(R.id.nav_bar_category).setOnClickListener(getNavClickListener(null, null));

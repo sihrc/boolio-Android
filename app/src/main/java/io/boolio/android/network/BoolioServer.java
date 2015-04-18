@@ -48,6 +48,7 @@ public class BoolioServer {
             instance = new BoolioServer(context);
             instance.imageLoader = new ImageLoader(instance.queue, new ImageLoader.ImageCache() {
                 LruCache<String, Bitmap> cache = new LruCache<>(40);
+
                 @Override
                 public Bitmap getBitmap(String url) {
                     return cache.get(url);
@@ -136,6 +137,7 @@ public class BoolioServer {
         queue.add(req);
     }
 
+
     public void getUserProfile(String userId, final UserCallback callback) {
         JSONObject jsonObject = new JSONObject();
         try {
@@ -150,16 +152,37 @@ public class BoolioServer {
             @Override
             public void onResponse(JSONObject response) {
                 callback.handleUser(UserParser.getInstance().parse(response));
+
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+
                 Log.e("GetUserProfile", "We done fucked it, " + error.getMessage());
             }
         });
 
+
         queue.add(req);
     }
+
+    public void createQuestion(JSONObject jsonObject) {
+        JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, API.CREATE_QUESTION_ENDPOINT,
+                jsonObject, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d("Boolio Server stuff", response.toString());
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Boolio Server Error", "Posting Question Failed");
+                error.printStackTrace();
+            }
+        });
+        queue.add(req);
+    }
+
 
     public ImageLoader getImageLoader() {
         return imageLoader;

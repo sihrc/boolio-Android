@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fcfcfc"
+    android:gravity="center"
+    >
+
+    <FrameLayout
+        android:id="@+id/header_bar"
+        android:layout_width="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_height="@dimen/header_height"
+        android:background="@color/theme_blue"
+        android:padding="@dimen/general_padding">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/content_description_header"
+            android:src="@drawable/logo_white"/>
+
+    </FrameLayout>
+
+
+    <com.android.volley.toolbox.NetworkImageView
+        android:id="@+id/create_question_image"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/header_bar"
+        android:layout_height="@dimen/question_image_height"
+        android:scaleType="centerCrop" />
+
+    <EditText
+        android:id="@+id/create_question_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/create_question_image"
+        android:gravity="center"
+        android:singleLine="true"
+        android:hint="@string/create_question_text_hint"
+        android:imeOptions="actionNext"
+        android:padding="@dimen/question_padding"
+        android:textSize="@dimen/question_text_size" />
+
+    <EditText
+        android:id="@+id/create_question_tag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:layout_below="@id/create_question_text"
+        android:gravity="center"
+        android:hint="@string/create_question_tags_hint"
+        android:imeOptions="actionNext"
+        android:padding="@dimen/question_padding"
+        android:textSize="@dimen/question_text_size" />
+
+    <LinearLayout
+        android:id="@+id/create_question_buttons"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/create_question_tag"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/create_question_left_answer"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:background="@drawable/left_answer_button"
+            android:gravity="center"
+            android:hint="@string/create_question_answer_left_hint"
+            android:imeOptions="actionNext"
+            android:textColor="#2196F3" />
+
+        <EditText
+            android:id="@+id/create_question_right_answer"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:singleLine="true"
+            android:background="@drawable/right_answer_button"
+            android:gravity="center"
+            android:padding="10dp"
+            android:hint="@string/create_question_answer_right_hint"
+            android:imeOptions="actionDone"
+            android:textColor="#0D47A1" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/create_question_submit"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/create_question_buttons"
+        android:background="@drawable/left_answer_button"
+        android:text="@string/create_question_submit" />
+</RelativeLayout>
