@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import io.boolio.android.auth.AuthActivity;
 import io.boolio.android.fragments.BoolioFragment;
@@ -22,7 +23,7 @@ public class MainActivity extends AuthActivity {
     FragmentManager fragmentManager;
     BoolioFragment boolioFragment;
     View curNavButton;
-    View navBar;
+    LinearLayout navBar;
     View navBarAdd;
 
     @Override
@@ -64,16 +65,12 @@ public class MainActivity extends AuthActivity {
     }
 
     public void showNavigationbar(boolean show) {
-        if (navBar == null) {
-            navBar = findViewById(R.id.nav_bar);
-            navBarAdd = findViewById(R.id.nav_bar_add);
-        }
         navBar.setVisibility(show ? View.VISIBLE : View.GONE);
         navBarAdd.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     private void setupNavigationBar() {
-        final View navBar = findViewById(R.id.nav_bar);
+        navBar = (LinearLayout) findViewById(R.id.nav_bar);
         View feedButton = navBar.findViewById(R.id.nav_bar_feed);
 
         // Initially Selected
@@ -81,7 +78,7 @@ public class MainActivity extends AuthActivity {
         curNavButton.setAlpha(1f);
 
         navBarAdd = findViewById(R.id.nav_bar_add);
-        navBarAdd.setOnClickListener(getNavClickListener(CreateQuestionFragment.getInstance(), new Runnable() {
+        navBarAdd.setOnClickListener(getNavClickListener(CreateQuestionFragment.newInstance(), new Runnable() {
             @Override
             public void run() {
                 navBar.setAlpha(1f);
@@ -126,7 +123,14 @@ public class MainActivity extends AuthActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void switchFragment(BoolioFragment fragment) {
+    public void switchFragment(int position) {
+        if (position == 3)
+            navBarAdd.callOnClick();
+        else
+            navBar.getChildAt(position).callOnClick();
+    }
+
+    private void switchFragment(BoolioFragment fragment) {
         boolioFragment = fragment;
         fragmentManager.beginTransaction()
                 .replace(R.id.container, fragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();

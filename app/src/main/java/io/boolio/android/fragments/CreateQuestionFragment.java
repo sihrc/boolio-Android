@@ -24,6 +24,7 @@ import org.json.JSONObject;
 
 import java.util.Arrays;
 
+import io.boolio.android.MainActivity;
 import io.boolio.android.R;
 import io.boolio.android.custom.BoolioNetworkImageView;
 import io.boolio.android.helpers.BoolioUserHandler;
@@ -35,20 +36,17 @@ import io.boolio.android.network.BoolioServer;
  * Created by james on 4/17/15.
  */
 public class CreateQuestionFragment extends BoolioFragment {
-    static CreateQuestionFragment instance;
     Context context;
     EditText questionText, left, right, tags;
+    View progress;
     BoolioNetworkImageView networkImageView;
     PictureHelper helper;
 
     String imageSaved = "";
     String imageType = "";
 
-    public static CreateQuestionFragment getInstance() {
-        if (instance == null) {
-            instance = new CreateQuestionFragment();
-        }
-        return instance;
+    public static CreateQuestionFragment newInstance() {
+        return new CreateQuestionFragment();
     }
 
     @Override
@@ -67,6 +65,7 @@ public class CreateQuestionFragment extends BoolioFragment {
         left = (EditText) rootView.findViewById(R.id.create_question_left_answer);
         right = (EditText) rootView.findViewById(R.id.create_question_right_answer);
         tags = (EditText) rootView.findViewById(R.id.create_question_tag);
+        progress = rootView.findViewById(R.id.progress_bar_saving);
 
         rootView.findViewById(R.id.create_question_submit).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,11 +99,20 @@ public class CreateQuestionFragment extends BoolioFragment {
                 e.printStackTrace();
             }
 
-            BoolioServer.getInstance(context).createQuestion(jsonObject);
             questionText.setText("");
             left.setText("");
             right.setText("");
             tags.setText("");
+            // Upload Image to Server
+            progress.setVisibility(View.VISIBLE);
+            BoolioServer.getInstance(context).createQuestion(jsonObject, new Runnable() {
+                @Override
+                public void run() {
+                    progress.setVisibility(View.GONE);
+                    ((MainActivity) getActivity()).switchFragment(0);
+                }
+            });
+
         }
     }
 

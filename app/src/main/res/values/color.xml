@@ -19,6 +19,7 @@
     <color name="profile_text_color">#d5425ad2</color>
 
     <!-- Progress Bar -->
+    <color name="inactive_background">#55000000</color>
     <color name="progress_1">#478fcc</color>
     <color name="progress_2">#009688</color>
     <color name="progress_3">#feea39</color>
