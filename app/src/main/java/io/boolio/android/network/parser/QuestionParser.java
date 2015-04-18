@@ -27,6 +27,7 @@ public class QuestionParser extends Parser<Question> {
         try {
             question.creator = UserParser.getInstance().parse(getJSONObject("creator"));
             question.question = getString("question");
+            question.questionId = getString("_id");
             question.image = getString("image") == null ? "" : getString("image");
             question.left = getString("left");
             question.right = getString("right");

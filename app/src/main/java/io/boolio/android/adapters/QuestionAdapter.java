@@ -9,10 +9,14 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import io.boolio.android.R;
+import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.Utils;
 import io.boolio.android.models.Question;
 import io.boolio.android.network.BoolioServer;
@@ -33,7 +37,7 @@ public class QuestionAdapter extends ArrayAdapter<Question> {
     }
 
     @Override
-    public View getView(int position, View view, ViewGroup parent) {
+    public View getView(final int position, View view, ViewGroup parent) {
         QuestionHolder holder;
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -49,6 +53,20 @@ public class QuestionAdapter extends ArrayAdapter<Question> {
             //Image Views
             holder.creatorImage = (BoolioProfileImage) view.findViewById(R.id.question_creator_picture);
             holder.questionImage = (NetworkImageView) view.findViewById(R.id.question_image);
+
+            holder.leftAnswer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setUpPostJSON("left", position);
+
+                }
+            });
+            holder.rightAnswer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setUpPostJSON("right", position);
+                }
+            });
 
             view.setTag(holder);
         } else {
@@ -75,6 +93,23 @@ public class QuestionAdapter extends ArrayAdapter<Question> {
         TextView question, leftAnswer, rightAnswer, creator, date;
         BoolioProfileImage creatorImage;
         NetworkImageView questionImage;
+    }
+
+    private void setUpPostJSON(String direction, int position){
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("questionId", getItem(position).questionId);
+            jsonObject.put("answer", direction);
+            jsonObject.put("id", BoolioUserHandler.getInstance(context).getUser().userId);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        // POST the answer
+        BoolioServer.getInstance(context).postAnswer(jsonObject);
+        remove(getItem(position));
+        notifyDataSetChanged();
+
     }
 
 }

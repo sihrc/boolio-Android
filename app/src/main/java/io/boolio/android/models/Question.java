@@ -7,7 +7,7 @@ import java.util.List;
  */
 public class Question {
 
-    public String dateCreated, image, left, right, question, creatorImage;
+    public String dateCreated, image, left, right, question, creatorImage, questionId;
     public User creator;
     public int leftCount, rightCount;
     public List<User> usersWhoLeft, usersWhoRight;
