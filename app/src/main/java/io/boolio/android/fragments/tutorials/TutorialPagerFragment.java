@@ -39,16 +39,13 @@ public class TutorialPagerFragment extends BoolioFragment {
         TutorialPagerFragment tutorialPagerFragment = new TutorialPagerFragment();
         tutorialPagerFragment.setTutorials(
                 // Tutorial I
-                R.drawable.logo, R.string.tutorial_1,
+                R.drawable.heartbear, R.string.tutorial_1,
 
                 // Tutorial II
-                R.drawable.logo, R.string.tutorial_1,
+                R.drawable.map, R.string.tutorial_2,
 
                 // Tutorial III
-                R.drawable.logo, R.string.tutorial_1,
-
-                // Tutorial IV
-                R.drawable.logo, R.string.tutorial_1
+                R.drawable.burgerphone, R.string.tutorial_3
         );
         return tutorialPagerFragment;
     }

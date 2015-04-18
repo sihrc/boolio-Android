@@ -12,8 +12,16 @@
     <color name="feed_list_divider_color">#e5e5e5</color>
     <color name="feed_question_left_color">#2196F3</color>
     <color name="feed_question_right_color">#fff79004</color>
+    <color name="question_card_background">#fcfcfc</color>
 
     <!-- Profile Fragment -->
     <color name="profile_cover_background">#66d8e0e8</color>
     <color name="profile_text_color">#d5425ad2</color>
+
+    <!-- Progress Bar -->
+    <color name="progress_1">#478fcc</color>
+    <color name="progress_2">#009688</color>
+    <color name="progress_3">#feea39</color>
+    <color name="progress_4">#f0592b</color>
+    <color name="progress_5">#8f3e97</color>
 </resources>

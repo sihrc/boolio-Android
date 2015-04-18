@@ -2,6 +2,7 @@ package io.boolio.android.fragments.tutorials;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +40,7 @@ public class TutorialFragment extends BoolioFragment {
         TextView tutorialText = (TextView) rootView.findViewById(R.id.fragment_tutorial_text);
 
         // Set Image and Text
-        tutorialText.setText(getArguments().getInt("pageText"));
+        tutorialText.setText(Html.fromHtml(getString(getArguments().getInt("pageText"))));
         tutorialImage.setBackground(getResources().getDrawable(getArguments().getInt("pageImage")));
 
         return rootView;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <FrameLayout
         android:id="@+id/header_bar"
@@ -14,7 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:contentDescription="@string/content_description_header"
-            android:src="@drawable/logo_white" />
+            android:src="@drawable/logo_white"/>
 
     </FrameLayout>
 
@@ -30,11 +30,65 @@
 
             <ListView
                 android:id="@+id/question_feed"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="@color/white"
                 android:divider="@color/feed_list_divider_color"
                 android:dividerHeight="@dimen/question_feed_padding"/>
 
         </io.boolio.android.custom.PullToRefreshView>
     </FrameLayout>
+
+    <!--<pl.droidsonroids.gif.GifImageView-->
+    <!--android:id="@+id/gif_loading"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_below="@id/header_bar"-->
+    <!--android:src="@drawable/bear_loading"/>-->
+
+    <fr.castorflex.android.circularprogressbar.CircularProgressBar
+        android:id="@+id/gif_loading"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="@dimen/progress_size"
+        android:layout_height="@dimen/progress_size"
+        android:layout_centerInParent="true"
+        android:background="@android:color/transparent"
+        android:indeterminate="true"
+        app:cpb_color="#FFee44"
+        app:cpb_colors="@array/progress_colors"
+        app:cpb_max_sweep_angle="300"
+        app:cpb_min_sweep_angle="10"
+        app:cpb_rotation_speed="1.0"
+        app:cpb_stroke_width="12dp"
+        app:cpb_sweep_speed="1.0"/>
+
+    <RelativeLayout
+        android:id="@+id/empty_list_message"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/header_bar"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/empty_list_image"
+            android:layout_width="@dimen/tutorial_image_size"
+            android:layout_height="@dimen/tutorial_image_size"
+            android:layout_centerHorizontal="true"
+            android:contentDescription="@string/content_desc_good_job"
+            android:padding="@dimen/question_feed_padding"
+            android:src="@drawable/heartbear"/>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/empty_list_image"
+            android:fontFamily="condensed"
+            android:gravity="center"
+            android:padding="@dimen/question_feed_padding"
+            android:text="@string/empty_feed_message"
+            android:textSize="@dimen/general_large_text"/>
+    </RelativeLayout>
 </RelativeLayout>

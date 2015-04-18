@@ -26,10 +26,14 @@ import io.boolio.android.network.BoolioServer;
 public class FeedFragment extends BoolioFragment {
     final public static int REFRESH_DELAY = 2000;
     static FeedFragment instance;
+
     Context context;
     PullToRefreshView pullToRefreshLayout;
     QuestionAdapter questionAdapter;
     List<String> prevSeenQuestions;
+
+    View gifLoading;
+    View loadingMessage;
 
     public static FeedFragment getInstance() {
         if (instance == null)
@@ -54,6 +58,10 @@ public class FeedFragment extends BoolioFragment {
                     questionAdapter.addAll(questionList);
                     questionAdapter.notifyDataSetChanged();
                     pullToRefreshLayout.setRefreshing(false);
+                    gifLoading.setVisibility(View.GONE);
+                    if (questionAdapter.getCount() == 0) {
+                        loadingMessage.setVisibility(View.VISIBLE);
+                    }
                 }
             }, REFRESH_DELAY);
         }
@@ -63,6 +71,9 @@ public class FeedFragment extends BoolioFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_feed, container, false);
 
+        gifLoading = rootView.findViewById(R.id.gif_loading);
+        loadingMessage = rootView.findViewById(R.id.empty_list_message);
+
         pullToRefreshLayout = (PullToRefreshView) rootView.findViewById(R.id.ptr_layout);
         pullToRefreshLayout.setRefreshDrawables(R.drawable.sky, R.drawable.bear, R.drawable.sun);
         pullToRefreshLayout.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
@@ -71,7 +82,6 @@ public class FeedFragment extends BoolioFragment {
                 pullQuestions();
             }
         });
-
 
         ListView listView = (ListView) rootView.findViewById(R.id.question_feed);
         questionAdapter = new QuestionAdapter(context, R.layout.item_question);
@@ -90,10 +100,14 @@ public class FeedFragment extends BoolioFragment {
     @Override
     public void onResume() {
         super.onResume();
+        if (questionAdapter.getCount() == 0) {
+            gifLoading.setVisibility(View.VISIBLE);
+        }
         pullQuestions();
     }
 
     private void pullQuestions() {
+        loadingMessage.setVisibility(View.GONE);
         BoolioServer.getInstance(context).getQuestionFeed(prevSeenQuestions, callback);
     }
 }
