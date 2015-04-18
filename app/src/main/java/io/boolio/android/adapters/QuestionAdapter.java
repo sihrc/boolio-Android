@@ -83,7 +83,6 @@ public class QuestionAdapter extends ArrayAdapter<Question> {
 
         holder.questionImage.setImageUrl(question.image, BoolioServer.getInstance(context).getImageLoader());
         holder.creatorImage.setImageUrl(question.creator.profilePic, BoolioServer.getInstance(context).getImageLoader());
-
     }
 
     private void setUpPostJSON(String direction, int position) {

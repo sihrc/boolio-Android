@@ -103,6 +103,11 @@ public class CreateQuestionFragment extends BoolioFragment {
                 e.printStackTrace();
             }
 
+            questionText.setText("");
+            left.setText("");
+            right.setText("");
+            tags.setText("");
+
             // Upload Image to Server
             progress.setVisibility(View.VISIBLE);
             BoolioServer.getInstance(context).createQuestion(jsonObject, new Runnable() {
@@ -133,6 +138,7 @@ public class CreateQuestionFragment extends BoolioFragment {
                                 break;
                             case 2: // Search
                                 imageType = "url";
+                                Toast.makeText(context, "Sorry, this isn't implemented yet!", Toast.LENGTH_LONG).show();
                                 break;
                             case 3:
                             default:
@@ -157,8 +163,7 @@ public class CreateQuestionFragment extends BoolioFragment {
             public void onBitmap(Bitmap bitmap) {
                 networkImageView.setLocalImageBitmap(bitmap);
                 if (imageType.equals("string")) {
-                    imageSaved = "data:image/jpeg;base64," + Utils.bitmapTo64String(bitmap);
-                    Log.i("DebugDebug", imageSaved);
+                    imageSaved = Utils.bitmapTo64String(bitmap);
                 } else {
                     // TODO URL
                 }
