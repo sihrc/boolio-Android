@@ -2,7 +2,7 @@
 <resources>
     <color name="white">#ffdedede</color>
     <color name="black">#FF000000</color>
-    <color name="theme_blue">#ff277da3</color>
+    <color name="theme_blue">#39AEC2</color>
     <color name="theme_blue_pressed">#ff277da3</color>
     <!-- Tutorial Fragments -->
 

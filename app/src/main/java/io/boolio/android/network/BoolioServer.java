@@ -21,6 +21,7 @@ import org.json.JSONObject;
 import java.util.List;
 
 import io.boolio.android.adapters.QuestionAdapter;
+import io.boolio.android.callbacks.QuestionsCallback;
 import io.boolio.android.callbacks.UserCallback;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.models.Question;
@@ -102,7 +103,7 @@ public class BoolioServer {
         queue.add(req);
     }
 
-    public void getQuestionFeed(final QuestionAdapter adapter, List<String> prevSeenQuestions) {
+    public void getQuestionFeed(List<String> prevSeenQuestions, final QuestionsCallback callback) {
         JSONObject jsonObject = new JSONObject();
         try {
             JSONArray seenQuestionIds = new JSONArray();
@@ -120,9 +121,7 @@ public class BoolioServer {
                     public void onResponse(JSONArray response) {
                         JSONArrayParser<Question> parser = new JSONArrayParser<>();
                         try {
-                            adapter.clear();
-                            adapter.addAll(parser.toArray(response, QuestionParser.getInstance()));
-                            adapter.notifyDataSetChanged();
+                            callback.handleQuestions(parser.toArray(response, QuestionParser.getInstance()));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

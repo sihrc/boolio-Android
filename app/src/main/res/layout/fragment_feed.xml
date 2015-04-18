@@ -18,19 +18,23 @@
 
     </FrameLayout>
 
-    <com.yalantis.phoenix.PullToRefreshView
-        android:id="@+id/ptr_layout"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/header_bar"
-        android:padding="@dimen/question_feed_padding">
+        android:layout_below="@id/header_bar">
 
-        <ListView
-            android:id="@+id/question_feed"
+        <io.boolio.android.custom.PullToRefreshView
+            android:id="@+id/ptr_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@color/feed_list_divider_color"
-            android:dividerHeight="@dimen/question_feed_padding" />
+            android:layout_height="match_parent">
 
-    </com.yalantis.phoenix.PullToRefreshView>
+            <ListView
+                android:id="@+id/question_feed"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@color/feed_list_divider_color"
+                android:dividerHeight="@dimen/question_feed_padding"/>
+
+        </io.boolio.android.custom.PullToRefreshView>
+    </FrameLayout>
 </RelativeLayout>
