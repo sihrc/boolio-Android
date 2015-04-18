@@ -12,6 +12,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.yalantis.phoenix.PullToRefreshView;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,8 +27,10 @@ import io.boolio.android.network.BoolioServer;
  */
 public class FeedFragment extends BoolioFragment {
     static FeedFragment instance;
+    final public static int REFRESH_DELAY = 2000;
 
     Context context;
+    PullToRefreshView pullToRefreshLayout;
     QuestionAdapter questionAdapter;
     List<String> prevSeenQuestions;
     Runnable afterOpen;
@@ -47,6 +51,19 @@ public class FeedFragment extends BoolioFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_feed, container, false);
+
+        pullToRefreshLayout = (PullToRefreshView) rootView.findViewById(R.id.ptr_layout);
+        pullToRefreshLayout.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                pullToRefreshLayout.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        pullToRefreshLayout.setRefreshing(false);
+                    }
+                }, REFRESH_DELAY);
+            }
+        });
 
         ListView listView = (ListView) rootView.findViewById(R.id.question_feed);
         questionAdapter = new QuestionAdapter(context, R.layout.item_question);

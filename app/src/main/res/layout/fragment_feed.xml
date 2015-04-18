@@ -18,12 +18,19 @@
 
     </FrameLayout>
 
-    <ListView
-        android:id="@+id/question_feed"
+    <com.yalantis.phoenix.PullToRefreshView
+        android:id="@+id/ptr_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/header_bar"
-        android:divider="@color/feed_list_divider_color"
-        android:dividerHeight="@dimen/question_feed_padding"
-        android:padding="@dimen/question_feed_padding" />
+        android:layout_below="@id/header_bar">
+
+        <ListView
+            android:id="@+id/question_feed"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@color/feed_list_divider_color"
+            android:dividerHeight="@dimen/question_feed_padding"
+            android:padding="@dimen/question_feed_padding"/>
+
+    </com.yalantis.phoenix.PullToRefreshView>
 </RelativeLayout>
