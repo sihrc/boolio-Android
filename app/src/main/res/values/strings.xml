@@ -40,6 +40,9 @@
     <string name="my_profile_page">My Profile Page</string>
     <string name="profile_page">Profile Page</string>
     <string name="settings">Settings</string>
+    <string name="profile_asked_view_text">ASKED</string>
+    <string name="profile_answered_view_text">ANSWERED</string>
+
 
     <!-- Feed Fragment -->
     <string name="empty_feed_message">Great Job! Your question feed is empty. Pull down to see if there are more.</string>

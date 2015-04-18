@@ -143,14 +143,17 @@ public class BoolioServer {
             for (String id : listQuestions) {
                 questionIds.put(id);
             }
-            jsonObject.put("listOfQuestions", questionIds);
+            jsonObject.put("listQuestion", questionIds);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        JsonArrayRequest req = new JsonArrayRequest(Request.Method.POST, API.LIST_QUESTIONS_ENDPOINT, jsonObject,
+
+
+        JsonArrayRequest req = new JsonArrayRequest(Request.Method.POST, API.LIST_QUESTIONS_ENDPOINT, jsonObject ,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
+                        Log.e("Boolio Server", "Getting List of Question Failed" + response.toString());
                         JSONArrayParser<Question> parser = new JSONArrayParser<>();
                         try {
                             adapter.clear();
