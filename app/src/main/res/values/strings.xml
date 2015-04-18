@@ -44,4 +44,5 @@
     <!-- Feed Fragment -->
     <string name="empty_feed_message">Great Job! Your question feed is empty. Pull down to see if there are more.</string>
     <string name="content_desc_good_job">good job bear</string>
+    <string name="picture">Picture</string>
 </resources>

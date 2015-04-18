@@ -7,18 +7,19 @@
                 android:padding="@dimen/create_question_padding">
 
 
-    <com.android.volley.toolbox.NetworkImageView
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/question_image_height"
+        android:background="@android:color/transparent"
+        android:gravity="center"
+        android:text="@string/place_image"
+        android:textSize="@dimen/general_large_text"/>
+
+    <io.boolio.android.custom.BoolioNetworkImageView
         android:id="@+id/create_question_image"
         android:layout_width="match_parent"
         android:layout_height="@dimen/question_image_height"
         android:scaleType="centerCrop"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/question_image_height"
-        android:gravity="center"
-        android:text="@string/place_image"
-        android:textSize="@dimen/general_large_text"/>
 
     <EditText
         android:id="@+id/create_question_text"

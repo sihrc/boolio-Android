@@ -1,5 +1,6 @@
 package io.boolio.android;
 
+import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -48,7 +49,12 @@ public class MainActivity extends AuthActivity {
     @Override
     protected void postLoginCallback() {
         showNavigationbar(true);
-        switchFragment(FeedFragment.getInstance());
+        if (boolioFragment == null || boolioFragment.getClass() == TutorialPagerFragment.class)
+            switchFragment(FeedFragment.getInstance());
+        else if (boolioFragment == FeedFragment.getInstance())
+            FeedFragment.getInstance().onResume();
+        else
+            boolioFragment.onResume();
     }
 
     @Override
@@ -113,6 +119,11 @@ public class MainActivity extends AuthActivity {
         if (curNavButton != navBarAdd)
             curNavButton.setAlpha(selectedAlpha);
         curNavButton = v;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     public void switchFragment(BoolioFragment fragment) {
