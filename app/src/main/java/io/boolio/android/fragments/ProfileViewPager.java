@@ -51,7 +51,7 @@ public class ProfileViewPager extends BoolioFragment {
         answerView = (TextView) rootView.findViewById(R.id.profile_answered_view);
 
         askedView.setAlpha(1f);
-        answerView.setAlpha(0.2f);
+        answerView.setAlpha(0.25f);
 
         setUpViewPager();
 
@@ -107,9 +107,9 @@ public class ProfileViewPager extends BoolioFragment {
             public void onPageSelected(int position) {
                 if (position == 0) {
                     askedView.setAlpha(1f);
-                    answerView.setAlpha(.1f);
+                    answerView.setAlpha(.25f);
                 } else {
-                    askedView.setAlpha(.1f);
+                    askedView.setAlpha(.25f);
                     answerView.setAlpha(1f);
                 }
 

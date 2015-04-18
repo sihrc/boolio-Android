@@ -57,6 +57,7 @@
     <!-- Nav Bar -->
     <dimen name="nav_bar_height">56dp</dimen>
     <dimen name="create_question_padding">16dp</dimen>
+    <dimen name="profile_asked_answered_padding">12dp</dimen>
 
 
 </resources>
