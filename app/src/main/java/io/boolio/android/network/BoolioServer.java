@@ -202,12 +202,14 @@ public class BoolioServer {
         queue.add(req);
     }
 
-    public void createQuestion(JSONObject jsonObject) {
+    public void createQuestion(JSONObject jsonObject, final Runnable runnable) {
         JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, API.CREATE_QUESTION_ENDPOINT,
                 jsonObject, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 Log.d("Boolio Server stuff", response.toString());
+                if (runnable != null)
+                    runnable.run();
             }
         }, new Response.ErrorListener() {
             @Override

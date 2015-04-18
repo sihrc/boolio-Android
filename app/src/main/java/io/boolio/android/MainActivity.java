@@ -81,7 +81,7 @@ public class MainActivity extends AuthActivity {
         curNavButton.setAlpha(1f);
 
         navBarAdd = findViewById(R.id.nav_bar_add);
-        navBarAdd.setOnClickListener(getNavClickListener(CreateQuestionFragment.getInstance(), new Runnable() {
+        navBarAdd.setOnClickListener(getNavClickListener(CreateQuestionFragment.newInstance(), new Runnable() {
             @Override
             public void run() {
                 navBar.setAlpha(1f);
