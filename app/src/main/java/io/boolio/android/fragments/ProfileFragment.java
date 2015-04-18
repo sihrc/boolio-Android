@@ -80,11 +80,8 @@ public class ProfileFragment extends BoolioFragment {
         headerBar = (RelativeLayout) rootView.findViewById(R.id.header_bar);
         profileDisplayName = (TextView) rootView.findViewById(R.id.profile_user_name);
         karmaCount = (TextView) rootView.findViewById(R.id.karma_count);
-        Log.v("DebugDebug", "profile Frag");
 
         getChildFragmentManager().beginTransaction().add(R.id.asked_answered_view_pager, ProfileViewPager.getInstance()).commit();
-
-
         setupViews();
 
         return rootView;

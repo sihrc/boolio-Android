@@ -46,7 +46,6 @@ public class ProfileAskedFragment extends BoolioFragment {
         askedAdapter = new QuestionAdapter(context, R.layout.item_question);
         askedListView.setAdapter(askedAdapter);
 
-
         return rootView;
     }
 
