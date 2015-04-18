@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#fcfcfc"
-    android:gravity="center">
+    android:gravity="center"
+    android:padding="@dimen/create_question_padding">
 
 
     <com.android.volley.toolbox.NetworkImageView
@@ -54,7 +55,8 @@
             android:imeOptions="actionNext"
             android:padding="10dp"
             android:singleLine="true"
-            android:textColor="#2196F3" />
+            android:textColor="@color/feed_question_left_color"
+            android:textColorHint="@color/feed_question_left_color" />
 
         <EditText
             android:id="@+id/create_question_right_answer"
@@ -67,7 +69,8 @@
             android:imeOptions="actionDone"
             android:padding="10dp"
             android:singleLine="true"
-            android:textColor="#0D47A1" />
+            android:textColor="@color/feed_question_right_color"
+            android:textColorHint="@color/feed_question_right_color" />
     </LinearLayout>
 
     <Button
