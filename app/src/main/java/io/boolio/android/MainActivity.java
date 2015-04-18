@@ -30,7 +30,6 @@ public class MainActivity extends AuthActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        setContentView(R.layout.activity_main);
         fragmentManager = getSupportFragmentManager();
         if (savedInstanceState == null) {
             Fragment fragment = TutorialPagerFragment.newInstance();

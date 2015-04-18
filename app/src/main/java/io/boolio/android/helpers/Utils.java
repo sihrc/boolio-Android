@@ -1,5 +1,7 @@
 package io.boolio.android.helpers;
 
+import android.content.Context;
+
 /**
  * Created by Chris on 4/17/15.
  */
@@ -27,5 +29,10 @@ public class Utils {
             buf.append(diff / 604800L).append("w");
         }
         return buf.toString();
+    }
+
+    public static int convertDpToPixel(Context context, int dp) {
+        float density = context.getResources().getDisplayMetrics().density;
+        return Math.round((float) dp * density);
     }
 }
