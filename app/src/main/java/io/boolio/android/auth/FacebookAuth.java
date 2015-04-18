@@ -3,7 +3,6 @@ package io.boolio.android.auth;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.facebook.AppEventsLogger;
 import com.facebook.HttpMethod;
@@ -14,7 +13,6 @@ import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
 
-import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.PrefsHelper;
 import io.boolio.android.network.BoolioServer;
 

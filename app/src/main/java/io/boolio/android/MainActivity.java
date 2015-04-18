@@ -13,7 +13,6 @@ import io.boolio.android.fragments.CreateQuestionFragment;
 import io.boolio.android.fragments.FeedFragment;
 import io.boolio.android.fragments.ProfileFragment;
 import io.boolio.android.fragments.tutorials.TutorialPagerFragment;
-import io.boolio.android.network.BoolioServer;
 
 
 public class MainActivity extends AuthActivity {
@@ -64,12 +63,12 @@ public class MainActivity extends AuthActivity {
             navBar = findViewById(R.id.nav_bar);
             navBarAdd = findViewById(R.id.nav_bar_add);
         }
-        navBar.setVisibility(show ? View.VISIBLE: View.GONE);
-        navBarAdd.setVisibility(show ? View.VISIBLE: View.GONE);
+        navBar.setVisibility(show ? View.VISIBLE : View.GONE);
+        navBarAdd.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     private void setupNavigationBar() {
-        View navBar = findViewById(R.id.nav_bar);
+        final View navBar = findViewById(R.id.nav_bar);
         View feedButton = navBar.findViewById(R.id.nav_bar_feed);
 
         // Initially Selected
@@ -77,7 +76,12 @@ public class MainActivity extends AuthActivity {
         curNavButton.setAlpha(1f);
 
         navBarAdd = findViewById(R.id.nav_bar_add);
-        navBarAdd.setOnClickListener(getNavClickListener(CreateQuestionFragment.getInstance(), null));
+        navBarAdd.setOnClickListener(getNavClickListener(CreateQuestionFragment.getInstance(), new Runnable() {
+            @Override
+            public void run() {
+                navBar.setAlpha(1f);
+            }
+        }));
         feedButton.setOnClickListener(getNavClickListener(FeedFragment.getInstance(), null));
         navBar.findViewById(R.id.nav_bar_search).setOnClickListener(getNavClickListener(null, null));
         navBar.findViewById(R.id.nav_bar_category).setOnClickListener(getNavClickListener(null, null));
@@ -92,6 +96,7 @@ public class MainActivity extends AuthActivity {
                 if (v == curNavButton) {
                     return;
                 }
+
                 selectNavBar(v);
                 if (fragment != null) {
                     switchFragment(fragment);
@@ -106,7 +111,8 @@ public class MainActivity extends AuthActivity {
 
     private void selectNavBar(View v) {
         v.setAlpha(1f);
-        curNavButton.setAlpha(selectedAlpha);
+        if (curNavButton != navBarAdd)
+            curNavButton.setAlpha(selectedAlpha);
         curNavButton = v;
     }
 

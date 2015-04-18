@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/header_bar"
@@ -14,9 +14,9 @@
         <TextView
             android:id="@+id/profile_user_name"
             style="@style/profile_big_text"
-            android:textColor="@color/white"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:textColor="@color/white" />
 
         <ImageView
             android:id="@+id/profile_setting"
@@ -26,7 +26,7 @@
             android:contentDescription="@string/content_desc_settings"
             android:scaleType="fitCenter"
             android:src="@drawable/settings"
-            android:visibility="invisible"/>
+            android:visibility="invisible" />
 
     </RelativeLayout>
 
@@ -43,7 +43,7 @@
             android:layout_height="@dimen/profile_image_size"
             android:layout_centerHorizontal="true"
             android:background="@drawable/default_profile"
-            android:padding="@dimen/general_padding"/>
+            android:padding="@dimen/general_padding" />
 
         <TextView
             android:id="@+id/profile_username"
@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/profile_user_image"
             android:layout_centerHorizontal="true"
-            android:padding="@dimen/general_padding"/>
+            android:padding="@dimen/general_padding" />
 
         <!-- KARMA -->
         <LinearLayout
@@ -70,7 +70,7 @@
                 style="@style/profile_small_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/karma"/>
+                android:text="@string/karma" />
 
             <TextView
                 android:id="@+id/karma_count"
@@ -78,7 +78,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/profile_large_size"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
         </LinearLayout>
 
         <!-- ASKED -->
@@ -95,14 +95,14 @@
                 style="@style/profile_small_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/asked"/>
+                android:text="@string/asked" />
 
             <TextView
                 android:id="@+id/asked_count"
                 style="@style/profile_medium_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textStyle="normal"/>
+                android:textStyle="normal" />
         </LinearLayout>
 
 
@@ -120,14 +120,14 @@
                 style="@style/profile_small_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/answered"/>
+                android:text="@string/answered" />
 
             <TextView
                 android:id="@+id/answered_count"
                 style="@style/profile_medium_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textStyle="normal"/>
+                android:textStyle="normal" />
         </LinearLayout>
     </RelativeLayout>
 

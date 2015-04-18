@@ -6,7 +6,7 @@ package io.boolio.android.helpers;
 public class Utils {
 
     public static String formatTimeDifferences(String value) {
-        long diff = (System.currentTimeMillis() - Long.parseLong(value))/1000;
+        long diff = (System.currentTimeMillis() - Long.parseLong(value)) / 1000;
         StringBuilder buf = new StringBuilder();
 
         buf.append("");

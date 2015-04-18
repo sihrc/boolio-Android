@@ -12,9 +12,6 @@ import com.android.volley.toolbox.NetworkImageView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import io.boolio.android.R;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.Utils;
@@ -89,13 +86,7 @@ public class QuestionAdapter extends ArrayAdapter<Question> {
 
     }
 
-    private class QuestionHolder {
-        TextView question, leftAnswer, rightAnswer, creator, date;
-        BoolioProfileImage creatorImage;
-        NetworkImageView questionImage;
-    }
-
-    private void setUpPostJSON(String direction, int position){
+    private void setUpPostJSON(String direction, int position) {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("questionId", getItem(position).questionId);
@@ -110,6 +101,12 @@ public class QuestionAdapter extends ArrayAdapter<Question> {
         remove(getItem(position));
         notifyDataSetChanged();
 
+    }
+
+    private class QuestionHolder {
+        TextView question, leftAnswer, rightAnswer, creator, date;
+        BoolioProfileImage creatorImage;
+        NetworkImageView questionImage;
     }
 
 }

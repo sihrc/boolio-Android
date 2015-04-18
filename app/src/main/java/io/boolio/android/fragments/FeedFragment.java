@@ -4,13 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.yalantis.phoenix.PullToRefreshView;
 
@@ -26,9 +23,8 @@ import io.boolio.android.network.BoolioServer;
  * Created by Chris on 4/16/15.
  */
 public class FeedFragment extends BoolioFragment {
-    static FeedFragment instance;
     final public static int REFRESH_DELAY = 2000;
-
+    static FeedFragment instance;
     Context context;
     PullToRefreshView pullToRefreshLayout;
     QuestionAdapter questionAdapter;
@@ -74,7 +70,7 @@ public class FeedFragment extends BoolioFragment {
             }
         });
         listView.setAdapter(questionAdapter);
-        
+
         return rootView;
     }
 
