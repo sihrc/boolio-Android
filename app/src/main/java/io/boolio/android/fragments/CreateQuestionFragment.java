@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +16,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.android.volley.toolbox.NetworkImageView;
 
 import org.json.JSONArray;
@@ -102,8 +99,7 @@ public class CreateQuestionFragment extends BoolioFragment {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            AmazonS3Client s3Client = new AmazonS3Client( new BasicAWSCredentials( getString(R.string.s3Secret), getString(R.string.s3Client)));
-            s3Client.
+
             BoolioServer.getInstance(context).createQuestion(jsonObject);
             questionText.setText("");
             left.setText("");
@@ -153,8 +149,7 @@ public class CreateQuestionFragment extends BoolioFragment {
             public void onBitmap(Bitmap bitmap) {
                 networkImageView.setLocalImageBitmap(bitmap);
                 if (imageType.equals("string")) {
-                    imageSaved = "data:image/jpeg;base64," + Utils.bitmapTo64String(bitmap);
-                    Log.i("DebugDebug", imageSaved);
+                    imageSaved = Utils.bitmapTo64String(bitmap);
                 } else {
                     // TODO URL
                 }
