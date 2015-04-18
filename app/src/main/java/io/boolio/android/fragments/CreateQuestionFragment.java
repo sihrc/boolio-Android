@@ -56,14 +56,14 @@ public class CreateQuestionFragment extends BoolioFragment {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                submitOnClickSetup(v);
+                submitOnClickSetup();
             }
         });
 
         return rootView;
     }
 
-    private void submitOnClickSetup(View view) {
+    private void submitOnClickSetup() {
         JSONObject jsonObject = new JSONObject();
         if (questionText.getText().toString().length() == 0) {
             Toast.makeText(context, "Please enter a question", Toast.LENGTH_SHORT).show();

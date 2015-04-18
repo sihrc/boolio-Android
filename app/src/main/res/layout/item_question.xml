@@ -5,7 +5,9 @@
                 android:gravity="center"
                 android:orientation="vertical"
                 android:background="@color/white"
-                android:padding="@dimen/question_feed_padding">
+                android:paddingTop="@dimen/question_feed_padding"
+                android:paddingLeft="@dimen/question_feed_padding"
+                android:paddingRight="@dimen/question_feed_padding">
 
     <RelativeLayout
         android:layout_width="match_parent"

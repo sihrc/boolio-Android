@@ -31,6 +31,7 @@
     <string name="create_question_tags_hint">Enter your categories</string>
     <string name="create_question_answer_left_hint">No</string>
     <string name="create_question_answer_right_hint">Yes</string>
+    <string name="place_image">Tap to place an image</string>
 
     <!-- Profile Fragment -->
     <string name="answered">ANSWERED</string>
