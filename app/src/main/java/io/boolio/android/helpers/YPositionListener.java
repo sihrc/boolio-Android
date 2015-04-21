@@ -2,23 +2,22 @@ package io.boolio.android.helpers;
 
 import android.content.Context;
 import android.support.v4.view.MotionEventCompat;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
 /**
  * Created by james on 4/21/15.
  */
-public class DragListener implements View.OnTouchListener {
+public class YPositionListener implements View.OnTouchListener {
     final static int INVALID_POINTER_ID = -999;
     // The ‘active pointer’ is the one currently moving our object.
     private int mActivePointerId = INVALID_POINTER_ID;
 
     float mLastTouchY;
     Context context;
-    float mydy;
+    float dy;
 
-    public DragListener(Context context) {
+    public YPositionListener(Context context) {
         this.context = context;
     }
 
@@ -45,7 +44,7 @@ public class DragListener implements View.OnTouchListener {
                 final float y = MotionEventCompat.getY(ev, pointerIndex);
 
                 // Calculate the distance moved
-                this.mydy = y - mLastTouchY;
+                this.dy = y - mLastTouchY;
 
                 mLastTouchY = y;
                 break;
@@ -79,6 +78,6 @@ public class DragListener implements View.OnTouchListener {
         return true;
     }
     public float getDy(){
-        return mydy;
+        return dy;
     }
 }

@@ -12,6 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -43,6 +44,7 @@ public class ProfileFragment extends BoolioFragment {
     // Layouts Sections
     RelativeLayout moveAble;
     RelativeLayout headerBar;
+    RelativeLayout movingFeed;
 
     // Profile Page
     ImageView profileSetting;
@@ -53,6 +55,13 @@ public class ProfileFragment extends BoolioFragment {
     ViewPager viewPager;
     View answerView, askedView;
     QuestionAdapter askedAdapter, answeredAdapter;
+    ScrollViewCallback scrollViewCallback = new ScrollViewCallback() {
+        @Override
+        public void scroll(float y) {
+            moveAble.setY(y);
+//            movingFeed.setTop(y);
+        }
+    };
 
     public static ProfileFragment newInstance(String userId) {
         ProfileFragment fragment = new ProfileFragment();
@@ -82,6 +91,7 @@ public class ProfileFragment extends BoolioFragment {
 
         moveAble = (RelativeLayout) rootView.findViewById(R.id.profile_moveable);
         headerBar = (RelativeLayout) rootView.findViewById(R.id.header_bar);
+        movingFeed = (RelativeLayout) rootView.findViewById(R.id.moving_feed);
 
         profileSetting = (ImageView) rootView.findViewById(R.id.profile_setting);
         profileUserImage = (BoolioProfileImage) rootView.findViewById(R.id.profile_user_image);
@@ -102,33 +112,6 @@ public class ProfileFragment extends BoolioFragment {
         return rootView;
     }
 
-    /** Update Views with User Information once populated **/
-    private void updateViews() {
-        if (user == null)
-            return;
-        if (user.userId.equals(BoolioUserHandler.getInstance(context).getUser().userId)) {
-            profileSetting.setVisibility(View.VISIBLE);
-            profileDisplayName.setText(R.string.my_profile_page);
-        } else {
-            profileSetting.setVisibility(View.GONE);
-            profileDisplayName.setText(R.string.profile_page);
-        }
-
-        profileUserImage.setImageUrl(user.profilePic, BoolioServer.getInstance(context).getImageLoader());
-        askedCount.setText(String.valueOf(user.questionsAsked.size()));
-        answeredCount.setText(String.valueOf(user.questionsAnswered.size()));
-        karmaCount.setText(String.valueOf(user.questionsAnswered.size() + user.questionsAsked.size())); //FIXME IMPLEMENT ON BACKEND
-        profileUsername.setText(user.name); // FIXME ADD USERNAME
-    }
-
-
-    ScrollViewCallback scrollViewCallback = new ScrollViewCallback() {
-        @Override
-        public void scroll(float dy) {
-            if (dy > -moveAble.getHeight())
-                moveAble.setY(dy);
-        }
-    };
     private void setupPager() {
         askedView.setAlpha(1f);
         answerView.setAlpha(0.25f);
@@ -173,7 +156,8 @@ public class ProfileFragment extends BoolioFragment {
 
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
 
             @Override
             public void onPageSelected(int position) {
@@ -187,7 +171,8 @@ public class ProfileFragment extends BoolioFragment {
             }
 
             @Override
-            public void onPageScrollStateChanged(int state) {}
+            public void onPageScrollStateChanged(int state) {
+            }
         });
 
 
@@ -228,5 +213,26 @@ public class ProfileFragment extends BoolioFragment {
                         }).show();
             }
         });
+    }
+
+    /**
+     * Update Views with User Information once populated *
+     */
+    private void updateViews() {
+        if (user == null)
+            return;
+        if (user.userId.equals(BoolioUserHandler.getInstance(context).getUser().userId)) {
+            profileSetting.setVisibility(View.VISIBLE);
+            profileDisplayName.setText(R.string.my_profile_page);
+        } else {
+            profileSetting.setVisibility(View.GONE);
+            profileDisplayName.setText(R.string.profile_page);
+        }
+
+        profileUserImage.setImageUrl(user.profilePic, BoolioServer.getInstance(context).getImageLoader());
+        askedCount.setText(String.valueOf(user.questionsAsked.size()));
+        answeredCount.setText(String.valueOf(user.questionsAnswered.size()));
+        karmaCount.setText(String.valueOf(user.questionsAnswered.size() + user.questionsAsked.size())); //FIXME IMPLEMENT ON BACKEND
+        profileUsername.setText(user.name); // FIXME ADD USERNAME
     }
 }

@@ -4,17 +4,19 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ListView;
 
 import io.boolio.android.R;
 import io.boolio.android.adapters.QuestionAdapter;
 import io.boolio.android.callbacks.QuestionsPullInterface;
 import io.boolio.android.callbacks.ScrollViewCallback;
-import io.boolio.android.helpers.DragListener;
+import io.boolio.android.helpers.YPositionListener;
 
 /**
  * Created by Chris on 4/21/15.
@@ -50,13 +52,13 @@ public class BoolioListFragment extends BoolioFragment {
         listView = (ListView) rootView.findViewById(R.id.profile_asked_feed);
         listView.setAdapter(questionAdapter);
 
-        final DragListener dragListener = new DragListener(context);
+
+        final YPositionListener yPositionListener = new YPositionListener(context);
         listView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                dragListener.onTouch(v, event);
-                scrollViewCallback.scroll(dragListener.getDy());
-
+                yPositionListener.onTouch(v, event);
+                scrollViewCallback.scroll(yPositionListener.getDy());
                 return false;
             }
         });
