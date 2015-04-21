@@ -6,20 +6,17 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import io.boolio.android.MainActivity;
 import io.boolio.android.R;
+import io.boolio.android.callbacks.ScrollViewCallback;
 import io.boolio.android.callbacks.UserCallback;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.models.User;
@@ -34,6 +31,7 @@ public class ProfileFragment extends BoolioFragment {
     String userId;
     User user;
 
+    RelativeLayout moveable;
 
     ImageView profileSetting;
     BoolioProfileImage profileUserImage;
@@ -70,7 +68,9 @@ public class ProfileFragment extends BoolioFragment {
                     }
                 });
 
-        View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        moveable = (RelativeLayout) rootView.findViewById(R.id.profile_moveable);
 
         profileSetting = (ImageView) rootView.findViewById(R.id.profile_setting);
         profileUserImage = (BoolioProfileImage) rootView.findViewById(R.id.profile_user_image);
@@ -81,11 +81,24 @@ public class ProfileFragment extends BoolioFragment {
         profileDisplayName = (TextView) rootView.findViewById(R.id.profile_user_name);
         karmaCount = (TextView) rootView.findViewById(R.id.karma_count);
 
-        getChildFragmentManager().beginTransaction().add(R.id.asked_answered_view_pager, ProfileViewPager.getInstance()).commit();
+        ScrollViewCallback scrollViewCallback = new ScrollViewCallback() {
+            @Override
+            public void scroll(float dy) {
+//                moveable.setVisibility(View.VISIBLE);
+                Log.v("debugdebug", "profile " + dy);
+                if (dy > -moveable.getHeight())
+                    moveable.setY(dy);
+            }
+        };
+        Log.i("DebugDebug", "here4");
+        ProfileViewPager fragment = ProfileViewPager.getInstance();
+        fragment.setCallback(scrollViewCallback);
+        getChildFragmentManager().beginTransaction().add(R.id.asked_answered_view_pager, fragment).commit();
         setupViews();
 
         return rootView;
     }
+
 
     private void setupViews() {
         // Settings Button

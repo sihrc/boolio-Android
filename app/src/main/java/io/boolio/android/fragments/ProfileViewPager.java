@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.boolio.android.R;
+import io.boolio.android.callbacks.ScrollViewCallback;
 
 /**
  * Created by james on 4/18/15.
@@ -26,12 +28,18 @@ public class ProfileViewPager extends BoolioFragment {
     List<BoolioFragment> fragmentList;
     ViewPager pager;
     TextView askedView, answerView;
+    ScrollViewCallback scrollViewCallback;
+
+    public void setCallback(ScrollViewCallback scrollViewCallback) {
+        this.scrollViewCallback = scrollViewCallback;
+    }
 
     public static ProfileViewPager getInstance() {
-        if (instance == null) {
+//        if (instance == null) {
+        Log.i("DebugDebug", "here2");
             instance = new ProfileViewPager();
             instance.setProfilePager();
-        }
+//        }
         return instance;
     }
 
@@ -60,8 +68,15 @@ public class ProfileViewPager extends BoolioFragment {
 
     private void setProfilePager() {
         fragmentList = new ArrayList<>();
-        fragmentList.add(ProfileAskedFragment.getInstance());
-        fragmentList.add(ProfileAnsweredFragment.getInstance());
+
+        // set the callbacks for each fragment
+        ProfileAskedFragment fragment1 = ProfileAskedFragment.getInstance();
+        fragment1.setCallback(scrollViewCallback);
+        ProfileAnsweredFragment fragment2 = ProfileAnsweredFragment.getInstance();
+        fragment2.setCallback(scrollViewCallback);
+        fragmentList.add(fragment1);
+        fragmentList.add(fragment2);
+        Log.i("DebugDebug", "Here");
     }
 
     private void setUpViewPager() {
