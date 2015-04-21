@@ -78,7 +78,7 @@ public class DragListener implements View.OnTouchListener {
         }
         return true;
     }
-    public float getdy(){
+    public float getDy(){
         return mydy;
     }
 }

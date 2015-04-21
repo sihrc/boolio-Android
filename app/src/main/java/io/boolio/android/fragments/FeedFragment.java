@@ -84,7 +84,7 @@ public class FeedFragment extends BoolioFragment {
         });
 
         ListView listView = (ListView) rootView.findViewById(R.id.question_feed);
-        questionAdapter = new QuestionAdapter(context, R.layout.item_question);
+        questionAdapter = new QuestionAdapter(context);
         BoolioUserHandler.getInstance(context).setUserCallback(new Runnable() {
             @Override
             public void run() {

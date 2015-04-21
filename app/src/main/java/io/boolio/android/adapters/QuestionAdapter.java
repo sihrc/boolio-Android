@@ -26,11 +26,10 @@ public class QuestionAdapter extends ArrayAdapter<Question> {
     int resource;
     Context context;
 
-    public QuestionAdapter(Context context, int resource) {
-        super(context, resource);
+    public QuestionAdapter(Context context) {
+        super(context, R.layout.item_question);
+        resource = R.layout.item_question;
         this.context = context;
-        this.resource = resource;
-
     }
 
     @Override
@@ -47,6 +46,7 @@ public class QuestionAdapter extends ArrayAdapter<Question> {
             holder.rightAnswer = (TextView) view.findViewById(R.id.question_right_answer);
             holder.creator = (TextView) view.findViewById(R.id.question_creator);
             holder.date = (TextView) view.findViewById(R.id.question_date);
+
             //Image Views
             holder.creatorImage = (BoolioProfileImage) view.findViewById(R.id.question_creator_picture);
             holder.questionImage = (NetworkImageView) view.findViewById(R.id.question_image);
@@ -78,11 +78,11 @@ public class QuestionAdapter extends ArrayAdapter<Question> {
         holder.question.setText(question.question);
         holder.leftAnswer.setText(question.left);
         holder.rightAnswer.setText(question.right);
-        holder.creator.setText(question.creator.name);
+        holder.creator.setText(question.creatorName);
         holder.date.setText(Utils.formatTimeDifferences(question.dateCreated) + " ago");
 
         holder.questionImage.setImageUrl(question.image, BoolioServer.getInstance(context).getImageLoader());
-        holder.creatorImage.setImageUrl(question.creator.profilePic, BoolioServer.getInstance(context).getImageLoader());
+        holder.creatorImage.setImageUrl(question.creatorImage, BoolioServer.getInstance(context).getImageLoader());
     }
 
     private void setUpPostJSON(String direction, int position) {
