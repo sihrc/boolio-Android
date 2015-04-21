@@ -7,3 +7,6 @@
 *.idea
 /.idea/
 *.iml
+*.apk
+app/app-release.apk
+my-release-key.keystore
