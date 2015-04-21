@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,7 @@ import android.view.View;
 import com.soundcloud.android.crop.Crop;
 
 import java.io.File;
+import java.io.IOException;
 
 import io.boolio.android.MainActivity;
 
@@ -78,11 +80,10 @@ public class PictureHelper {
 
         if (requestCode == Crop.REQUEST_CROP) {
             Bitmap scaledBitmap = Utils.loadScaledBitmap(context, savedUri, MainActivity.SCREEN_WIDTH, MainActivity.SCREEN_HEIGHT);
-            callback.onBitmap(Utils.rotateBitmapIfNecessary(
-                    Bitmap.createBitmap(
-                            scaledBitmap, 0, 0,
-                            scaledBitmap.getWidth(),
-                            scaledBitmap.getHeight())));
+            callback.onBitmap(Utils.rotateBitmap(Bitmap.createBitmap(
+                    scaledBitmap, 0, 0,
+                    scaledBitmap.getWidth(),
+                    scaledBitmap.getHeight()), savedUri));
         }
 
         return false;
