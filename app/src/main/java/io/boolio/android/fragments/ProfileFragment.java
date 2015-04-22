@@ -7,21 +7,28 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import io.boolio.android.MainActivity;
+import java.util.ArrayList;
+import java.util.List;
+
 import io.boolio.android.R;
+import io.boolio.android.adapters.QuestionAdapter;
+import io.boolio.android.callbacks.QuestionsCallback;
+import io.boolio.android.callbacks.QuestionsPullInterface;
+import io.boolio.android.callbacks.ScrollViewCallback;
 import io.boolio.android.callbacks.UserCallback;
 import io.boolio.android.helpers.BoolioUserHandler;
+import io.boolio.android.models.Question;
 import io.boolio.android.models.User;
 import io.boolio.android.network.BoolioServer;
 import io.boolio.android.views.BoolioProfileImage;
@@ -34,16 +41,27 @@ public class ProfileFragment extends BoolioFragment {
     String userId;
     User user;
 
+    // Layouts Sections
+    RelativeLayout moveAble;
+    RelativeLayout headerBar;
+    RelativeLayout movingFeed;
 
+    // Profile Page
     ImageView profileSetting;
     BoolioProfileImage profileUserImage;
-    TextView askedCount;
-    TextView profileUsername;
-    TextView answeredCount;
-    RelativeLayout headerBar;
-    TextView profileDisplayName;
-    TextView karmaCount;
+    TextView profileDisplayName, askedCount, profileUsername, answeredCount, karmaCount;
 
+    // List Fragment Pager
+    ViewPager viewPager;
+    View answerView, askedView;
+    QuestionAdapter askedAdapter, answeredAdapter;
+    ScrollViewCallback scrollViewCallback = new ScrollViewCallback() {
+        @Override
+        public void scroll(float y) {
+            moveAble.setY(y);
+//            movingFeed.setTop(y);
+        }
+    };
 
     public static ProfileFragment newInstance(String userId) {
         ProfileFragment fragment = new ProfileFragment();
@@ -56,10 +74,6 @@ public class ProfileFragment extends BoolioFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         context = activity;
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         BoolioServer.getInstance(context).getUserProfile(
                 userId == null ? BoolioUserHandler.getInstance(context).getUser().userId : userId,
                 new UserCallback() {
@@ -69,22 +83,110 @@ public class ProfileFragment extends BoolioFragment {
                         updateViews();
                     }
                 });
+    }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        moveAble = (RelativeLayout) rootView.findViewById(R.id.profile_moveable);
+        headerBar = (RelativeLayout) rootView.findViewById(R.id.header_bar);
+        movingFeed = (RelativeLayout) rootView.findViewById(R.id.moving_feed);
 
         profileSetting = (ImageView) rootView.findViewById(R.id.profile_setting);
         profileUserImage = (BoolioProfileImage) rootView.findViewById(R.id.profile_user_image);
+
         askedCount = (TextView) rootView.findViewById(R.id.asked_count);
         profileUsername = (TextView) rootView.findViewById(R.id.profile_username);
         answeredCount = (TextView) rootView.findViewById(R.id.answered_count);
-        headerBar = (RelativeLayout) rootView.findViewById(R.id.header_bar);
         profileDisplayName = (TextView) rootView.findViewById(R.id.profile_user_name);
         karmaCount = (TextView) rootView.findViewById(R.id.karma_count);
 
-        getChildFragmentManager().beginTransaction().add(R.id.asked_answered_view_pager, ProfileViewPager.getInstance()).commit();
+        viewPager = (ViewPager) rootView.findViewById(R.id.asked_answered_view_pager);
+        askedView = rootView.findViewById(R.id.profile_asked_view);
+        answerView = rootView.findViewById(R.id.profile_answered_view);
+
+        setupPager();
         setupViews();
 
         return rootView;
+    }
+
+    private void setupPager() {
+        askedView.setAlpha(1f);
+        answerView.setAlpha(0.25f);
+        askedAdapter = new QuestionAdapter(context);
+        answeredAdapter = new QuestionAdapter(context);
+        final List<BoolioListFragment> fragmentList = new ArrayList<BoolioListFragment>() {{
+            add(BoolioListFragment.newInstance(askedAdapter, scrollViewCallback, new QuestionsPullInterface() {
+                @Override
+                public void pullQuestions() {
+                    BoolioServer.getInstance(context).getUserAsked(
+                            BoolioUserHandler.getInstance(context).getUser().userId,
+                            new QuestionsCallback() {
+                                @Override
+                                public void handleQuestions(List<Question> questionList) {
+                                    askedAdapter.clear();
+                                    askedAdapter.addAll(questionList);
+
+                                }
+                            }
+                    );
+                }
+            }));
+
+
+            add(BoolioListFragment.newInstance(answeredAdapter, scrollViewCallback, new QuestionsPullInterface() {
+                @Override
+                public void pullQuestions() {
+                    BoolioServer.getInstance(context).getUserAnswered(
+                            BoolioUserHandler.getInstance(context).getUser().userId,
+                            new QuestionsCallback() {
+                                @Override
+                                public void handleQuestions(List<Question> questionList) {
+                                    answeredAdapter.clear();
+                                    answeredAdapter.addAll(questionList);
+                                }
+                            }
+                    );
+                }
+            }));
+        }};
+
+
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 0) {
+                    askedView.setAlpha(1f);
+                    answerView.setAlpha(.25f);
+                } else {
+                    askedView.setAlpha(.25f);
+                    answerView.setAlpha(1f);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
+
+
+        viewPager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager()) {
+            @Override
+            public Fragment getItem(int position) {
+                return fragmentList.get(position);
+            }
+
+            @Override
+            public int getCount() {
+                return fragmentList.size();
+            }
+        });
     }
 
     private void setupViews() {
@@ -113,6 +215,9 @@ public class ProfileFragment extends BoolioFragment {
         });
     }
 
+    /**
+     * Update Views with User Information once populated *
+     */
     private void updateViews() {
         if (user == null)
             return;
@@ -123,7 +228,6 @@ public class ProfileFragment extends BoolioFragment {
             profileSetting.setVisibility(View.GONE);
             profileDisplayName.setText(R.string.profile_page);
         }
-
 
         profileUserImage.setImageUrl(user.profilePic, BoolioServer.getInstance(context).getImageLoader());
         askedCount.setText(String.valueOf(user.questionsAsked.size()));
