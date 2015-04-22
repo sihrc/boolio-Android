@@ -12,8 +12,8 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,12 +21,14 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.boolio.android.MainActivity;
 import io.boolio.android.R;
 import io.boolio.android.adapters.QuestionAdapter;
 import io.boolio.android.callbacks.QuestionsCallback;
 import io.boolio.android.callbacks.QuestionsPullInterface;
-import io.boolio.android.callbacks.ScrollViewCallback;
+import io.boolio.android.callbacks.ScrollViewListener;
 import io.boolio.android.callbacks.UserCallback;
+import io.boolio.android.custom.ObservableScrollView;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.models.Question;
 import io.boolio.android.models.User;
@@ -42,7 +44,7 @@ public class ProfileFragment extends BoolioFragment {
     User user;
 
     // Layouts Sections
-    RelativeLayout moveAble;
+    ObservableScrollView scrollView;
     RelativeLayout headerBar;
     RelativeLayout movingFeed;
 
@@ -55,13 +57,9 @@ public class ProfileFragment extends BoolioFragment {
     ViewPager viewPager;
     View answerView, askedView;
     QuestionAdapter askedAdapter, answeredAdapter;
-    ScrollViewCallback scrollViewCallback = new ScrollViewCallback() {
-        @Override
-        public void scroll(float y) {
-            moveAble.setY(y);
-//            movingFeed.setTop(y);
-        }
-    };
+    List<BoolioListFragment> fragmentList;
+    int headerHeight;
+    boolean movingFeedIsTop;
 
     public static ProfileFragment newInstance(String userId) {
         ProfileFragment fragment = new ProfileFragment();
@@ -83,15 +81,17 @@ public class ProfileFragment extends BoolioFragment {
                         updateViews();
                     }
                 });
+        headerHeight = (int) getResources().getDimension(R.dimen.header_height);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        moveAble = (RelativeLayout) rootView.findViewById(R.id.profile_moveable);
+        scrollView = (ObservableScrollView) rootView.findViewById(R.id.profile_scroll_view);
         headerBar = (RelativeLayout) rootView.findViewById(R.id.header_bar);
         movingFeed = (RelativeLayout) rootView.findViewById(R.id.moving_feed);
+        movingFeed.setLayoutParams(new LinearLayout.LayoutParams(MainActivity.SCREEN_WIDTH, MainActivity.SCREEN_HEIGHT));
 
         profileSetting = (ImageView) rootView.findViewById(R.id.profile_setting);
         profileUserImage = (BoolioProfileImage) rootView.findViewById(R.id.profile_user_image);
@@ -106,19 +106,47 @@ public class ProfileFragment extends BoolioFragment {
         askedView = rootView.findViewById(R.id.profile_asked_view);
         answerView = rootView.findViewById(R.id.profile_answered_view);
 
+        setupScrolling();
         setupPager();
         setupViews();
 
         return rootView;
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        scrollView.requestFocus();
+    }
+
+    private void setupScrolling() {
+        scrollView.setSmoothScrollingEnabled(true);
+        scrollView.setScrollViewListener(new ScrollViewListener() {
+            @Override
+            public void onScrollChanged(ObservableScrollView scrollView, int x, int y, int oldX, int oldY) {
+                if (y - oldY >= 0 && y >= movingFeed.getY()) {
+                    movingFeedIsTop = true;
+                    scrollView.setScrollY((int) (movingFeed.getY()));
+                    scrollView.setEnabled(false);
+                }
+            }
+        });
+    }
+
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            scrollView.setEnabled(true);
+        }
+    };
+
     private void setupPager() {
         askedView.setAlpha(1f);
         answerView.setAlpha(0.25f);
         askedAdapter = new QuestionAdapter(context);
         answeredAdapter = new QuestionAdapter(context);
-        final List<BoolioListFragment> fragmentList = new ArrayList<BoolioListFragment>() {{
-            add(BoolioListFragment.newInstance(askedAdapter, scrollViewCallback, new QuestionsPullInterface() {
+        fragmentList = new ArrayList<BoolioListFragment>() {{
+            add(BoolioListFragment.newInstance(askedAdapter, new QuestionsPullInterface() {
                 @Override
                 public void pullQuestions() {
                     BoolioServer.getInstance(context).getUserAsked(
@@ -133,10 +161,10 @@ public class ProfileFragment extends BoolioFragment {
                             }
                     );
                 }
-            }));
+            }, runnable));
 
 
-            add(BoolioListFragment.newInstance(answeredAdapter, scrollViewCallback, new QuestionsPullInterface() {
+            add(BoolioListFragment.newInstance(answeredAdapter, new QuestionsPullInterface() {
                 @Override
                 public void pullQuestions() {
                     BoolioServer.getInstance(context).getUserAnswered(
@@ -150,7 +178,7 @@ public class ProfileFragment extends BoolioFragment {
                             }
                     );
                 }
-            }));
+            }, runnable));
         }};
 
 

@@ -47,6 +47,23 @@ public class CreateQuestionFragment extends BoolioFragment {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        helper.onActivityResult(this, requestCode, resultCode, data, networkImageView, new PictureHelper.BitmapCallback() {
+            @Override
+            public void onBitmap(Bitmap bitmap) {
+                networkImageView.setLocalImageBitmap(bitmap);
+                if (imageType.equals("string")) {
+                    imageSaved = Utils.bitmapTo64String(bitmap);
+                } else {
+                    // TODO URL
+                }
+            }
+        });
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         this.context = activity;
@@ -86,6 +103,8 @@ public class CreateQuestionFragment extends BoolioFragment {
                 jsonObject.put("question", questionText.getText().toString());
                 jsonObject.put("left", left.getText().toString().equals("") ? "No" : left.getText().toString());
                 jsonObject.put("right", right.getText().toString().equals("") ? "Yes" : right.getText().toString());
+                jsonObject.put("creatorName", BoolioUserHandler.getInstance(context).getUser().name);
+                jsonObject.put("creatorPic", BoolioUserHandler.getInstance(context).getUser().profilePic);
                 JSONArray array = new JSONArray(Arrays.asList(tags.getText().toString().split(", ")));
                 jsonObject.put("tags", array);
                 jsonObject.put("dateCreated", System.currentTimeMillis());
@@ -127,7 +146,7 @@ public class CreateQuestionFragment extends BoolioFragment {
                                 break;
                             case 1: // Take a picture
                                 helper.dispatchTakePictureIntent(getActivity(), CreateQuestionFragment.this);
-                                imageType="string";
+                                imageType = "string";
                                 break;
                             case 2: // Search
                                 imageType = "url";
@@ -147,22 +166,5 @@ public class CreateQuestionFragment extends BoolioFragment {
                 alert.show();
             }
         });
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        helper.onActivityResult(this, requestCode, resultCode, data, networkImageView, new PictureHelper.BitmapCallback() {
-            @Override
-            public void onBitmap(Bitmap bitmap) {
-                networkImageView.setLocalImageBitmap(bitmap);
-                if (imageType.equals("string")) {
-                    imageSaved = Utils.bitmapTo64String(bitmap);
-                } else {
-                    // TODO URL
-                }
-            }
-        });
-
-        super.onActivityResult(requestCode, resultCode, data);
     }
 }
