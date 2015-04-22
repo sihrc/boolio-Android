@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Base64;
@@ -12,6 +13,7 @@ import android.util.Log;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -125,12 +127,27 @@ public class Utils {
         return inSampleSize;
     }
 
-    public static Bitmap rotateBitmapIfNecessary(Bitmap source) {
-        if (source.getHeight() < source.getWidth()) {
-            return source;
+    public static Bitmap rotateBitmap(Bitmap source, Uri file) {
+        int orientation = 0;
+        try {
+            switch(new ExifInterface(file.getPath()).getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)) {
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    orientation = 90;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    orientation = 180;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    orientation = 270;
+                    break;
+                // etc.
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
         Matrix matrix = new Matrix();
-        matrix.postRotate(90);
+        matrix.postRotate(orientation);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
 
