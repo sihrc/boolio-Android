@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.ListView;
 
@@ -43,7 +45,6 @@ public class BoolioListFragment extends BoolioFragment {
     }
 
 
-
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_boolio_list, container, false);
 
@@ -51,12 +52,12 @@ public class BoolioListFragment extends BoolioFragment {
         listView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-
                 return false;
             }
         });
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             int prev = 1;
+
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 if (callback != null && scrollState == SCROLL_STATE_IDLE && prev == 0) {
@@ -70,6 +71,7 @@ public class BoolioListFragment extends BoolioFragment {
             }
         });
         listView.setAdapter(questionAdapter);
+        hideKeyBoard(listView);
 
         return rootView;
     }
@@ -78,5 +80,23 @@ public class BoolioListFragment extends BoolioFragment {
     public void onResume() {
         super.onResume();
         pullInterface.pullQuestions();
+    }
+
+    private void hideKeyBoard(final View view) {
+        view.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Log.v("debugdebug", "outside " + v);
+
+                if (v == view) {
+
+                    Log.v("debugdebug", "inside " + v);
+                    InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(((Activity) context).getCurrentFocus().getWindowToken(), 0);
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 }

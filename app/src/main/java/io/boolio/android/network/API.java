@@ -17,13 +17,17 @@ public class API {
 
     final static public String POST_ANSWER_ENDPOINT = BASE + "/questions/answer";
 
+    final static public String SEARCH_ENDPOINT = BASE + "/questions/search";
+
 
     static public String GET_USER_ENDPOINT(String id) {
         return BASE + "/users/" + id;
     }
+
     static public String GET_USER_ASKED(String id) {
         return BASE + "/questions/" + id + "/asked";
     }
+
     static public String GET_USER_ANSWERED(String id) {
         return BASE + "/questions/" + id + "/answered";
     }

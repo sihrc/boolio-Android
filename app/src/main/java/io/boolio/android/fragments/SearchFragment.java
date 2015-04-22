@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ public class SearchFragment extends BoolioFragment {
     static SearchFragment instance;
     Context context;
 
-    EditText searchBar;
+    SearchView searchBar;
     ViewPager viewPager;
     TextView questionsTab, friendsTab, catergoriesTab;
 
@@ -43,9 +44,15 @@ public class SearchFragment extends BoolioFragment {
 
     QuestionAdapter questionsTabAdapter, friendsTabAdapter, catergoriesTabAdapter;
     RelativeLayout relativeLayout;
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
 
-    public static SearchFragment getInstance(){
-        if (instance == null){
+        }
+    };
+
+    public static SearchFragment getInstance() {
+        if (instance == null) {
             instance = new SearchFragment();
         }
         return instance;
@@ -61,33 +68,46 @@ public class SearchFragment extends BoolioFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_search, container, false);
 
-        searchBar = (EditText) rootView.findViewById(R.id.search_bar);
+        searchBar = (SearchView) rootView.findViewById(R.id.search_bar);
         viewPager = (ViewPager) rootView.findViewById(R.id.search_view_pager);
         questionsTab = (TextView) rootView.findViewById(R.id.search_questions_tab);
         friendsTab = (TextView) rootView.findViewById(R.id.search_friends_tab);
         catergoriesTab = (TextView) rootView.findViewById(R.id.search_categories_tab);
 
-        relativeLayout = (RelativeLayout)rootView.findViewById(R.id.search_rellayout);
+        relativeLayout = (RelativeLayout) rootView.findViewById(R.id.search_rellayout);
 
-        hideKeyBoard();
+
+        searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (query.length() > 0) {
+                    fragmentList.get(viewPager.getCurrentItem()).pullInterface.pullQuestions();
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (newText.length() > 0) {
+                    fragmentList.get(viewPager.getCurrentItem()).pullInterface.pullQuestions();
+                }
+                return false;
+            }
+        });
+
+        hideKeyBoard(relativeLayout);
         setupPager();
 
         return rootView;
     }
 
-    Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-
-        }
-    };
-
-    private void hideKeyBoard(){
-        relativeLayout.setOnTouchListener(new View.OnTouchListener() {
+    private void hideKeyBoard(final View view) {
+        view.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(v==relativeLayout){
-                    InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (v == view) {
+
+                    InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(searchBar.getWindowToken(), 0);
                     return true;
                 }
@@ -95,6 +115,7 @@ public class SearchFragment extends BoolioFragment {
             }
         });
     }
+
     private void setupPager() {
         questionsTab.setAlpha(1f);
         friendsTab.setAlpha(0.25f);
@@ -106,17 +127,17 @@ public class SearchFragment extends BoolioFragment {
             add(BoolioListFragment.newInstance(questionsTabAdapter, new QuestionsPullInterface() {
                 @Override
                 public void pullQuestions() {
-//                    BoolioServer.getInstance(context).getUserAsked(
-//                            BoolioUserHandler.getInstance(context).getUser().userId,
-//                            new QuestionsCallback() {
-//                                @Override
-//                                public void handleQuestions(List<Question> questionList) {
-//                                    askedAdapter.clear();
-//                                    askedAdapter.addAll(questionList);
-//
-//                                }
-//                            }
-//                    );
+                    BoolioServer.getInstance(context).searchQuestion(
+                            searchBar.getQuery().toString().length() == 0 ?
+                                    "   " : searchBar.getQuery().toString(),
+                            new QuestionsCallback() {
+                                @Override
+                                public void handleQuestions(List<Question> questionList) {
+                                    questionsTabAdapter.clear();
+                                    questionsTabAdapter.addAll(questionList);
+                                }
+                            }
+                    );
                 }
             }, runnable));
 
@@ -124,6 +145,7 @@ public class SearchFragment extends BoolioFragment {
             add(BoolioListFragment.newInstance(friendsTabAdapter, new QuestionsPullInterface() {
                 @Override
                 public void pullQuestions() {
+                    // TODO
 //                    BoolioServer.getInstance(context).getUserAnswered(
 //                            BoolioUserHandler.getInstance(context).getUser().userId,
 //                            new QuestionsCallback() {
@@ -139,6 +161,7 @@ public class SearchFragment extends BoolioFragment {
             add(BoolioListFragment.newInstance(catergoriesTabAdapter, new QuestionsPullInterface() {
                 @Override
                 public void pullQuestions() {
+                    // TODO
 //                    BoolioServer.getInstance(context).getUserAsked(
 //                            BoolioUserHandler.getInstance(context).getUser().userId,
 //                            new QuestionsCallback() {
@@ -166,7 +189,7 @@ public class SearchFragment extends BoolioFragment {
                     questionsTab.setAlpha(1f);
                     friendsTab.setAlpha(.25f);
                     catergoriesTab.setAlpha(.25f);
-                } else if(position == 1) {
+                } else if (position == 1) {
                     questionsTab.setAlpha(.25f);
                     friendsTab.setAlpha(1f);
                     catergoriesTab.setAlpha(.25f);

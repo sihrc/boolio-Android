@@ -65,7 +65,9 @@ public class BoolioServer {
         return instance;
     }
 
-    /** GET **/
+    /**
+     * GET *
+     */
 
     public void getBoolioUserFromFacebook(JSONObject jsonObject) {
         JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, API.FACEBOOK_USER_ENDPOINT,
@@ -132,7 +134,7 @@ public class BoolioServer {
         }
 
 
-        JsonArrayRequest req = new JsonArrayRequest(Request.Method.POST, API.LIST_QUESTIONS_ENDPOINT, jsonObject ,
+        JsonArrayRequest req = new JsonArrayRequest(Request.Method.POST, API.LIST_QUESTIONS_ENDPOINT, jsonObject,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -224,7 +226,9 @@ public class BoolioServer {
         queue.add(req);
     }
 
-    /** POSTS **/
+    /**
+     * POSTS *
+     */
 
     public void postQuestion(JSONObject jsonObject, final Runnable runnable) {
         JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, API.CREATE_QUESTION_ENDPOINT,
@@ -242,6 +246,35 @@ public class BoolioServer {
                 error.printStackTrace();
             }
         });
+        queue.add(req);
+    }
+
+    public void searchQuestion(String search, final QuestionsCallback callback) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("searchParams", search);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        JsonArrayRequest req = new JsonArrayRequest(Request.Method.POST,
+                API.SEARCH_ENDPOINT,
+                jsonObject, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                try {
+                    callback.handleQuestions(new JSONArrayParser<Question>().toArray(response, QuestionParser.getInstance()));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("searchQuestion", "error " + error.getMessage());
+                error.printStackTrace();
+            }
+        });
+
         queue.add(req);
     }
 
@@ -264,7 +297,6 @@ public class BoolioServer {
 
         queue.add(req);
     }
-
 
 
     public ImageLoader getImageLoader() {
