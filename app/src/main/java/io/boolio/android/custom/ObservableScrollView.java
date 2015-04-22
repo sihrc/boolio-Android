@@ -2,6 +2,7 @@ package io.boolio.android.custom;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.widget.ScrollView;
 
 import io.boolio.android.callbacks.ScrollViewListener;
@@ -13,6 +14,8 @@ import io.boolio.android.callbacks.ScrollViewListener;
 public class ObservableScrollView extends ScrollView {
 
     private ScrollViewListener scrollViewListener = null;
+
+    boolean enabled = true;
 
     public ObservableScrollView(Context context) {
         super(context);
@@ -38,4 +41,13 @@ public class ObservableScrollView extends ScrollView {
         }
     }
 
+    @Override
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        return enabled && super.onInterceptTouchEvent(ev);
+    }
 }

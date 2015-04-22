@@ -9,16 +9,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,8 +30,6 @@ import io.boolio.android.callbacks.ScrollViewListener;
 import io.boolio.android.callbacks.UserCallback;
 import io.boolio.android.custom.ObservableScrollView;
 import io.boolio.android.helpers.BoolioUserHandler;
-import io.boolio.android.helpers.Utils;
-import io.boolio.android.helpers.YPositionListener;
 import io.boolio.android.models.Question;
 import io.boolio.android.models.User;
 import io.boolio.android.network.BoolioServer;
@@ -98,9 +92,6 @@ public class ProfileFragment extends BoolioFragment {
         headerBar = (RelativeLayout) rootView.findViewById(R.id.header_bar);
         movingFeed = (RelativeLayout) rootView.findViewById(R.id.moving_feed);
         movingFeed.setLayoutParams(new LinearLayout.LayoutParams(MainActivity.SCREEN_WIDTH, MainActivity.SCREEN_HEIGHT));
-        scrollView.pageScroll(View.FOCUS_UP);
-        scrollView.fullScroll(View.FOCUS_UP);
-        scrollView.scrollTo(0, 0);
 
         profileSetting = (ImageView) rootView.findViewById(R.id.profile_setting);
         profileUserImage = (BoolioProfileImage) rootView.findViewById(R.id.profile_user_image);
@@ -130,52 +121,24 @@ public class ProfileFragment extends BoolioFragment {
 
     private void setupScrolling() {
         scrollView.setSmoothScrollingEnabled(true);
-        scrollView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return movingFeedIsTop;
-            }
-        });
-
         scrollView.setScrollViewListener(new ScrollViewListener() {
             @Override
-            public void onScrollChanged(ObservableScrollView scrollView, int x, int y, int oldx, int oldy) {
-//                Log.i("DebugDebug", y + " new y");
-//                int dy = y - oldy;
-//                if (dy < 0 && y >= movingFeed.getY()) {
-//                    movingFeedIsTop = true;
-//                    scrollView.scrollBy(0, (int) (movingFeed.getY() - y));
-//                } else {
-//                    movingFeedIsTop = false;
-//                }
+            public void onScrollChanged(ObservableScrollView scrollView, int x, int y, int oldX, int oldY) {
+                if (y - oldY >= 0 && y >= movingFeed.getY()) {
+                    movingFeedIsTop = true;
+                    scrollView.setScrollY((int) (movingFeed.getY()));
+                    scrollView.setEnabled(false);
+                }
             }
         });
-
-//        final YPositionListener yPositionListener = new YPositionListener(context);
-//        touchListener = new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                yPositionListener.onTouch(v, event);
-//                float dy = yPositionListener.getDy();
-//                Log.i("DebugDebug", "Here1 " + dy);
-//                if (dy < 0) {
-//                    // Scrolling Down
-//                    Log.i("DebugDebug", "Here2 " + movingFeed.getTop());
-//                    if (movingFeed.getY() >= 0) {
-//                        profilePane.setTop((int) (profilePane.getTop() + dy));
-//                        movingFeed.setTop((int) (movingFeed.getTop() + dy));
-////                        changeHeight(movingFeed, dy);
-//                    } else {
-//                        enableLists(true);
-//                    }
-//                } else {
-//                    // Scrolling Up
-//
-//                }
-//                return true;
-//            }
-//        };
     }
+
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            scrollView.setEnabled(true);
+        }
+    };
 
     private void setupPager() {
         askedView.setAlpha(1f);
@@ -183,7 +146,7 @@ public class ProfileFragment extends BoolioFragment {
         askedAdapter = new QuestionAdapter(context);
         answeredAdapter = new QuestionAdapter(context);
         fragmentList = new ArrayList<BoolioListFragment>() {{
-            add(BoolioListFragment.newInstance(askedAdapter, null, new QuestionsPullInterface() {
+            add(BoolioListFragment.newInstance(askedAdapter, new QuestionsPullInterface() {
                 @Override
                 public void pullQuestions() {
                     BoolioServer.getInstance(context).getUserAsked(
@@ -198,10 +161,10 @@ public class ProfileFragment extends BoolioFragment {
                             }
                     );
                 }
-            }));
+            }, runnable));
 
 
-            add(BoolioListFragment.newInstance(answeredAdapter, null, new QuestionsPullInterface() {
+            add(BoolioListFragment.newInstance(answeredAdapter, new QuestionsPullInterface() {
                 @Override
                 public void pullQuestions() {
                     BoolioServer.getInstance(context).getUserAnswered(
@@ -215,7 +178,7 @@ public class ProfileFragment extends BoolioFragment {
                             }
                     );
                 }
-            }));
+            }, runnable));
         }};
 
 
@@ -278,30 +241,6 @@ public class ProfileFragment extends BoolioFragment {
                         }).show();
             }
         });
-    }
-
-    private void changeHeight(View v, float dy) {
-        ViewGroup.LayoutParams params = v.getLayoutParams();
-//        params.height = (int) (v.getHeight() - dy);
-        params.height = (int) (v.getHeight() - dy);
-//        Utils.callPrivateMethod(v, "setMeasuredDimension", void.class, v.getWidth(), v.getHeight() - dy);
-//        v.invalidate();
-//        v.setMeasuredDimension()
-
-//        Log.i("DebugDebug", v.getHeight() + " height");
-//        Log.i("DebugDebug", dy + " dy");
-//        Log.i("DebugDebug", (v.getHeight() - dy) + " supposed sum");
-//        Log.i("DebugDebug", params.height + " sum");
-
-        v.setLayoutParams(params);
-    }
-
-    private void enableLists(boolean enabled) {
-        if (fragmentList != null) {
-            for (BoolioListFragment fragment : fragmentList) {
-                fragment.enableListView(enabled);
-            }
-        }
     }
 
     /**
