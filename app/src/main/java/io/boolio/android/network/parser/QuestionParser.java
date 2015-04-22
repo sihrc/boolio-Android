@@ -12,7 +12,6 @@ import io.boolio.android.models.User;
  */
 public class QuestionParser extends Parser<Question> {
     static QuestionParser instance;
-    static JSONArrayParser<User> userArray = new JSONArrayParser<>();
     static JSONArrayParser<String> stringArray = new JSONArrayParser<>();
 
     public static QuestionParser getInstance() {
@@ -25,7 +24,8 @@ public class QuestionParser extends Parser<Question> {
     public Question parse() {
         Question question = new Question();
         try {
-            question.creator = UserParser.getInstance().parse(getJSONObject("creator"));
+            question.creatorName = getString("creatorName");
+            question.creatorImage = getString("creatorPic");
             question.question = getString("question");
             question.questionId = getString("_id");
             question.image = getString("image") == null ? "" : getString("image");

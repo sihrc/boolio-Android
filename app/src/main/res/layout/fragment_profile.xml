@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    android:id="@+id/profile_relativelayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -16,7 +18,7 @@
             style="@style/profile_big_text"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"/>
 
         <ImageView
             android:id="@+id/profile_setting"
@@ -26,116 +28,160 @@
             android:contentDescription="@string/content_desc_settings"
             android:scaleType="fitCenter"
             android:src="@drawable/settings"
-            android:visibility="invisible" />
+            android:visibility="invisible"/>
 
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/profile_karma"
+    <io.boolio.android.custom.ObservableScrollView
+        android:id="@+id/profile_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/header_bar"
-        android:background="@color/profile_cover_background"
-        android:padding="@dimen/profile_padding">
+        android:focusable="true">
 
-        <io.boolio.android.views.BoolioProfileImage
-            android:id="@+id/profile_user_image"
-            android:layout_width="@dimen/profile_image_size"
-            android:layout_height="@dimen/profile_image_size"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/default_profile"
-            android:padding="@dimen/general_padding" />
-
-        <TextView
-            android:id="@+id/profile_username"
-            style="@style/profile_medium_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/profile_user_image"
-            android:layout_centerHorizontal="true"
-            android:padding="@dimen/general_padding" />
-
-        <!-- KARMA -->
         <LinearLayout
-            android:id="@+id/karma"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/profile_username"
-            android:layout_centerHorizontal="true"
-            android:layout_marginLeft="@dimen/profile_score_margin"
-            android:layout_marginRight="@dimen/profile_score_margin"
-            android:gravity="center_horizontal"
             android:orientation="vertical">
 
-            <TextView
-                style="@style/profile_small_text"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:id="@+id/profile_karma"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/karma" />
+                android:background="@color/profile_cover_background"
+                android:padding="@dimen/profile_padding">
 
-            <TextView
-                android:id="@+id/karma_count"
-                style="@style/profile_big_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/profile_large_size"
-                android:textStyle="bold" />
+                <io.boolio.android.views.BoolioProfileImage
+                    android:id="@+id/profile_user_image"
+                    android:layout_width="@dimen/profile_image_size"
+                    android:layout_height="@dimen/profile_image_size"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/default_profile"
+                    android:padding="@dimen/general_padding"/>
+
+                <TextView
+                    android:id="@+id/profile_username"
+                    style="@style/profile_medium_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/profile_user_image"
+                    android:layout_centerHorizontal="true"
+                    android:padding="@dimen/general_padding"/>
+
+                <!-- KARMA -->
+                <LinearLayout
+                    android:id="@+id/karma"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/profile_username"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="@dimen/profile_score_margin"
+                    android:layout_marginRight="@dimen/profile_score_margin"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/profile_small_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/karma"/>
+
+                    <TextView
+                        android:id="@+id/karma_count"
+                        style="@style/profile_big_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/profile_large_size"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+
+                <!-- ASKED -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignTop="@id/karma"
+                    android:layout_marginLeft="@dimen/profile_score_margin"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/profile_small_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/asked"/>
+
+                    <TextView
+                        android:id="@+id/asked_count"
+                        style="@style/profile_medium_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textStyle="normal"/>
+                </LinearLayout>
+
+
+                <!-- ANSWERED -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignTop="@id/karma"
+                    android:layout_marginRight="@dimen/profile_score_margin"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/profile_small_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/answered"/>
+
+                    <TextView
+                        android:id="@+id/answered_count"
+                        style="@style/profile_medium_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textStyle="normal"/>
+                </LinearLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/moving_feed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/asked_answered_view_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/profile_asked_view"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="@dimen/profile_asked_answered_padding"
+                        android:text="@string/profile_asked_view_text"
+                        android:textColor="@color/feed_question_left_color"/>
+
+                    <TextView
+                        android:id="@+id/profile_answered_view"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="@dimen/profile_asked_answered_padding"
+                        android:text="@string/profile_answered_view_text"
+                        android:textColor="@color/feed_question_right_color"/>
+                </LinearLayout>
+
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/asked_answered_view_pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_below="@id/asked_answered_view_layout"/>
+            </RelativeLayout>
         </LinearLayout>
-
-        <!-- ASKED -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignTop="@id/karma"
-            android:layout_marginLeft="@dimen/profile_score_margin"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
-
-            <TextView
-                style="@style/profile_small_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/asked" />
-
-            <TextView
-                android:id="@+id/asked_count"
-                style="@style/profile_medium_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="normal" />
-        </LinearLayout>
-
-
-        <!-- ANSWERED -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@id/karma"
-            android:layout_marginRight="@dimen/profile_score_margin"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
-
-            <TextView
-                style="@style/profile_small_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/answered" />
-
-            <TextView
-                android:id="@+id/answered_count"
-                style="@style/profile_medium_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="normal" />
-        </LinearLayout>
-    </RelativeLayout>
-
-    <FrameLayout
-        android:id="@+id/asked_answered_view_pager"
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:layout_below="@id/profile_karma" />
-
-</RelativeLayout>
+    </io.boolio.android.custom.ObservableScrollView>
+</LinearLayout>
