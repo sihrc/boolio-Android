@@ -2,12 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@color/white"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:background="@color/white"
-                android:paddingTop="@dimen/question_feed_padding"
                 android:paddingLeft="@dimen/question_feed_padding"
-                android:paddingRight="@dimen/question_feed_padding">
+                android:paddingRight="@dimen/question_feed_padding"
+                android:paddingTop="@dimen/question_feed_padding">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -71,23 +71,17 @@
             android:layout_below="@id/question_text"
             android:orientation="horizontal">
 
-            <Button
+            <TextSwitcher
                 android:id="@+id/question_left_answer"
                 android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"
-                android:background="@drawable/left_answer_button"
-                android:textColor="@color/feed_question_left_color"
-                android:textStyle="bold"/>
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
 
-            <Button
+            <TextSwitcher
                 android:id="@+id/question_right_answer"
                 android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"
-                android:background="@drawable/right_answer_button"
-                android:textColor="@color/feed_question_right_color"
-                android:textStyle="bold"/>
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
         </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>
