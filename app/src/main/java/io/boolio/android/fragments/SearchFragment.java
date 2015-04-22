@@ -29,7 +29,7 @@ public class SearchFragment extends BoolioFragment {
         View rootView = inflater.inflate(R.layout.fragment_search, container, false);
 
         searchBar = (EditText) rootView.findViewById(R.id.search_bar);
-        searchBar.
+
 
         return rootView;
     }

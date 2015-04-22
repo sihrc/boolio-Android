@@ -12,10 +12,14 @@
 
         <EditText
             android:id="@+id/search_bar"
-            style="@style/profile_big_text"
+            android:hint="@string/search_bar_text"
+            android:inputType="textCapSentences"
             android:layout_width="wrap_content"
+            android:textColorHint="@color/white"
             android:layout_height="match_parent"
             android:textColor="@color/white"/>
+
+
         </RelativeLayout>
 
 

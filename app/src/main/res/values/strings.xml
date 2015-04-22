@@ -49,4 +49,7 @@
     <string name="content_desc_good_job">good job bear</string>
     <string name="picture">Picture</string>
 
+    <!-- Search Fragment -->
+    <string name="search_bar_text">Search</string>
+
 </resources>
