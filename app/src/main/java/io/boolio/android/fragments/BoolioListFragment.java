@@ -4,12 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.ListView;
 
 import io.boolio.android.R;
@@ -27,15 +25,21 @@ public class BoolioListFragment extends BoolioFragment {
     ListView listView;
 
     // Callbacks
-    ScrollViewCallback scrollViewCallback;
     QuestionsPullInterface pullInterface;
+    View.OnTouchListener disabled;
+    View.OnTouchListener touchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            return false;
+        }
+    };
 
-    public static BoolioListFragment newInstance(QuestionAdapter questionAdapter,
-                                                 ScrollViewCallback scrollViewCallback, QuestionsPullInterface pullQuestions) {
+    public static BoolioListFragment newInstance(QuestionAdapter questionAdapter, View.OnTouchListener listener,
+                                                 QuestionsPullInterface pullQuestions) {
         BoolioListFragment fragment = new BoolioListFragment();
         fragment.questionAdapter = questionAdapter;
-        fragment.scrollViewCallback = scrollViewCallback;
         fragment.pullInterface = pullQuestions;
+        fragment.disabled = listener;
         return fragment;
     }
 
@@ -45,25 +49,20 @@ public class BoolioListFragment extends BoolioFragment {
         context = activity;
     }
 
-    @Override
+
+
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_boolio_list, container, false);
 
         listView = (ListView) rootView.findViewById(R.id.profile_asked_feed);
+        listView.setOnTouchListener(disabled);
         listView.setAdapter(questionAdapter);
 
-
-        final YPositionListener yPositionListener = new YPositionListener(context);
-        listView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                yPositionListener.onTouch(v, event);
-                scrollViewCallback.scroll(yPositionListener.getDy());
-                return false;
-            }
-        });
-
         return rootView;
+    }
+
+    public void enableListView(boolean enabled) {
+        listView.setOnTouchListener(enabled ? touchListener : disabled);
     }
 
     @Override
