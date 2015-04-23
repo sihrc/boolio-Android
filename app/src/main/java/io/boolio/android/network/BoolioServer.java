@@ -148,7 +148,7 @@ public class BoolioServer {
             @Override
             public void onResponse(JSONArray response) {
                 try {
-                    callback.handleQuestions(new JSONArrayParser<Question>().toArray(response, QuestionParser.getInstance()));
+                    callback.handleQuestions(new JSONArrayParser<Question>().toArray(response, QuestionParser.getInstance(), true));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -171,7 +171,7 @@ public class BoolioServer {
             @Override
             public void onResponse(JSONArray response) {
                 try {
-                    callback.handleQuestions(new JSONArrayParser<Question>().toArray(response, QuestionParser.getInstance()));
+                    callback.handleQuestions(new JSONArrayParser<Question>().toArray(response, QuestionParser.getInstance(), true));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

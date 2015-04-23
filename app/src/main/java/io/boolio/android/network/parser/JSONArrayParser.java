@@ -16,9 +16,20 @@ public class JSONArrayParser<T> {
     }
 
     public List<T> toArray(JSONArray array, Parser<T> parser) throws JSONException {
+        return toArray(array, parser, false);
+    }
+
+    public List<T> toArray(JSONArray array, Parser<T> parser, boolean reverse) throws JSONException {
         List<T> results = new ArrayList<>(array.length());
-        for (int i = 0; i < array.length(); i++) {
-            results.add(parser == null ? (T) array.get(i) : parser.parse((JSONObject) array.get(i)));
+        if(reverse) {
+            for (int i = array.length()-1; i >= 0; i--) {
+                results.add(parser == null ? (T) array.get(i) : parser.parse((JSONObject) array.get(i)));
+            }
+
+        } else {
+            for (int i = 0; i < array.length(); i++) {
+                results.add(parser == null ? (T) array.get(i) : parser.parse((JSONObject) array.get(i)));
+            }
         }
         return results;
     }
