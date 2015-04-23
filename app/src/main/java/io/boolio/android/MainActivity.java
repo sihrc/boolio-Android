@@ -14,6 +14,7 @@ import io.boolio.android.fragments.BoolioFragment;
 import io.boolio.android.fragments.CreateQuestionFragment;
 import io.boolio.android.fragments.FeedFragment;
 import io.boolio.android.fragments.ProfileFragment;
+import io.boolio.android.fragments.SearchFragment;
 import io.boolio.android.fragments.tutorials.TutorialPagerFragment;
 
 
@@ -85,7 +86,7 @@ public class MainActivity extends AuthActivity {
             }
         }));
         feedButton.setOnClickListener(getNavClickListener(FeedFragment.getInstance(), null));
-        navBar.findViewById(R.id.nav_bar_search).setOnClickListener(getNavClickListener(null, null));
+        navBar.findViewById(R.id.nav_bar_search).setOnClickListener(getNavClickListener(SearchFragment.getInstance(), null));
         navBar.findViewById(R.id.nav_bar_category).setOnClickListener(getNavClickListener(null, null));
         navBar.findViewById(R.id.nav_bar_profile).setOnClickListener(getNavClickListener(
                 ProfileFragment.newInstance(null), null));

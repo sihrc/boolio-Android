@@ -60,6 +60,12 @@ public class ProfileFragment extends BoolioFragment {
     List<BoolioListFragment> fragmentList;
     int headerHeight;
     boolean movingFeedIsTop;
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            scrollView.setEnabled(true);
+        }
+    };
 
     public static ProfileFragment newInstance(String userId) {
         ProfileFragment fragment = new ProfileFragment();
@@ -132,13 +138,6 @@ public class ProfileFragment extends BoolioFragment {
             }
         });
     }
-
-    Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            scrollView.setEnabled(true);
-        }
-    };
 
     private void setupPager() {
         askedView.setAlpha(1f);

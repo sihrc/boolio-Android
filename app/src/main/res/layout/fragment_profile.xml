@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    android:id="@+id/profile_relativelayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/profile_relativelayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -18,7 +18,7 @@
             style="@style/profile_big_text"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white" />
 
         <ImageView
             android:id="@+id/profile_setting"
@@ -28,7 +28,7 @@
             android:contentDescription="@string/content_desc_settings"
             android:scaleType="fitCenter"
             android:src="@drawable/settings"
-            android:visibility="invisible"/>
+            android:visibility="invisible" />
 
     </RelativeLayout>
 
@@ -56,7 +56,7 @@
                     android:layout_height="@dimen/profile_image_size"
                     android:layout_centerHorizontal="true"
                     android:background="@drawable/default_profile"
-                    android:padding="@dimen/general_padding"/>
+                    android:padding="@dimen/general_padding" />
 
                 <TextView
                     android:id="@+id/profile_username"
@@ -65,7 +65,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/profile_user_image"
                     android:layout_centerHorizontal="true"
-                    android:padding="@dimen/general_padding"/>
+                    android:padding="@dimen/general_padding" />
 
                 <!-- KARMA -->
                 <LinearLayout
@@ -83,7 +83,7 @@
                         style="@style/profile_small_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/karma"/>
+                        android:text="@string/karma" />
 
                     <TextView
                         android:id="@+id/karma_count"
@@ -91,7 +91,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/profile_large_size"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <!-- ASKED -->
@@ -108,14 +108,14 @@
                         style="@style/profile_small_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/asked"/>
+                        android:text="@string/asked" />
 
                     <TextView
                         android:id="@+id/asked_count"
                         style="@style/profile_medium_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textStyle="normal"/>
+                        android:textStyle="normal" />
                 </LinearLayout>
 
 
@@ -133,14 +133,14 @@
                         style="@style/profile_small_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/answered"/>
+                        android:text="@string/answered" />
 
                     <TextView
                         android:id="@+id/answered_count"
                         style="@style/profile_medium_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textStyle="normal"/>
+                        android:textStyle="normal" />
                 </LinearLayout>
             </RelativeLayout>
 
@@ -163,7 +163,7 @@
                         android:gravity="center"
                         android:padding="@dimen/profile_asked_answered_padding"
                         android:text="@string/profile_asked_view_text"
-                        android:textColor="@color/feed_question_left_color"/>
+                        android:textColor="@color/feed_question_left_color" />
 
                     <TextView
                         android:id="@+id/profile_answered_view"
@@ -173,14 +173,14 @@
                         android:gravity="center"
                         android:padding="@dimen/profile_asked_answered_padding"
                         android:text="@string/profile_answered_view_text"
-                        android:textColor="@color/feed_question_right_color"/>
+                        android:textColor="@color/feed_question_right_color" />
                 </LinearLayout>
 
                 <android.support.v4.view.ViewPager
                     android:id="@+id/asked_answered_view_pager"
                     android:layout_width="match_parent"
                     android:layout_height="fill_parent"
-                    android:layout_below="@id/asked_answered_view_layout"/>
+                    android:layout_below="@id/asked_answered_view_layout" />
             </RelativeLayout>
         </LinearLayout>
     </io.boolio.android.custom.ObservableScrollView>
