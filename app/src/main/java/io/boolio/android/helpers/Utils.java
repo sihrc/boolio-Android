@@ -130,7 +130,7 @@ public class Utils {
     public static Bitmap rotateBitmap(Bitmap source, Uri file) {
         int orientation = 0;
         try {
-            switch(new ExifInterface(file.getPath()).getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)) {
+            switch (new ExifInterface(file.getPath()).getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)) {
                 case ExifInterface.ORIENTATION_ROTATE_90:
                     orientation = 90;
                     break;

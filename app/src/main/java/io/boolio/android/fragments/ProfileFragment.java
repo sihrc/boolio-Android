@@ -60,6 +60,12 @@ public class ProfileFragment extends BoolioFragment {
     List<BoolioListFragment> fragmentList;
     int headerHeight;
     boolean movingFeedIsTop;
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            scrollView.setEnabled(true);
+        }
+    };
 
     public static ProfileFragment newInstance(String userId) {
         ProfileFragment fragment = new ProfileFragment();
@@ -109,6 +115,7 @@ public class ProfileFragment extends BoolioFragment {
         setupScrolling();
         setupPager();
         setupViews();
+        setupTabOnClick();
 
         return rootView;
     }
@@ -119,6 +126,21 @@ public class ProfileFragment extends BoolioFragment {
         scrollView.requestFocus();
     }
 
+    private void setupTabOnClick(){
+        askedView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewPager.setCurrentItem(0);
+            }
+        });
+        answerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewPager.setCurrentItem(1);
+            }
+        });
+
+    }
     private void setupScrolling() {
         scrollView.setSmoothScrollingEnabled(true);
         scrollView.setScrollViewListener(new ScrollViewListener() {
@@ -132,13 +154,6 @@ public class ProfileFragment extends BoolioFragment {
             }
         });
     }
-
-    Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            scrollView.setEnabled(true);
-        }
-    };
 
     private void setupPager() {
         askedView.setAlpha(1f);

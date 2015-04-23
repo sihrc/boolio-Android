@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/search_rellayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <RelativeLayout
+        android:id="@+id/search_header_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/header_height"
+        android:background="@color/theme_blue"
+        android:paddingLeft="@dimen/general_padding">
+
+        <SearchView
+            android:id="@+id/search_bar"
+            style="@style/search_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/search_bar_text"
+            android:iconifiedByDefault="false"
+            android:inputType="textCapSentences"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white" />
+
+    </RelativeLayout>
+
+    <!-- View Tabs -->
+    <LinearLayout
+        android:id="@+id/search_tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/search_header_bar"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/search_questions_tab"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="@dimen/profile_asked_answered_padding"
+            android:text="@string/search_questions_tab_text"
+            android:textColor="@color/feed_question_left_color" />
+
+        <TextView
+            android:id="@+id/search_friends_tab"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="@dimen/profile_asked_answered_padding"
+            android:text="@string/search_friends_tab_text"
+            android:textColor="@color/feed_question_left_color" />
+
+        <TextView
+            android:id="@+id/search_categories_tab"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="@dimen/profile_asked_answered_padding"
+            android:text="@string/search_categories_tab_text"
+            android:textColor="@color/feed_question_left_color" />
+
+    </LinearLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/search_view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/search_tab_layout" />
+
+
+</RelativeLayout>

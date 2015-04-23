@@ -17,8 +17,8 @@
         android:id="@+id/fragment_tutorial_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/profile_large_size"
         android:layout_margin="@dimen/tutorial_fragment_text_margin"
         android:gravity="center"
-        android:lineSpacingMultiplier="1.2" />
+        android:lineSpacingMultiplier="1.2"
+        android:textSize="@dimen/profile_large_size" />
 </LinearLayout>

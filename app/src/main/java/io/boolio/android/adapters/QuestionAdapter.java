@@ -69,6 +69,9 @@ public class QuestionAdapter extends ArrayAdapter<Question> {
         holder.creator.setText(question.creatorName);
         holder.date.setText(Utils.formatTimeDifferences(question.dateCreated) + " ago");
 
+        if (question.image.equals("")){
+            holder.questionImage.setVisibility(View.GONE);
+        }
         holder.questionImage.setImageUrl(question.image, BoolioServer.getInstance(context).getImageLoader());
         holder.creatorImage.setImageUrl(question.creatorImage, BoolioServer.getInstance(context).getImageLoader());
 
