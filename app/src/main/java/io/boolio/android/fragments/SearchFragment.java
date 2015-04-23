@@ -40,7 +40,6 @@ public class SearchFragment extends BoolioFragment {
     List<BoolioListFragment> fragmentList;
 
     QuestionAdapter questionsTabAdapter, friendsTabAdapter, catergoriesTabAdapter;
-    RelativeLayout relativeLayout;
     Runnable runnable = new Runnable() {
         @Override
         public void run() {
@@ -71,9 +70,6 @@ public class SearchFragment extends BoolioFragment {
         friendsTab = (TextView) rootView.findViewById(R.id.search_friends_tab);
         catergoriesTab = (TextView) rootView.findViewById(R.id.search_categories_tab);
 
-        relativeLayout = (RelativeLayout) rootView.findViewById(R.id.search_rellayout);
-
-
         searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -92,7 +88,6 @@ public class SearchFragment extends BoolioFragment {
             }
         });
 
-        hideKeyBoard(relativeLayout);
         setupPager();
 
         return rootView;

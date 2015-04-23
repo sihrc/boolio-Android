@@ -13,6 +13,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.ListView;
 
+import io.boolio.android.MainActivity;
 import io.boolio.android.R;
 import io.boolio.android.adapters.QuestionAdapter;
 import io.boolio.android.callbacks.QuestionsPullInterface;
@@ -88,8 +89,8 @@ public class BoolioListFragment extends BoolioFragment {
             public boolean onTouch(View v, MotionEvent event) {
                 if (v == view) {
                     InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(((Activity) context).getCurrentFocus().getWindowToken(), 0);
-                    return true;
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+//                    return true;
                 }
                 return false;
             }
