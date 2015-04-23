@@ -8,11 +8,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -89,25 +86,33 @@ public class SearchFragment extends BoolioFragment {
         });
 
         setupPager();
+        setupTabOnClick();
 
         return rootView;
     }
 
-    private void hideKeyBoard(final View view) {
-        view.setOnTouchListener(new View.OnTouchListener() {
+    private void setupTabOnClick(){
+        questionsTab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (v == view) {
+            public void onClick(View v) {
+                viewPager.setCurrentItem(0);
+            }
+        });
 
-                    InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(searchBar.getWindowToken(), 0);
-                    return true;
-                }
-                return false;
+        friendsTab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewPager.setCurrentItem(1);
+            }
+        });
+
+        catergoriesTab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewPager.setCurrentItem(2);
             }
         });
     }
-
     private void setupPager() {
         questionsTab.setAlpha(1f);
         friendsTab.setAlpha(0.25f);

@@ -115,6 +115,7 @@ public class ProfileFragment extends BoolioFragment {
         setupScrolling();
         setupPager();
         setupViews();
+        setupTabOnClick();
 
         return rootView;
     }
@@ -125,6 +126,21 @@ public class ProfileFragment extends BoolioFragment {
         scrollView.requestFocus();
     }
 
+    private void setupTabOnClick(){
+        askedView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewPager.setCurrentItem(0);
+            }
+        });
+        answerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewPager.setCurrentItem(1);
+            }
+        });
+
+    }
     private void setupScrolling() {
         scrollView.setSmoothScrollingEnabled(true);
         scrollView.setScrollViewListener(new ScrollViewListener() {
