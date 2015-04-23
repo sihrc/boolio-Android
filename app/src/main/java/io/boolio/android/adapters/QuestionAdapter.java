@@ -1,16 +1,25 @@
 package io.boolio.android.adapters;
 
 import android.content.Context;
+import android.os.AsyncTask;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
 
+<<<<<<< Updated upstream
 import org.json.JSONException;
 import org.json.JSONObject;
+=======
+import java.util.Timer;
+import java.util.TimerTask;
+>>>>>>> Stashed changes
 
 import io.boolio.android.R;
 import io.boolio.android.helpers.BoolioUserHandler;
@@ -41,6 +50,7 @@ public class QuestionAdapter extends ArrayAdapter<Question> {
             holder = new QuestionHolder();
 
             //TextViews
+            holder.container = view;
             holder.question = (TextView) view.findViewById(R.id.question_text);
             holder.leftAnswer = (TextView) view.findViewById(R.id.question_left_answer);
             holder.rightAnswer = (TextView) view.findViewById(R.id.question_right_answer);
@@ -70,14 +80,28 @@ public class QuestionAdapter extends ArrayAdapter<Question> {
             holder = (QuestionHolder) view.getTag();
         }
 
+<<<<<<< Updated upstream
         fillViews(holder, getItem(position));
+=======
+        Question question = getItem(position);
+
+        fillViews(holder, question);
+
+>>>>>>> Stashed changes
         return view;
     }
 
     private void fillViews(QuestionHolder holder, Question question) {
         holder.question.setText(question.question);
+<<<<<<< Updated upstream
         holder.leftAnswer.setText(question.left);
         holder.rightAnswer.setText(question.right);
+=======
+        holder.leftAnswer.setCurrentText(question.left);
+        holder.rightAnswer.setCurrentText(question.right);
+        holder.leftAnswer.setEnabled(true);
+        holder.rightAnswer .setEnabled(true);
+>>>>>>> Stashed changes
         holder.creator.setText(question.creatorName);
         holder.date.setText(Utils.formatTimeDifferences(question.dateCreated) + " ago");
 
@@ -92,6 +116,7 @@ public class QuestionAdapter extends ArrayAdapter<Question> {
             jsonObject.put("answer", direction);
             jsonObject.put("id", BoolioUserHandler.getInstance(context).getUser().userId);
 
+<<<<<<< Updated upstream
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -99,11 +124,63 @@ public class QuestionAdapter extends ArrayAdapter<Question> {
         BoolioServer.getInstance(context).postAnswer(jsonObject);
         remove(getItem(position));
         notifyDataSetChanged();
+=======
+        final NetworkCallback<Question> questionNetworkCallback = new NetworkCallback<Question>() {
+            @Override
+            public void handle(final Question object) {
+                holder.leftAnswer.setText(String.valueOf(object.leftCount));
+                holder.rightAnswer.setText(String.valueOf(object.rightCount));
+                holder.leftAnswer.setEnabled(false);
+                holder.rightAnswer.setEnabled(false);
+                Animation animation = AnimationUtils.loadAnimation(context, R.anim.slide_right_out);
+                animation.setStartOffset(1000);
+                animation.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        remove(question);
+                        notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                holder.container.setAnimation(animation);
+                holder.container.animate();
+            }
+
+        };
+        holder.leftAnswer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BoolioServer.getInstance(context).postAnswer(question.questionId, "left", questionNetworkCallback);
+
+            }
+        });
+        holder.rightAnswer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BoolioServer.getInstance(context).postAnswer(question.questionId, "right", questionNetworkCallback);
+            }
+        });
+>>>>>>> Stashed changes
 
     }
 
     private class QuestionHolder {
+<<<<<<< Updated upstream
         TextView question, leftAnswer, rightAnswer, creator, date;
+=======
+        View container;
+        TextView question, creator, date;
+        TextSwitcher leftAnswer, rightAnswer;
+>>>>>>> Stashed changes
         BoolioProfileImage creatorImage;
         NetworkImageView questionImage;
     }
