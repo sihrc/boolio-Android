@@ -86,11 +86,7 @@ public class BoolioListFragment extends BoolioFragment {
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                Log.v("debugdebug", "outside " + v);
-
                 if (v == view) {
-
-                    Log.v("debugdebug", "inside " + v);
                     InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(((Activity) context).getCurrentFocus().getWindowToken(), 0);
                     return true;

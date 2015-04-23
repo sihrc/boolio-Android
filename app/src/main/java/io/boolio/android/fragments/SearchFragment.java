@@ -7,13 +7,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -25,7 +23,6 @@ import io.boolio.android.R;
 import io.boolio.android.adapters.QuestionAdapter;
 import io.boolio.android.callbacks.QuestionsCallback;
 import io.boolio.android.callbacks.QuestionsPullInterface;
-import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.models.Question;
 import io.boolio.android.network.BoolioServer;
 
@@ -146,33 +143,29 @@ public class SearchFragment extends BoolioFragment {
                 @Override
                 public void pullQuestions() {
                     // TODO
-//                    BoolioServer.getInstance(context).getUserAnswered(
-//                            BoolioUserHandler.getInstance(context).getUser().userId,
-//                            new QuestionsCallback() {
-//                                @Override
-//                                public void handleQuestions(List<Question> questionList) {
-//                                    answeredAdapter.clear();
-//                                    answeredAdapter.addAll(questionList);
-//                                }
-//                            }
-//                    );
+                    BoolioServer.getInstance(context).getUserAnswered(
+                            null,
+                            new QuestionsCallback() {
+                                @Override
+                                public void handleQuestions(List<Question> questionList) {
+
+                                }
+                            }
+                    );
                 }
             }, runnable));
             add(BoolioListFragment.newInstance(catergoriesTabAdapter, new QuestionsPullInterface() {
                 @Override
                 public void pullQuestions() {
                     // TODO
-//                    BoolioServer.getInstance(context).getUserAsked(
-//                            BoolioUserHandler.getInstance(context).getUser().userId,
-//                            new QuestionsCallback() {
-//                                @Override
-//                                public void handleQuestions(List<Question> questionList) {
-//                                    askedAdapter.clear();
-//                                    askedAdapter.addAll(questionList);
-//
-//                                }
-//                            }
-//                    );
+                    BoolioServer.getInstance(context).getUserAsked(
+                            null,
+                            new QuestionsCallback() {
+                                @Override
+                                public void handleQuestions(List<Question> questionList) {
+                                }
+                            }
+                    );
                 }
             }, runnable));
         }};

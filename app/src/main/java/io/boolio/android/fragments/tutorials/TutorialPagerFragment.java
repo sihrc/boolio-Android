@@ -114,7 +114,11 @@ public class TutorialPagerFragment extends BoolioFragment {
             }
         });
         pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            int prev, curr, next;
+            int prev
+                    ,
+                    curr
+                    ,
+                    next;
             boolean dragging;
 
             @Override
