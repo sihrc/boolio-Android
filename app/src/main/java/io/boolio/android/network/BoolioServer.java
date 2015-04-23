@@ -240,12 +240,21 @@ public class BoolioServer {
     }
 
 
-    public void postAnswer(JSONObject jsonObject) {
+    public void postAnswer(String questionId, String direction, final NetworkCallback<Question> questionNetworkCallback) {
+        JSONObject answer = new JSONObject();
+        try {
+            answer.put("questionId", questionId);
+            answer.put("answer", direction);
+            answer.put("id", BoolioUserHandler.getInstance(context).getUser().userId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, API.POST_ANSWER_ENDPOINT,
-                jsonObject, new Response.Listener<JSONObject>() {
+                answer, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Log.d("Boolio Server Success", "Success" + response.toString());
+                if (questionNetworkCallback != null)
+                    questionNetworkCallback.handle(QuestionParser.getInstance().parse(response));
 
             }
         }, new Response.ErrorListener() {
