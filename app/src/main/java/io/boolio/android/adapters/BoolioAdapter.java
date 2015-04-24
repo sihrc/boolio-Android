@@ -15,24 +15,19 @@ import io.boolio.android.animation.TextAnimation;
 import io.boolio.android.helpers.Utils;
 import io.boolio.android.models.Question;
 import io.boolio.android.network.BoolioServer;
-import io.boolio.android.network.NetworkCallback;
 import io.boolio.android.views.BoolioProfileImage;
 
 /**
- * Created by james on 4/17/15.
+ * Created by james on 4/24/15.
  */
-public class QuestionAdapter extends ArrayAdapter<Question> {
-    int resource;
+public abstract class BoolioAdapter extends ArrayAdapter<Question> {
     Context context;
-    boolean isProfile;
+    int resource;
 
-
-    public QuestionAdapter(Context context) {
+    public BoolioAdapter(Context context) {
         super(context, R.layout.item_question);
         resource = R.layout.item_question;
         this.context = context;
-        this.isProfile = false;
-
     }
 
     @Override
@@ -49,6 +44,7 @@ public class QuestionAdapter extends ArrayAdapter<Question> {
             holder.rightAnswer = (TextSwitcher) view.findViewById(R.id.question_right_answer);
             holder.creator = (TextView) view.findViewById(R.id.question_creator);
             holder.date = (TextView) view.findViewById(R.id.question_date);
+
             TextAnimation.getInstance(context).FadeTextSwitcher(holder.leftAnswer, R.layout.text_answer_left);
             TextAnimation.getInstance(context).FadeTextSwitcher(holder.rightAnswer, R.layout.text_answer_right);
 
@@ -66,7 +62,7 @@ public class QuestionAdapter extends ArrayAdapter<Question> {
         return view;
     }
 
-    private void fillViews(final QuestionHolder holder, final Question question) {
+    public void fillViews(final QuestionHolder holder, final Question question) {
         holder.question.setText(question.question);
         holder.leftAnswer.setCurrentText(question.left);
         holder.rightAnswer.setCurrentText(question.right);
@@ -76,43 +72,25 @@ public class QuestionAdapter extends ArrayAdapter<Question> {
         if (question.image.equals("")){
             holder.questionImage.setVisibility(View.GONE);
         }
+
+        fillQuestions(holder, question);
+        fillAnswers(holder, question);
+
         holder.questionImage.setImageUrl(question.image, BoolioServer.getInstance(context).getImageLoader());
         holder.creatorImage.setImageUrl(question.creatorImage, BoolioServer.getInstance(context).getImageLoader());
 
-        if (isProfile){
-            holder.leftAnswer.setText(String.valueOf(question.leftCount));
-            holder.rightAnswer.setText(String.valueOf(question.rightCount));
-        } else {
-
-            final NetworkCallback<Question> questionNetworkCallback = new NetworkCallback<Question>() {
-                @Override
-                public void handle(Question object) {
-                    holder.leftAnswer.setText(String.valueOf(object.leftCount));
-                    holder.rightAnswer.setText(String.valueOf(object.rightCount));
-                }
-            };
-            holder.leftAnswer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    BoolioServer.getInstance(context).postAnswer(question.questionId, "left", questionNetworkCallback);
-
-                }
-            });
-            holder.rightAnswer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    BoolioServer.getInstance(context).postAnswer(question.questionId, "right", questionNetworkCallback);
-                }
-            });
-        }
-
     }
 
-    private class QuestionHolder {
+
+    public class QuestionHolder {
         TextView question, creator, date;
         TextSwitcher leftAnswer, rightAnswer;
         BoolioProfileImage creatorImage;
         NetworkImageView questionImage;
     }
+
+    public abstract void fillQuestions(QuestionHolder holder, Question question);
+
+    public abstract void fillAnswers(QuestionHolder holder, Question question);
 
 }

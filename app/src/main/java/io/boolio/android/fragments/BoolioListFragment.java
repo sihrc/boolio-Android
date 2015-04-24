@@ -15,6 +15,7 @@ import android.widget.ListView;
 
 import io.boolio.android.MainActivity;
 import io.boolio.android.R;
+import io.boolio.android.adapters.BoolioAnswerAdapter;
 import io.boolio.android.adapters.QuestionAdapter;
 import io.boolio.android.callbacks.QuestionsPullInterface;
 
@@ -23,14 +24,14 @@ import io.boolio.android.callbacks.QuestionsPullInterface;
  */
 public class BoolioListFragment extends BoolioFragment {
     Context context;
-    QuestionAdapter questionAdapter;
+    BoolioAnswerAdapter questionAdapter;
     ListView listView;
     Runnable callback;
 
     // Callbacks
     QuestionsPullInterface pullInterface;
 
-    public static BoolioListFragment newInstance(QuestionAdapter questionAdapter,
+    public static BoolioListFragment newInstance(BoolioAnswerAdapter questionAdapter,
                                                  QuestionsPullInterface pullQuestions, Runnable callback) {
         BoolioListFragment fragment = new BoolioListFragment();
         fragment.questionAdapter = questionAdapter;

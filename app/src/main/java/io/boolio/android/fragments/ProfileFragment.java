@@ -23,6 +23,7 @@ import java.util.List;
 
 import io.boolio.android.MainActivity;
 import io.boolio.android.R;
+import io.boolio.android.adapters.BoolioAnswerAdapter;
 import io.boolio.android.adapters.QuestionAdapter;
 import io.boolio.android.callbacks.QuestionsCallback;
 import io.boolio.android.callbacks.QuestionsPullInterface;
@@ -56,7 +57,7 @@ public class ProfileFragment extends BoolioFragment {
     // List Fragment Pager
     ViewPager viewPager;
     View answerView, askedView;
-    QuestionAdapter askedAdapter, answeredAdapter;
+    BoolioAnswerAdapter askedAdapter, answeredAdapter;
     List<BoolioListFragment> fragmentList;
     int headerHeight;
     boolean movingFeedIsTop;
@@ -158,8 +159,9 @@ public class ProfileFragment extends BoolioFragment {
     private void setupPager() {
         askedView.setAlpha(1f);
         answerView.setAlpha(0.25f);
-        askedAdapter = new QuestionAdapter(context);
-        answeredAdapter = new QuestionAdapter(context);
+        // profile
+        askedAdapter = new BoolioAnswerAdapter(context);
+        answeredAdapter = new BoolioAnswerAdapter(context);
         fragmentList = new ArrayList<BoolioListFragment>() {{
             add(BoolioListFragment.newInstance(askedAdapter, new QuestionsPullInterface() {
                 @Override
