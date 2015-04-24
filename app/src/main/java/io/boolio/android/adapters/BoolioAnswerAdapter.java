@@ -62,7 +62,7 @@ public class BoolioAnswerAdapter extends BoolioAdapter {
 
     @Override
     public void fillAnswers(QuestionHolder holder, Question question) {
-        holder.leftAnswer.setText(String.valueOf(question.leftCount));
-        holder.rightAnswer.setText(String.valueOf(question.rightCount));
+        holder.leftAnswer.setText(String.valueOf(question.left + " (" + question.leftCount + ")"));
+        holder.rightAnswer.setText(String.valueOf(question.right + " (" + question.rightCount + ")"));
     }
 }

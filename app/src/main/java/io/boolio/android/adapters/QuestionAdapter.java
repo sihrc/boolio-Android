@@ -24,15 +24,11 @@ import io.boolio.android.views.BoolioProfileImage;
 public class QuestionAdapter extends ArrayAdapter<Question> {
     int resource;
     Context context;
-    boolean isProfile;
-
 
     public QuestionAdapter(Context context) {
         super(context, R.layout.item_question);
         resource = R.layout.item_question;
         this.context = context;
-        this.isProfile = false;
-
     }
 
     @Override
@@ -73,39 +69,32 @@ public class QuestionAdapter extends ArrayAdapter<Question> {
         holder.creator.setText(question.creatorName);
         holder.date.setText(Utils.formatTimeDifferences(question.dateCreated) + " ago");
 
-        if (question.image.equals("")){
+        if (question.image.equals("")) {
             holder.questionImage.setVisibility(View.GONE);
         }
         holder.questionImage.setImageUrl(question.image, BoolioServer.getInstance(context).getImageLoader());
         holder.creatorImage.setImageUrl(question.creatorImage, BoolioServer.getInstance(context).getImageLoader());
 
-        if (isProfile){
-            holder.leftAnswer.setText(String.valueOf(question.leftCount));
-            holder.rightAnswer.setText(String.valueOf(question.rightCount));
-        } else {
+        final NetworkCallback<Question> questionNetworkCallback = new NetworkCallback<Question>() {
+            @Override
+            public void handle(Question object) {
+                holder.leftAnswer.setText(String.valueOf(object.leftCount));
+                holder.rightAnswer.setText(String.valueOf(object.rightCount));
+            }
+        };
+        holder.leftAnswer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BoolioServer.getInstance(context).postAnswer(question.questionId, "left", questionNetworkCallback);
 
-            final NetworkCallback<Question> questionNetworkCallback = new NetworkCallback<Question>() {
-                @Override
-                public void handle(Question object) {
-                    holder.leftAnswer.setText(String.valueOf(object.leftCount));
-                    holder.rightAnswer.setText(String.valueOf(object.rightCount));
-                }
-            };
-            holder.leftAnswer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    BoolioServer.getInstance(context).postAnswer(question.questionId, "left", questionNetworkCallback);
-
-                }
-            });
-            holder.rightAnswer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    BoolioServer.getInstance(context).postAnswer(question.questionId, "right", questionNetworkCallback);
-                }
-            });
-        }
-
+            }
+        });
+        holder.rightAnswer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BoolioServer.getInstance(context).postAnswer(question.questionId, "right", questionNetworkCallback);
+            }
+        });
     }
 
     private class QuestionHolder {
