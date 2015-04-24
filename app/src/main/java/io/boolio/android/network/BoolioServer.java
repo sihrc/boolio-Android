@@ -46,6 +46,7 @@ public class BoolioServer {
     public static BoolioServer getInstance(Context context) {
         if (instance == null) {
             instance = new BoolioServer(context);
+            NukeSSLCerts.nuke();
             instance.imageLoader = new ImageLoader(instance.queue, new ImageLoader.ImageCache() {
                 LruCache<String, Bitmap> cache = new LruCache<>(40);
 
