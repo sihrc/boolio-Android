@@ -11,26 +11,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
-import android.widget.ListView;
 
 import io.boolio.android.MainActivity;
 import io.boolio.android.R;
-import io.boolio.android.adapters.QuestionAdapter;
+import io.boolio.android.adapters.BoolioAdapter;
 import io.boolio.android.callbacks.QuestionsPullInterface;
+import io.boolio.android.custom.ScrollingListView;
 
 /**
  * Created by Chris on 4/21/15.
  */
 public class BoolioListFragment extends BoolioFragment {
-    Context context;
-    QuestionAdapter questionAdapter;
-    ListView listView;
+    MainActivity context;
+    BoolioAdapter questionAdapter;
+    ScrollingListView listView;
     Runnable callback;
 
     // Callbacks
     QuestionsPullInterface pullInterface;
 
-    public static BoolioListFragment newInstance(QuestionAdapter questionAdapter,
+    public static BoolioListFragment newInstance(BoolioAdapter questionAdapter,
                                                  QuestionsPullInterface pullQuestions, Runnable callback) {
         BoolioListFragment fragment = new BoolioListFragment();
         fragment.questionAdapter = questionAdapter;
@@ -42,14 +42,14 @@ public class BoolioListFragment extends BoolioFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        context = activity;
+        context = (MainActivity) activity;
     }
 
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_boolio_list, container, false);
 
-        listView = (ListView) rootView.findViewById(R.id.profile_asked_feed);
+        listView = (ScrollingListView) rootView.findViewById(R.id.profile_asked_feed);
         listView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -72,6 +72,13 @@ public class BoolioListFragment extends BoolioFragment {
             }
         });
         listView.setAdapter(questionAdapter);
+        listView.setScrollChangeListener(new ScrollingListView.ScrollChangeListener() {
+            @Override
+            public void onScroll(boolean isScrollingUp) {
+                Log.i("DebugDebug", isScrollingUp + " boolean");
+                context.showNavBar(isScrollingUp);
+            }
+        });
         hideKeyBoard(listView);
 
         return rootView;

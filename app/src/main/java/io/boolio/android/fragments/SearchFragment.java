@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.boolio.android.R;
+import io.boolio.android.adapters.BoolioQuestionAdapter;
 import io.boolio.android.adapters.QuestionAdapter;
 import io.boolio.android.callbacks.QuestionsCallback;
 import io.boolio.android.callbacks.QuestionsPullInterface;
@@ -36,7 +37,7 @@ public class SearchFragment extends BoolioFragment {
 
     List<BoolioListFragment> fragmentList;
 
-    QuestionAdapter questionsTabAdapter, friendsTabAdapter, catergoriesTabAdapter;
+    BoolioQuestionAdapter questionsTabAdapter, friendsTabAdapter, catergoriesTabAdapter;
     Runnable runnable = new Runnable() {
         @Override
         public void run() {
@@ -117,9 +118,9 @@ public class SearchFragment extends BoolioFragment {
         questionsTab.setAlpha(1f);
         friendsTab.setAlpha(0.25f);
         catergoriesTab.setAlpha(0.25f);
-        questionsTabAdapter = new QuestionAdapter(context);
-        friendsTabAdapter = new QuestionAdapter(context);
-        catergoriesTabAdapter = new QuestionAdapter(context);
+        questionsTabAdapter = new BoolioQuestionAdapter(context);
+        friendsTabAdapter = new BoolioQuestionAdapter(context);
+        catergoriesTabAdapter = new BoolioQuestionAdapter(context);
         fragmentList = new ArrayList<BoolioListFragment>() {{
             add(BoolioListFragment.newInstance(questionsTabAdapter, new QuestionsPullInterface() {
                 @Override

@@ -5,7 +5,7 @@
     android:descendantFocusability="blocksDescendants"
     android:orientation="vertical">
 
-    <ListView
+    <io.boolio.android.custom.ScrollingListView
         android:id="@+id/profile_asked_feed"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

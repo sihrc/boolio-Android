@@ -14,17 +14,17 @@ public class ScrollingListView extends ListView {
 
     public ScrollingListView(Context context) {
         super(context);
-        setOnScrollListener(onScrollListener);
+        setOnScrollListener(null);
     }
 
     public ScrollingListView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setOnScrollListener(onScrollListener);
+        setOnScrollListener(null);
     }
 
     public ScrollingListView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        setOnScrollListener(onScrollListener);
+        setOnScrollListener(null);
     }
 
     public void setScrollChangeListener(ScrollChangeListener scrollChangeListener) {
@@ -35,27 +35,34 @@ public class ScrollingListView extends ListView {
         public void onScroll(boolean isScrollingUp);
     }
 
-    OnScrollListener onScrollListener = new AbsListView.OnScrollListener() {
-        private int mInitialScroll = 0;
-        private boolean touching = false;
+    @Override
+    public void setOnScrollListener(final OnScrollListener onScrollListener) {
+        super.setOnScrollListener(new OnScrollListener() {
+            private int mInitialScroll = 0;
+            private boolean touching = false;
 
-        @Override
-        public void onScrollStateChanged(AbsListView view, int scrollState) {
-            touching = scrollState == SCROLL_STATE_TOUCH_SCROLL;
-        }
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (onScrollListener != null)
+                    onScrollListener.onScrollStateChanged(view, scrollState);
+                touching = scrollState == SCROLL_STATE_TOUCH_SCROLL;
+            }
 
-        @Override
-        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-            if (!touching) {
-                return;
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (onScrollListener != null)
+                    onScrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
+                if (!touching) {
+                    return;
+                }
+                int scrolledOffset = computeVerticalScrollOffset();
+                if (scrolledOffset != mInitialScroll) {
+                    //if scroll position changed
+                    if (scrollChangeListener != null)
+                        scrollChangeListener.onScroll((scrolledOffset - mInitialScroll) < 0);
+                    mInitialScroll = scrolledOffset;
+                }
             }
-            int scrolledOffset = computeVerticalScrollOffset();
-            if (scrolledOffset != mInitialScroll) {
-                //if scroll position changed
-                if (scrollChangeListener != null)
-                    scrollChangeListener.onScroll((scrolledOffset - mInitialScroll) < 0);
-                mInitialScroll = scrolledOffset;
-            }
-        }
-    };
+        });
+    }
 }

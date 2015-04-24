@@ -46,6 +46,7 @@ public class TutorialPagerFragment extends BoolioFragment {
 
                 // Tutorial III
                 R.drawable.burgerphone, R.string.tutorial_3
+
         );
         return tutorialPagerFragment;
     }

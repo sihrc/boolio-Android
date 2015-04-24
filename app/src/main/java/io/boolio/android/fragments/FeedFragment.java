@@ -13,6 +13,8 @@ import java.util.List;
 
 import io.boolio.android.MainActivity;
 import io.boolio.android.R;
+import io.boolio.android.adapters.BoolioAdapter;
+import io.boolio.android.adapters.BoolioQuestionAdapter;
 import io.boolio.android.adapters.QuestionAdapter;
 import io.boolio.android.animation.AnimationHelper;
 import io.boolio.android.callbacks.QuestionsCallback;
@@ -31,7 +33,7 @@ public class FeedFragment extends BoolioFragment {
     static FeedFragment instance;
     MainActivity context;
     PullToRefreshView pullToRefreshLayout;
-    QuestionAdapter questionAdapter;
+    BoolioQuestionAdapter questionAdapter;
     List<String> prevSeenQuestions;
     View gifLoading, loadingMessage;
     View headerBar;
@@ -67,12 +69,12 @@ public class FeedFragment extends BoolioFragment {
         });
 
         ScrollingListView listView = (ScrollingListView) rootView.findViewById(R.id.question_feed);
-        questionAdapter = new QuestionAdapter(context);
+        questionAdapter = new BoolioQuestionAdapter(context);
         listView.setAdapter(questionAdapter);
         listView.setScrollChangeListener(new ScrollingListView.ScrollChangeListener() {
             @Override
             public void onScroll(boolean isScrollingUp) {
-                showBars(isScrollingUp);
+                context.showNavBar(isScrollingUp);
             }
         });
 
@@ -99,14 +101,6 @@ public class FeedFragment extends BoolioFragment {
     private void pullQuestions() {
         loadingMessage.setVisibility(View.GONE);
         BoolioServer.getInstance(context).getQuestionFeed(prevSeenQuestions, callback);
-    }
-
-    private void showBars(boolean visible) {
-        if (visible) {
-            context.showNavBar(true);
-        } else {
-            context.showNavBar(false);
-        }
     }
 
     QuestionsCallback callback = new QuestionsCallback() {
