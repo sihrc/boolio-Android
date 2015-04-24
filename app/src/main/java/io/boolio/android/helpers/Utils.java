@@ -91,7 +91,7 @@ public class Utils {
 
         // Determine how much to scale down the image
         int scaleFactor = calculateInSampleSize(bmOptions, width, height);
-
+        Log.i("DebugDebug", scaleFactor + " scale Factor");
         // Decode the image file into a Bitmap sized to fill the View
         bmOptions.inJustDecodeBounds = false;
         bmOptions.inSampleSize = scaleFactor;
@@ -153,7 +153,7 @@ public class Utils {
 
     public static String bitmapTo64String(Bitmap bm) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.JPEG, 80, baos); //bm is the bitmap object
+        bm.compress(Bitmap.CompressFormat.JPEG, 90, baos); //bm is the bitmap object
         byte[] b = baos.toByteArray();
         return Base64.encodeToString(b, Base64.DEFAULT);
     }
