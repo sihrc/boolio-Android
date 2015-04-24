@@ -14,16 +14,17 @@
     <string name="content_desc_settings">Settings Button on Profile Page</string>
 
     <!-- Tutorial -->
-    <string name="tutorial_1"><![CDATA[<h1>Welcome</h1>]]>Swipe to learn more about Boolio.</string>
-    <string name="tutorial_2">Pose any question and get feedback\nfrom your friends and the world.</string>
-    <string name="tutorial_3">Help people out by answering their questions.\n Boolio populates your feed\n only with what matters to you</string>
-
+    <string name="tutorial_1"><![CDATA[<h1>Welcome!</h1>]]>Swipe to learn more about Boolio.</string>
+    <string name="tutorial_2"><![CDATA[<h1>Feedback</h1>]]>Pose any question and get feedback\nfrom your friends and the world.</string>
+    <string name="tutorial_3"><![CDATA[<h1>Community</h1>]]>Help the community by answering their questions.\n Boolio populates your feed\n only with what matters to you.</string>
+    <string name="get_started">Get Started</string>
+    <string name="empty_categories_list">Categories coming soon!</string>
     <!-- Login Fragment -->
     <string name="login_button">Login</string>
     <string name="login_email">email</string>
     <string name="login_password">password</string>
     <string name="login_with_facebook">or Login with</string>
-    <string name="login_button_facebook">facebook</string>
+    <string name="login_button_facebook">Sign up with Facebook</string>
 
     <!-- CreateQuestion Fragment -->
     <string name="create_question_submit">Send</string>

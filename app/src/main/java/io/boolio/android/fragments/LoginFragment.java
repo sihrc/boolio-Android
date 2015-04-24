@@ -37,9 +37,9 @@ public class LoginFragment extends BoolioFragment {
         View rootView = inflater.inflate(R.layout.fragment_login, container, false);
 
         // Find Views and Buttons
-        EditText loginEmail = (EditText) rootView.findViewById(R.id.login_email);
-        EditText loginPassword = (EditText) rootView.findViewById(R.id.login_password);
-        Button loginButton = (Button) rootView.findViewById(R.id.login_button);
+//        EditText loginEmail = (EditText) rootView.findViewById(R.id.login_email);
+//        EditText loginPassword = (EditText) rootView.findViewById(R.id.login_password);
+//        Button loginButton = (Button) rootView.findViewById(R.id.login_button);
 
         // Facebook Login
         setupFacebookLogin(rootView);
