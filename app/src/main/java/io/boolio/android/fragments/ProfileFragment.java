@@ -49,9 +49,9 @@ public class ProfileFragment extends BoolioFragment {
     RelativeLayout movingFeed;
 
     // Profile Page
-    ImageView profileSetting;
+//    ImageView profileSetting;
     BoolioProfileImage profileUserImage;
-    TextView profileDisplayName, askedCount, profileUsername, answeredCount, karmaCount;
+    TextView askedCount, profileUsername, answeredCount, karmaCount, profileDisplayName;
 
     // List Fragment Pager
     ViewPager viewPager;
@@ -99,7 +99,7 @@ public class ProfileFragment extends BoolioFragment {
         movingFeed = (RelativeLayout) rootView.findViewById(R.id.moving_feed);
         movingFeed.setLayoutParams(new LinearLayout.LayoutParams(MainActivity.SCREEN_WIDTH, MainActivity.SCREEN_HEIGHT));
 
-        profileSetting = (ImageView) rootView.findViewById(R.id.profile_setting);
+//        profileSetting = (ImageView) rootView.findViewById(R.id.profile_setting);
         profileUserImage = (BoolioProfileImage) rootView.findViewById(R.id.profile_user_image);
 
         askedCount = (TextView) rootView.findViewById(R.id.asked_count);
@@ -114,7 +114,7 @@ public class ProfileFragment extends BoolioFragment {
 
         setupScrolling();
         setupPager();
-        setupViews();
+//        setupViews();
         setupTabOnClick();
 
         return rootView;
@@ -232,31 +232,31 @@ public class ProfileFragment extends BoolioFragment {
         });
     }
 
-    private void setupViews() {
-        // Settings Button
-        profileSetting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new AlertDialog.Builder(context)
-                        .setTitle(R.string.settings)
-                        .setItems(new CharSequence[]{"Logout", "Cancel"}, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                switch (which) {
-                                    case 0:
-                                        Toast.makeText(context, "Logged Out", Toast.LENGTH_SHORT).show();
-                                        BoolioUserHandler.getInstance(context).logout();
-                                        dialog.dismiss();
-                                        break;
-                                    case 1:
-                                        dialog.dismiss();
-                                        break;
-                                }
-                            }
-                        }).show();
-            }
-        });
-    }
+//    private void setupViews() {
+//        // Settings Button
+//        profileSetting.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                new AlertDialog.Builder(context)
+//                        .setTitle(R.string.settings)
+//                        .setItems(new CharSequence[]{"Logout", "Cancel"}, new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                switch (which) {
+//                                    case 0:
+//                                        Toast.makeText(context, "Logged Out", Toast.LENGTH_SHORT).show();
+//                                        BoolioUserHandler.getInstance(context).logout();
+//                                        dialog.dismiss();
+//                                        break;
+//                                    case 1:
+//                                        dialog.dismiss();
+//                                        break;
+//                                }
+//                            }
+//                        }).show();
+//            }
+//        });
+//    }
 
     /**
      * Update Views with User Information once populated *
@@ -265,10 +265,10 @@ public class ProfileFragment extends BoolioFragment {
         if (user == null)
             return;
         if (user.userId.equals(BoolioUserHandler.getInstance(context).getUser().userId)) {
-            profileSetting.setVisibility(View.VISIBLE);
+//            profileSetting.setVisibility(View.VISIBLE);
             profileDisplayName.setText(R.string.my_profile_page);
         } else {
-            profileSetting.setVisibility(View.GONE);
+//            profileSetting.setVisibility(View.GONE);
             profileDisplayName.setText(R.string.profile_page);
         }
 

@@ -13,6 +13,12 @@
         android:background="@color/theme_blue"
         android:padding="@dimen/general_padding">
 
+        <!--<ImageView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:contentDescription="@string/content_description_header"-->
+        <!--android:src="@drawable/logo_white" />-->
+        
         <TextView
             android:id="@+id/profile_user_name"
             style="@style/profile_big_text"
@@ -20,15 +26,15 @@
             android:layout_height="match_parent"
             android:textColor="@color/white" />
 
-        <ImageView
-            android:id="@+id/profile_setting"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:contentDescription="@string/content_desc_settings"
-            android:scaleType="fitCenter"
-            android:src="@drawable/settings"
-            android:visibility="invisible" />
+        <!--<ImageView-->
+            <!--android:id="@+id/profile_setting"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:contentDescription="@string/content_desc_settings"-->
+            <!--android:scaleType="fitCenter"-->
+            <!--android:src="@drawable/settings"-->
+            <!--android:visibility="invisible" />-->
 
     </RelativeLayout>
 
