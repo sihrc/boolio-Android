@@ -43,7 +43,7 @@
     <string name="settings">Settings</string>
     <string name="profile_asked_view_text">ASKED</string>
     <string name="profile_answered_view_text">ANSWERED</string>
-
+    <string name="profile_logo">My Profile</string>
 
     <!-- Feed Fragment -->
     <string name="empty_feed_message">Great Job! Your question feed is empty. Pull down to see if there are more.</string>
@@ -56,4 +56,6 @@
     <string name="search_friends_tab_text">FRIENDS</string>
     <string name="search_categories_tab_text">CATEGORIES</string>
 
+    <!--Categories Fragment-->
+    <string name="categories_logo">Categories</string>
 </resources>

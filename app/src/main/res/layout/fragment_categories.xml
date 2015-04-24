@@ -10,11 +10,22 @@
         android:background="@color/theme_blue"
         android:padding="@dimen/general_padding">
 
-        <ImageView
+        <!--<ImageView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:contentDescription="@string/content_description_header"-->
+            <!--android:src="@drawable/logo_white" />-->
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="@dimen/profile_large_size"
+            android:textColor="@color/white"
             android:contentDescription="@string/content_description_header"
-            android:src="@drawable/logo_white" />
+            android:text="@string/categories_logo" />
+
 
     </FrameLayout>
 
