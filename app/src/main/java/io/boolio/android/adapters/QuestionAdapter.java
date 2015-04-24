@@ -18,7 +18,7 @@ import io.boolio.android.helpers.Utils;
 import io.boolio.android.models.Question;
 import io.boolio.android.network.BoolioServer;
 import io.boolio.android.network.NetworkCallback;
-import io.boolio.android.views.BoolioProfileImage;
+import io.boolio.android.custom.BoolioProfileImage;
 
 /**
  * Created by james on 4/17/15.
@@ -91,7 +91,7 @@ public class QuestionAdapter extends ArrayAdapter<Question> {
                 holder.rightAnswer.setText(String.valueOf(object.rightCount));
                 holder.leftAnswer.setEnabled(false);
                 holder.rightAnswer.setEnabled(false);
-                Animation animation = AnimationUtils.loadAnimation(context, R.anim.slide_right_out);
+                Animation animation = AnimationUtils.loadAnimation(context, R.anim.right_out);
                 animation.setStartOffset(1000);
                 animation.setAnimationListener(new Animation.AnimationListener() {
                     @Override

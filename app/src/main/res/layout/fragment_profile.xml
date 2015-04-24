@@ -50,7 +50,7 @@
                 android:background="@color/profile_cover_background"
                 android:padding="@dimen/profile_padding">
 
-                <io.boolio.android.views.BoolioProfileImage
+                <io.boolio.android.custom.BoolioProfileImage
                     android:id="@+id/profile_user_image"
                     android:layout_width="@dimen/profile_image_size"
                     android:layout_height="@dimen/profile_image_size"

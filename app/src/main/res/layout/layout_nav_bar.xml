@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/nav_bar_height"
-    android:layout_alignParentBottom="true"
-    android:background="@color/theme_blue"
-    android:gravity="center_horizontal"
-    android:orientation="horizontal"
-    android:paddingLeft="@dimen/general_padding"
-    android:paddingRight="@dimen/general_padding">
+              android:layout_width="match_parent"
+              android:layout_height="@dimen/nav_bar_height"
+              android:layout_alignParentBottom="true"
+              android:background="@color/theme_blue"
+              android:gravity="center_horizontal"
+              android:orientation="horizontal"
+              android:paddingLeft="@dimen/general_padding"
+              android:paddingRight="@dimen/general_padding">
 
     <ImageView
         android:id="@+id/nav_bar_feed"
@@ -16,12 +16,12 @@
         android:alpha=".5"
         android:background="@drawable/nav_bar_button"
         android:contentDescription="@string/content_desc_nav_bar_button"
-        android:src="@drawable/feed" />
+        android:src="@drawable/feed"/>
 
     <View
         android:layout_width="0dp"
         android:layout_height="1dp"
-        android:layout_weight="1"></View>
+        android:layout_weight="1"/>
 
     <ImageView
         android:id="@+id/nav_bar_search"
@@ -30,12 +30,12 @@
         android:alpha=".5"
         android:background="@drawable/nav_bar_button"
         android:contentDescription="@string/content_desc_nav_bar_button"
-        android:src="@drawable/search" />
+        android:src="@drawable/search"/>
 
     <View
         android:layout_width="0dp"
         android:layout_height="1dp"
-        android:layout_weight="1"></View>
+        android:layout_weight="1"/>
 
     <ImageView
         android:id="@+id/nav_bar_add_hidden"
@@ -44,12 +44,12 @@
         android:layout_margin="@dimen/button_margin"
         android:background="@drawable/nav_bar_button"
         android:contentDescription="@string/content_desc_nav_bar_button"
-        android:src="@drawable/search" />
+        android:src="@drawable/search"/>
 
     <View
         android:layout_width="0dp"
         android:layout_height="1dp"
-        android:layout_weight="1"></View>
+        android:layout_weight="1"/>
 
     <ImageView
         android:id="@+id/nav_bar_category"
@@ -58,12 +58,12 @@
         android:alpha=".5"
         android:background="@drawable/nav_bar_button"
         android:contentDescription="@string/content_desc_nav_bar_button"
-        android:src="@drawable/categories" />
+        android:src="@drawable/categories"/>
 
     <View
         android:layout_width="0dp"
         android:layout_height="1dp"
-        android:layout_weight="1"></View>
+        android:layout_weight="1"/>
 
     <ImageView
         android:id="@+id/nav_bar_profile"
@@ -72,6 +72,6 @@
         android:alpha=".5"
         android:background="@drawable/nav_bar_button"
         android:contentDescription="@string/content_desc_nav_bar_button"
-        android:src="@drawable/profile" />
+        android:src="@drawable/profile"/>
 
 </LinearLayout>

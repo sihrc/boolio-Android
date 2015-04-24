@@ -1,21 +1,23 @@
 package io.boolio.android.fragments;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.boolio.android.MainActivity;
 import io.boolio.android.R;
 import io.boolio.android.adapters.QuestionAdapter;
+import io.boolio.android.animation.AnimationHelper;
 import io.boolio.android.callbacks.QuestionsCallback;
 import io.boolio.android.custom.PullToRefreshView;
+import io.boolio.android.custom.ScrollingListView;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.models.Question;
 import io.boolio.android.network.BoolioServer;
@@ -25,31 +27,14 @@ import io.boolio.android.network.BoolioServer;
  */
 public class FeedFragment extends BoolioFragment {
     final public static int REFRESH_DELAY = 2000;
-    QuestionsCallback callback = new QuestionsCallback() {
-        @Override
-        public void handleQuestions(final List<Question> questionList) {
-            pullToRefreshLayout.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    questionAdapter.clear();
-                    questionAdapter.addAll(questionList);
-                    questionAdapter.notifyDataSetChanged();
-                    pullToRefreshLayout.setRefreshing(false);
-                    gifLoading.setVisibility(View.GONE);
-                    if (questionAdapter.getCount() == 0) {
-                        loadingMessage.setVisibility(View.VISIBLE);
-                    }
-                }
-            }, REFRESH_DELAY);
-        }
-    };
+
     static FeedFragment instance;
-    Context context;
+    MainActivity context;
     PullToRefreshView pullToRefreshLayout;
     QuestionAdapter questionAdapter;
     List<String> prevSeenQuestions;
-    View gifLoading;
-    View loadingMessage;
+    View gifLoading, loadingMessage;
+    View headerBar;
 
     public static FeedFragment getInstance() {
         if (instance == null)
@@ -61,7 +46,7 @@ public class FeedFragment extends BoolioFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         prevSeenQuestions = new ArrayList<>();
-        context = activity;
+        context = (MainActivity) activity;
     }
 
     @Override
@@ -70,6 +55,7 @@ public class FeedFragment extends BoolioFragment {
 
         gifLoading = rootView.findViewById(R.id.gif_loading);
         loadingMessage = rootView.findViewById(R.id.empty_list_message);
+        headerBar = rootView.findViewById(R.id.header_bar);
 
         pullToRefreshLayout = (PullToRefreshView) rootView.findViewById(R.id.ptr_layout);
         pullToRefreshLayout.setRefreshDrawables(R.drawable.sky, R.drawable.bear, R.drawable.sun);
@@ -80,15 +66,22 @@ public class FeedFragment extends BoolioFragment {
             }
         });
 
-        ListView listView = (ListView) rootView.findViewById(R.id.question_feed);
+        ScrollingListView listView = (ScrollingListView) rootView.findViewById(R.id.question_feed);
         questionAdapter = new QuestionAdapter(context);
+        listView.setAdapter(questionAdapter);
+        listView.setScrollChangeListener(new ScrollingListView.ScrollChangeListener() {
+            @Override
+            public void onScroll(boolean isScrollingUp) {
+                showBars(isScrollingUp);
+            }
+        });
+
         BoolioUserHandler.getInstance(context).setUserCallback(new Runnable() {
             @Override
             public void run() {
                 pullQuestions();
             }
         });
-        listView.setAdapter(questionAdapter);
 
         return rootView;
     }
@@ -107,4 +100,33 @@ public class FeedFragment extends BoolioFragment {
         loadingMessage.setVisibility(View.GONE);
         BoolioServer.getInstance(context).getQuestionFeed(prevSeenQuestions, callback);
     }
+
+    private void showBars(boolean visible) {
+        if (visible) {
+            AnimationHelper.getInstance(context).animateViewTopIn(headerBar);
+            context.showNavBar(true);
+        } else {
+            AnimationHelper.getInstance(context).animateViewTopOut(headerBar);
+            context.showNavBar(false);
+        }
+    }
+
+    QuestionsCallback callback = new QuestionsCallback() {
+        @Override
+        public void handleQuestions(final List<Question> questionList) {
+            pullToRefreshLayout.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    questionAdapter.clear();
+                    questionAdapter.addAll(questionList);
+                    questionAdapter.notifyDataSetChanged();
+                    pullToRefreshLayout.setRefreshing(false);
+                    gifLoading.setVisibility(View.GONE);
+                    if (questionAdapter.getCount() == 0) {
+                        loadingMessage.setVisibility(View.VISIBLE);
+                    }
+                }
+            }, REFRESH_DELAY);
+        }
+    };
 }
