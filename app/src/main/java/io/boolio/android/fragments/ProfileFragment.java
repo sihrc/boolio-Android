@@ -51,7 +51,7 @@ public class ProfileFragment extends BoolioFragment {
     // Profile Page
 //    ImageView profileSetting;
     BoolioProfileImage profileUserImage;
-    TextView askedCount, profileUsername, answeredCount, karmaCount;
+    TextView askedCount, profileUsername, answeredCount, karmaCount, profileDisplayName;
 
     // List Fragment Pager
     ViewPager viewPager;
@@ -105,7 +105,7 @@ public class ProfileFragment extends BoolioFragment {
         askedCount = (TextView) rootView.findViewById(R.id.asked_count);
         profileUsername = (TextView) rootView.findViewById(R.id.profile_username);
         answeredCount = (TextView) rootView.findViewById(R.id.answered_count);
-//        profileDisplayName = (TextView) rootView.findViewById(R.id.profile_user_name);
+        profileDisplayName = (TextView) rootView.findViewById(R.id.profile_user_name);
         karmaCount = (TextView) rootView.findViewById(R.id.karma_count);
 
         viewPager = (ViewPager) rootView.findViewById(R.id.asked_answered_view_pager);
@@ -264,13 +264,13 @@ public class ProfileFragment extends BoolioFragment {
     private void updateViews() {
         if (user == null)
             return;
-//        if (user.userId.equals(BoolioUserHandler.getInstance(context).getUser().userId)) {
+        if (user.userId.equals(BoolioUserHandler.getInstance(context).getUser().userId)) {
 //            profileSetting.setVisibility(View.VISIBLE);
-//            profileDisplayName.setText(R.string.my_profile_page);
-//        } else {
+            profileDisplayName.setText(R.string.my_profile_page);
+        } else {
 //            profileSetting.setVisibility(View.GONE);
-//            profileDisplayName.setText(R.string.profile_page);
-//        }
+            profileDisplayName.setText(R.string.profile_page);
+        }
 
         profileUserImage.setImageUrl(user.profilePic, BoolioServer.getInstance(context).getImageLoader());
         askedCount.setText(String.valueOf(user.questionsAsked.size()));
