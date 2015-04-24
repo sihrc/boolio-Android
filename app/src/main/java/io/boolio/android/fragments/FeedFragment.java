@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.boolio.android.R;
+import io.boolio.android.adapters.BoolioAdapter;
+import io.boolio.android.adapters.BoolioQuestionAdapter;
 import io.boolio.android.adapters.QuestionAdapter;
 import io.boolio.android.callbacks.QuestionsCallback;
 import io.boolio.android.custom.PullToRefreshView;
@@ -46,7 +48,7 @@ public class FeedFragment extends BoolioFragment {
     static FeedFragment instance;
     Context context;
     PullToRefreshView pullToRefreshLayout;
-    QuestionAdapter questionAdapter;
+    BoolioQuestionAdapter questionAdapter;
     List<String> prevSeenQuestions;
     View gifLoading;
     View loadingMessage;
@@ -81,7 +83,7 @@ public class FeedFragment extends BoolioFragment {
         });
 
         ListView listView = (ListView) rootView.findViewById(R.id.question_feed);
-        questionAdapter = new QuestionAdapter(context);
+        questionAdapter = new BoolioQuestionAdapter(context);
         BoolioUserHandler.getInstance(context).setUserCallback(new Runnable() {
             @Override
             public void run() {
