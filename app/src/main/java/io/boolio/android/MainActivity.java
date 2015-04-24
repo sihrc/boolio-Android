@@ -1,6 +1,5 @@
 package io.boolio.android;
 
-import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -127,9 +126,10 @@ public class MainActivity extends AuthActivity {
         curNavButton = v;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    private void switchFragment(BoolioFragment fragment) {
+        boolioFragment = fragment;
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, fragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
     }
 
     public void switchFragment(int position) {
@@ -137,11 +137,5 @@ public class MainActivity extends AuthActivity {
             navBarAdd.callOnClick();
         else
             navBar.getChildAt(position).callOnClick();
-    }
-
-    private void switchFragment(BoolioFragment fragment) {
-        boolioFragment = fragment;
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, fragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
     }
 }

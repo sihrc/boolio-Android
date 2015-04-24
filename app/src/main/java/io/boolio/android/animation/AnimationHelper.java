@@ -75,7 +75,7 @@ public class AnimationHelper {
     private void out(View view, Animation animation) {
         if (view.getVisibility() == View.VISIBLE) {
             view.startAnimation(animation);
-            view.setVisibility(View.INVISIBLE);
+            view.setVisibility(View.GONE);
         }
     }
 

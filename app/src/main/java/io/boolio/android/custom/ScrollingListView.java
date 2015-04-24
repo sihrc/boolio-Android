@@ -36,7 +36,6 @@ public class ScrollingListView extends ListView {
     }
 
     OnScrollListener onScrollListener = new AbsListView.OnScrollListener() {
-
         private int mInitialScroll = 0;
         private boolean touching = false;
 
@@ -47,8 +46,9 @@ public class ScrollingListView extends ListView {
 
         @Override
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-            if (!touching)
+            if (!touching) {
                 return;
+            }
             int scrolledOffset = computeVerticalScrollOffset();
             if (scrolledOffset != mInitialScroll) {
                 //if scroll position changed

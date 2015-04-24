@@ -103,10 +103,8 @@ public class FeedFragment extends BoolioFragment {
 
     private void showBars(boolean visible) {
         if (visible) {
-            AnimationHelper.getInstance(context).animateViewTopIn(headerBar);
             context.showNavBar(true);
         } else {
-            AnimationHelper.getInstance(context).animateViewTopOut(headerBar);
             context.showNavBar(false);
         }
     }
