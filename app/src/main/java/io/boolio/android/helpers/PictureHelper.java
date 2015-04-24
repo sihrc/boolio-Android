@@ -6,16 +6,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.soundcloud.android.crop.Crop;
 
 import java.io.File;
 
-import io.boolio.android.MainActivity;
+import io.boolio.android.R;
 
 /**
  * Created by chris on 2/19/15.
@@ -53,7 +55,7 @@ public class PictureHelper {
         }
     }
 
-    public boolean onActivityResult(Fragment fragment, int requestCode, int resultCode, Intent data, View view, BitmapCallback callback) {
+    public boolean onActivityResult(Fragment fragment, int requestCode, int resultCode, Intent data, final View view, final BitmapCallback callback) {
         if (resultCode != Activity.RESULT_OK) {
             Log.e("PictureHelper", "Intent did not come back successfully");
             return false;
@@ -77,11 +79,25 @@ public class PictureHelper {
         }
 
         if (requestCode == Crop.REQUEST_CROP) {
-            Bitmap scaledBitmap = Utils.loadScaledBitmap(context, savedUri, MainActivity.SCREEN_WIDTH, MainActivity.SCREEN_HEIGHT);
-            callback.onBitmap(Utils.rotateBitmap(Bitmap.createBitmap(
-                    scaledBitmap, 0, 0,
-                    scaledBitmap.getWidth(),
-                    scaledBitmap.getHeight()), savedUri));
+            new AsyncTask<Void, Void, Bitmap>() {
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                    Toast.makeText(context, R.string.loading_picture, Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                protected Bitmap doInBackground(Void... params) {
+
+                    return Utils.rotateBitmap(
+                            Utils.loadScaledBitmap(context, savedUri, view.getWidth(), view.getHeight()), savedUri);
+                }
+
+                @Override
+                protected void onPostExecute(Bitmap aVoid) {
+                    callback.onBitmap(aVoid);
+                }
+            }.execute();
         }
 
         return false;

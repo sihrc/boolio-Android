@@ -256,7 +256,6 @@ public class BoolioServer {
             public void onResponse(JSONObject response) {
                 if (questionNetworkCallback != null)
                     questionNetworkCallback.handle(QuestionParser.getInstance().parse(response));
-
             }
         }, new Response.ErrorListener() {
             @Override

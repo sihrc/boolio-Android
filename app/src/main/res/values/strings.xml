@@ -26,6 +26,7 @@
     <string name="login_button_facebook">facebook</string>
 
     <!-- CreateQuestion Fragment -->
+    <string name="loading_picture">Loading Picture …</string>
     <string name="create_question_submit">Send</string>
     <string name="create_question_text_hint">Enter your question</string>
     <string name="create_question_tags_hint">Enter your categories</string>
