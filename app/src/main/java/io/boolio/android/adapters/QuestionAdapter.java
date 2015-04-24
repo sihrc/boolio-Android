@@ -1,31 +1,23 @@
 package io.boolio.android.adapters;
 
 import android.content.Context;
-import android.os.AsyncTask;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
+import android.widget.TextSwitcher;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
 
-<<<<<<< Updated upstream
-import org.json.JSONException;
-import org.json.JSONObject;
-=======
-import java.util.Timer;
-import java.util.TimerTask;
->>>>>>> Stashed changes
-
 import io.boolio.android.R;
-import io.boolio.android.helpers.BoolioUserHandler;
+import io.boolio.android.animation.TextAnimation;
 import io.boolio.android.helpers.Utils;
 import io.boolio.android.models.Question;
 import io.boolio.android.network.BoolioServer;
+import io.boolio.android.network.NetworkCallback;
 import io.boolio.android.views.BoolioProfileImage;
 
 /**
@@ -52,79 +44,46 @@ public class QuestionAdapter extends ArrayAdapter<Question> {
             //TextViews
             holder.container = view;
             holder.question = (TextView) view.findViewById(R.id.question_text);
-            holder.leftAnswer = (TextView) view.findViewById(R.id.question_left_answer);
-            holder.rightAnswer = (TextView) view.findViewById(R.id.question_right_answer);
+            holder.leftAnswer = (TextSwitcher) view.findViewById(R.id.question_left_answer);
+            holder.rightAnswer = (TextSwitcher) view.findViewById(R.id.question_right_answer);
             holder.creator = (TextView) view.findViewById(R.id.question_creator);
             holder.date = (TextView) view.findViewById(R.id.question_date);
+            TextAnimation.getInstance(context).FadeTextSwitcher(holder.leftAnswer, R.layout.text_answer_left);
+            TextAnimation.getInstance(context).FadeTextSwitcher(holder.rightAnswer, R.layout.text_answer_right);
 
             //Image Views
             holder.creatorImage = (BoolioProfileImage) view.findViewById(R.id.question_creator_picture);
             holder.questionImage = (NetworkImageView) view.findViewById(R.id.question_image);
-
-            holder.leftAnswer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    setUpPostJSON("left", position);
-
-                }
-            });
-            holder.rightAnswer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    setUpPostJSON("right", position);
-                }
-            });
 
             view.setTag(holder);
         } else {
             holder = (QuestionHolder) view.getTag();
         }
 
-<<<<<<< Updated upstream
-        fillViews(holder, getItem(position));
-=======
         Question question = getItem(position);
 
         fillViews(holder, question);
 
->>>>>>> Stashed changes
         return view;
     }
 
-    private void fillViews(QuestionHolder holder, Question question) {
+    private void fillViews(final QuestionHolder holder, final Question question) {
         holder.question.setText(question.question);
-<<<<<<< Updated upstream
-        holder.leftAnswer.setText(question.left);
-        holder.rightAnswer.setText(question.right);
-=======
+
         holder.leftAnswer.setCurrentText(question.left);
         holder.rightAnswer.setCurrentText(question.right);
         holder.leftAnswer.setEnabled(true);
         holder.rightAnswer .setEnabled(true);
->>>>>>> Stashed changes
+
         holder.creator.setText(question.creatorName);
         holder.date.setText(Utils.formatTimeDifferences(question.dateCreated) + " ago");
 
+        if (question.image.equals("")){
+            holder.questionImage.setVisibility(View.GONE);
+        }
         holder.questionImage.setImageUrl(question.image, BoolioServer.getInstance(context).getImageLoader());
         holder.creatorImage.setImageUrl(question.creatorImage, BoolioServer.getInstance(context).getImageLoader());
-    }
 
-    private void setUpPostJSON(String direction, int position) {
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("questionId", getItem(position).questionId);
-            jsonObject.put("answer", direction);
-            jsonObject.put("id", BoolioUserHandler.getInstance(context).getUser().userId);
-
-<<<<<<< Updated upstream
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        // POST the answer
-        BoolioServer.getInstance(context).postAnswer(jsonObject);
-        remove(getItem(position));
-        notifyDataSetChanged();
-=======
         final NetworkCallback<Question> questionNetworkCallback = new NetworkCallback<Question>() {
             @Override
             public void handle(final Question object) {
@@ -169,18 +128,12 @@ public class QuestionAdapter extends ArrayAdapter<Question> {
                 BoolioServer.getInstance(context).postAnswer(question.questionId, "right", questionNetworkCallback);
             }
         });
->>>>>>> Stashed changes
-
     }
 
     private class QuestionHolder {
-<<<<<<< Updated upstream
-        TextView question, leftAnswer, rightAnswer, creator, date;
-=======
         View container;
         TextView question, creator, date;
         TextSwitcher leftAnswer, rightAnswer;
->>>>>>> Stashed changes
         BoolioProfileImage creatorImage;
         NetworkImageView questionImage;
     }

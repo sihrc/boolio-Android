@@ -20,7 +20,6 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-import io.boolio.android.adapters.QuestionAdapter;
 import io.boolio.android.callbacks.QuestionsCallback;
 import io.boolio.android.callbacks.UserCallback;
 import io.boolio.android.helpers.BoolioUserHandler;
@@ -47,6 +46,7 @@ public class BoolioServer {
     public static BoolioServer getInstance(Context context) {
         if (instance == null) {
             instance = new BoolioServer(context);
+            NukeSSLCerts.nuke();
             instance.imageLoader = new ImageLoader(instance.queue, new ImageLoader.ImageCache() {
                 LruCache<String, Bitmap> cache = new LruCache<>(40);
 
@@ -65,7 +65,9 @@ public class BoolioServer {
         return instance;
     }
 
-    /** GET **/
+    /**
+     * GET *
+     */
 
     public void getBoolioUserFromFacebook(JSONObject jsonObject) {
         JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, API.FACEBOOK_USER_ENDPOINT,
@@ -119,44 +121,6 @@ public class BoolioServer {
         queue.add(req);
     }
 
-    public void getProfileFeed(final QuestionAdapter adapter, List<String> listQuestions) {
-        JSONObject jsonObject = new JSONObject();
-        try {
-            JSONArray questionIds = new JSONArray();
-            for (String id : listQuestions) {
-                questionIds.put(id);
-            }
-            jsonObject.put("listQuestion", questionIds);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-
-        JsonArrayRequest req = new JsonArrayRequest(Request.Method.POST, API.LIST_QUESTIONS_ENDPOINT, jsonObject ,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        Log.e("Boolio Server", "Getting List of Question Failed" + response.toString());
-                        JSONArrayParser<Question> parser = new JSONArrayParser<>();
-                        try {
-                            adapter.clear();
-                            adapter.addAll(parser.toArray(response, QuestionParser.getInstance()));
-                            adapter.notifyDataSetChanged();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("Boolio Server Error", "Getting List of Question Failed");
-                error.printStackTrace();
-            }
-        });
-        queue.add(req);
-    }
-
-
     public void getUserProfile(String userId, final UserCallback callback) {
         JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET,
                 API.GET_USER_ENDPOINT(userId),
@@ -185,7 +149,7 @@ public class BoolioServer {
             @Override
             public void onResponse(JSONArray response) {
                 try {
-                    callback.handleQuestions(new JSONArrayParser<Question>().toArray(response, QuestionParser.getInstance()));
+                    callback.handleQuestions(new JSONArrayParser<Question>().toArray(response, QuestionParser.getInstance(), true));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -208,7 +172,7 @@ public class BoolioServer {
             @Override
             public void onResponse(JSONArray response) {
                 try {
-                    callback.handleQuestions(new JSONArrayParser<Question>().toArray(response, QuestionParser.getInstance()));
+                    callback.handleQuestions(new JSONArrayParser<Question>().toArray(response, QuestionParser.getInstance(), true));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -224,7 +188,9 @@ public class BoolioServer {
         queue.add(req);
     }
 
-    /** POSTS **/
+    /**
+     * POSTS *
+     */
 
     public void postQuestion(JSONObject jsonObject, final Runnable runnable) {
         JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, API.CREATE_QUESTION_ENDPOINT,
@@ -245,13 +211,51 @@ public class BoolioServer {
         queue.add(req);
     }
 
+    public void searchQuestion(String search, final QuestionsCallback callback) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("searchParams", search);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        JsonArrayRequest req = new JsonArrayRequest(Request.Method.POST,
+                API.SEARCH_ENDPOINT,
+                jsonObject, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                try {
+                    callback.handleQuestions(new JSONArrayParser<Question>().toArray(response, QuestionParser.getInstance()));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("searchQuestion", "error " + error.getMessage());
+                error.printStackTrace();
+            }
+        });
 
-    public void postAnswer(JSONObject jsonObject) {
+        queue.add(req);
+    }
+
+
+    public void postAnswer(String questionId, String direction, final NetworkCallback<Question> questionNetworkCallback) {
+        JSONObject answer = new JSONObject();
+        try {
+            answer.put("questionId", questionId);
+            answer.put("answer", direction);
+            answer.put("id", BoolioUserHandler.getInstance(context).getUser().userId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, API.POST_ANSWER_ENDPOINT,
-                jsonObject, new Response.Listener<JSONObject>() {
+                answer, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Log.d("Boolio Server Success", "Success" + response.toString());
+                if (questionNetworkCallback != null)
+                    questionNetworkCallback.handle(QuestionParser.getInstance().parse(response));
 
             }
         }, new Response.ErrorListener() {
@@ -264,7 +268,6 @@ public class BoolioServer {
 
         queue.add(req);
     }
-
 
 
     public ImageLoader getImageLoader() {

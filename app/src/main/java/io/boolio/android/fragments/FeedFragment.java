@@ -25,29 +25,6 @@ import io.boolio.android.network.BoolioServer;
  */
 public class FeedFragment extends BoolioFragment {
     final public static int REFRESH_DELAY = 2000;
-    static FeedFragment instance;
-
-    Context context;
-    PullToRefreshView pullToRefreshLayout;
-    QuestionAdapter questionAdapter;
-    List<String> prevSeenQuestions;
-
-    View gifLoading;
-    View loadingMessage;
-
-    public static FeedFragment getInstance() {
-        if (instance == null)
-            instance = new FeedFragment();
-        return instance;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        prevSeenQuestions = new ArrayList<>();
-        context = activity;
-    }
-
     QuestionsCallback callback = new QuestionsCallback() {
         @Override
         public void handleQuestions(final List<Question> questionList) {
@@ -66,6 +43,26 @@ public class FeedFragment extends BoolioFragment {
             }, REFRESH_DELAY);
         }
     };
+    static FeedFragment instance;
+    Context context;
+    PullToRefreshView pullToRefreshLayout;
+    QuestionAdapter questionAdapter;
+    List<String> prevSeenQuestions;
+    View gifLoading;
+    View loadingMessage;
+
+    public static FeedFragment getInstance() {
+        if (instance == null)
+            instance = new FeedFragment();
+        return instance;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        prevSeenQuestions = new ArrayList<>();
+        context = activity;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

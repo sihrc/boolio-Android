@@ -12,8 +12,24 @@ public class OnScrollViewListener implements View.OnTouchListener {
 
     public final GestureDetector gestureDetector;
 
-    public OnScrollViewListener(Context context){
+    public OnScrollViewListener(Context context) {
         gestureDetector = new GestureDetector(context, new GestureListener());
+    }
+
+    public boolean onTouch(View v, MotionEvent event) {
+        return gestureDetector.onTouchEvent(event);
+    }
+
+    public void onSwipeRight() {
+    }
+
+    public void onSwipeLeft() {
+    }
+
+    public void onSwipeTop() {
+    }
+
+    public void onSwipeBottom() {
     }
 
     private final class GestureListener extends GestureDetector.SimpleOnGestureListener {
@@ -41,8 +57,7 @@ public class OnScrollViewListener implements View.OnTouchListener {
                         }
                     }
                     result = true;
-                }
-                else if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
+                } else if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
                     if (diffY > 0) {
                         onSwipeBottom();
                     } else {
@@ -56,20 +71,5 @@ public class OnScrollViewListener implements View.OnTouchListener {
             }
             return result;
         }
-    }
-    public boolean onTouch (View v, MotionEvent event){
-        return gestureDetector.onTouchEvent(event);
-    }
-
-    public void onSwipeRight() {
-    }
-
-    public void onSwipeLeft() {
-    }
-
-    public void onSwipeTop() {
-    }
-
-    public void onSwipeBottom() {
     }
 }
