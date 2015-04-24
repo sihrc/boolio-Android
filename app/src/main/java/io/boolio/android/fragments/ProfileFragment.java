@@ -34,7 +34,7 @@ import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.models.Question;
 import io.boolio.android.models.User;
 import io.boolio.android.network.BoolioServer;
-import io.boolio.android.views.BoolioProfileImage;
+import io.boolio.android.custom.BoolioProfileImage;
 
 /**
  * Created by Chris on 4/17/15.

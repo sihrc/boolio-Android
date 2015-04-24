@@ -1,6 +1,5 @@
 package io.boolio.android;
 
-import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import io.boolio.android.animation.AnimationHelper;
 import io.boolio.android.auth.AuthActivity;
 import io.boolio.android.fragments.BoolioFragment;
 import io.boolio.android.fragments.CreateQuestionFragment;
@@ -51,7 +51,7 @@ public class MainActivity extends AuthActivity {
 
     @Override
     protected void postLoginCallback() {
-        showNavigationbar(true);
+        showNavBar(true);
         if (boolioFragment == null || boolioFragment.getClass() == TutorialPagerFragment.class)
             switchFragment(FeedFragment.getInstance());
         else if (boolioFragment == FeedFragment.getInstance())
@@ -62,13 +62,20 @@ public class MainActivity extends AuthActivity {
 
     @Override
     protected void postLogoutCallback() {
-        showNavigationbar(false);
+        showNavBar(false);
         switchFragment(TutorialPagerFragment.newInstance());
     }
 
-    public void showNavigationbar(boolean show) {
-        navBar.setVisibility(show ? View.VISIBLE : View.GONE);
-        navBarAdd.setVisibility(show ? View.VISIBLE : View.GONE);
+    public void showNavBar(boolean visible) {
+        if (navBar == null)
+            return;
+        if (visible) {
+            AnimationHelper.getInstance(this).animateViewBottomIn(navBar);
+            AnimationHelper.getInstance(this).animateViewBottomIn(navBarAdd);
+        } else {
+            AnimationHelper.getInstance(this).animateViewBottomOut(navBar);
+            AnimationHelper.getInstance(this).animateViewBottomOut(navBarAdd);
+        }
     }
 
     private void setupNavigationBar() {
@@ -120,9 +127,10 @@ public class MainActivity extends AuthActivity {
         curNavButton = v;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    private void switchFragment(BoolioFragment fragment) {
+        boolioFragment = fragment;
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, fragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
     }
 
     public void switchFragment(int position) {
@@ -130,11 +138,5 @@ public class MainActivity extends AuthActivity {
             navBarAdd.callOnClick();
         else
             navBar.getChildAt(position).callOnClick();
-    }
-
-    private void switchFragment(BoolioFragment fragment) {
-        boolioFragment = fragment;
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, fragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
     }
 }

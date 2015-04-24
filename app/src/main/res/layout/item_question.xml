@@ -22,7 +22,7 @@
             android:gravity="center_vertical"
             android:padding="@dimen/question_creator_image_margin">
 
-            <io.boolio.android.views.BoolioProfileImage
+            <io.boolio.android.custom.BoolioProfileImage
                 android:id="@+id/question_creator_picture"
                 android:layout_width="@dimen/question_user_profile_size"
                 android:layout_height="@dimen/question_user_profile_size"

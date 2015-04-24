@@ -15,7 +15,7 @@ import io.boolio.android.animation.TextAnimation;
 import io.boolio.android.helpers.Utils;
 import io.boolio.android.models.Question;
 import io.boolio.android.network.BoolioServer;
-import io.boolio.android.views.BoolioProfileImage;
+import io.boolio.android.custom.BoolioProfileImage;
 
 /**
  * Created by james on 4/24/15.
@@ -73,8 +73,7 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
             holder.questionImage.setVisibility(View.GONE);
         }
 
-        fillQuestions(holder, question);
-        fillAnswers(holder, question);
+        fillContent(holder, question);
 
         holder.questionImage.setImageUrl(question.image, BoolioServer.getInstance(context).getImageLoader());
         holder.creatorImage.setImageUrl(question.creatorImage, BoolioServer.getInstance(context).getImageLoader());
@@ -89,8 +88,5 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
         NetworkImageView questionImage;
     }
 
-    public abstract void fillQuestions(QuestionHolder holder, Question question);
-
-    public abstract void fillAnswers(QuestionHolder holder, Question question);
-
+    public abstract void fillContent(QuestionHolder holder, Question question);
 }

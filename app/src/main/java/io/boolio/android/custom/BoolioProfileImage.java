@@ -1,4 +1,4 @@
-package io.boolio.android.views;
+package io.boolio.android.custom;
 
 import android.content.Context;
 import android.graphics.Bitmap;

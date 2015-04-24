@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ListView
+            <io.boolio.android.custom.ScrollingListView
                 android:id="@+id/question_feed"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
@@ -38,13 +38,6 @@
 
         </io.boolio.android.custom.PullToRefreshView>
     </FrameLayout>
-
-    <!--<pl.droidsonroids.gif.GifImageView-->
-    <!--android:id="@+id/gif_loading"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layout_below="@id/header_bar"-->
-    <!--android:src="@drawable/bear_loading"/>-->
 
     <fr.castorflex.android.circularprogressbar.CircularProgressBar
         xmlns:android="http://schemas.android.com/apk/res/android"
