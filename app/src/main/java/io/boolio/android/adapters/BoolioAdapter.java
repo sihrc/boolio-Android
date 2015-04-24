@@ -35,8 +35,9 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
         QuestionHolder holder;
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(resource, parent, false);
             holder = new QuestionHolder();
+            view = inflater.inflate(resource, parent, false);
+            holder.view = view;
 
             //TextViews
             holder.question = (TextView) view.findViewById(R.id.question_text);
@@ -82,6 +83,7 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
 
 
     public class QuestionHolder {
+        View view;
         TextView question, creator, date;
         TextSwitcher leftAnswer, rightAnswer;
         BoolioProfileImage creatorImage;

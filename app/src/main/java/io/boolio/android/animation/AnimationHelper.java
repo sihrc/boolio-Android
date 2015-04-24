@@ -13,7 +13,7 @@ import io.boolio.android.R;
 public class AnimationHelper {
     static AnimationHelper instance;
 
-    Animation bottomOut, bottomIn, topOut, topIn, rightIn, rightOut, leftIn, leftOut;
+    public Animation bottomOut, bottomIn, topOut, topIn, rightIn, rightOut, leftIn, leftOut;
 
     Context context;
 

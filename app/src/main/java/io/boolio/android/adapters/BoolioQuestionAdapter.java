@@ -2,7 +2,9 @@ package io.boolio.android.adapters;
 
 import android.content.Context;
 import android.view.View;
+import android.view.animation.Animation;
 
+import io.boolio.android.animation.AnimationHelper;
 import io.boolio.android.models.Question;
 import io.boolio.android.network.BoolioServer;
 import io.boolio.android.network.NetworkCallback;
@@ -23,6 +25,23 @@ public class BoolioQuestionAdapter extends BoolioAdapter {
             public void handle(Question object) {
                 holder.leftAnswer.setText(String.valueOf(object.leftCount));
                 holder.rightAnswer.setText(String.valueOf(object.rightCount));
+
+                Animation animation = AnimationHelper.getInstance(context).rightOut;
+                animation.setStartOffset(2000);
+                animation.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {}
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        remove(question);
+                        notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {}
+                });
+                holder.view.startAnimation(animation);
             }
         };
         holder.leftAnswer.setOnClickListener(new View.OnClickListener() {
@@ -39,4 +58,5 @@ public class BoolioQuestionAdapter extends BoolioAdapter {
             }
         });
     }
+
 }
