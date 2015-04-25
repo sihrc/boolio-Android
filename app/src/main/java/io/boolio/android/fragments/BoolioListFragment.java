@@ -75,7 +75,6 @@ public class BoolioListFragment extends BoolioFragment {
         listView.setScrollChangeListener(new ScrollingListView.ScrollChangeListener() {
             @Override
             public void onScroll(boolean isScrollingUp) {
-                Log.i("DebugDebug", isScrollingUp + " boolean");
                 context.showNavBar(isScrollingUp);
             }
         });

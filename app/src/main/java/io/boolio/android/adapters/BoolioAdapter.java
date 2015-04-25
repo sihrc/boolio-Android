@@ -1,6 +1,7 @@
 package io.boolio.android.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,6 +73,8 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
 
         if (question.image.equals("")){
             holder.questionImage.setVisibility(View.GONE);
+        } else {
+            holder.questionImage.setVisibility(View.VISIBLE);
         }
 
         fillContent(holder, question);
