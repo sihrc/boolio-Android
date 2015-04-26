@@ -17,13 +17,6 @@ public class AnimationHelper {
 
     Context context;
 
-    public static AnimationHelper getInstance(Context context) {
-        if (instance == null) {
-            instance = new AnimationHelper(context);
-        }
-        return instance;
-    }
-
     public AnimationHelper(Context context) {
         this.context = context;
         setupAll();
@@ -40,29 +33,15 @@ public class AnimationHelper {
         leftOut = AnimationUtils.loadAnimation(context, R.anim.left_out);
     }
 
+    public static AnimationHelper getInstance(Context context) {
+        if (instance == null) {
+            instance = new AnimationHelper(context);
+        }
+        return instance;
+    }
+
     public void animateViewBottomIn(View view) {
         in(view, bottomIn);
-    }
-    public void animateViewBottomOut(View view) {
-        out(view, bottomOut);
-    }
-    public void animateViewTopIn(View view) {
-        in(view, topIn);
-    }
-    public void animateViewTopOut(View view) {
-        out(view, topOut);
-    }
-    public void animateViewRightIn(View view) {
-        in(view, rightIn);
-    }
-    public void animateViewRightOut(View view) {
-        out(view, rightOut);
-    }
-    public void animateViewLeftIn(View view) {
-        in(view, leftIn);
-    }
-    public void animateViewLeftOut(View view) {
-        out(view, leftOut);
     }
 
     private void in(View view, Animation animation) {
@@ -72,11 +51,39 @@ public class AnimationHelper {
         }
     }
 
+    public void animateViewBottomOut(View view) {
+        out(view, bottomOut);
+    }
+
     private void out(View view, Animation animation) {
         if (view.getVisibility() == View.VISIBLE) {
             view.startAnimation(animation);
             view.setVisibility(View.GONE);
         }
+    }
+
+    public void animateViewTopIn(View view) {
+        in(view, topIn);
+    }
+
+    public void animateViewTopOut(View view) {
+        out(view, topOut);
+    }
+
+    public void animateViewRightIn(View view) {
+        in(view, rightIn);
+    }
+
+    public void animateViewRightOut(View view) {
+        out(view, rightOut);
+    }
+
+    public void animateViewLeftIn(View view) {
+        in(view, leftIn);
+    }
+
+    public void animateViewLeftOut(View view) {
+        out(view, leftOut);
     }
 
 

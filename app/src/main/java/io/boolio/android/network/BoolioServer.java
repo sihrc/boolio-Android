@@ -37,6 +37,14 @@ public class BoolioServer {
     ImageLoader imageLoader;
     Context context;
     RequestQueue queue;
+    Response.ErrorListener errorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            if (error.networkResponse != null && error.networkResponse.data != null)
+                Log.e("Volley Error", new String(error.networkResponse.data));
+            error.printStackTrace();
+        }
+    };
 
     public BoolioServer(Context context) {
         this.context = context;
@@ -111,13 +119,7 @@ public class BoolioServer {
                             e.printStackTrace();
                         }
                     }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("Boolio Server Error", "Getting Question Feed Failed");
-                error.printStackTrace();
-            }
-        });
+                }, errorListener);
         queue.add(req);
     }
 
@@ -130,13 +132,7 @@ public class BoolioServer {
                 callback.handleUser(UserParser.getInstance().parse(response));
 
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-                Log.e("GetUserProfile", "We done fucked it, " + error.getMessage());
-            }
-        });
+        }, errorListener);
 
 
         queue.add(req);
@@ -154,13 +150,7 @@ public class BoolioServer {
                     e.printStackTrace();
                 }
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("getUserAsked", "We done fucked it, " + error.getMessage());
-                error.printStackTrace();
-            }
-        });
+        }, errorListener);
 
         queue.add(req);
     }
@@ -177,38 +167,54 @@ public class BoolioServer {
                     e.printStackTrace();
                 }
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("getUserAnswered", "We done fucked it, " + error.getMessage());
-                error.printStackTrace();
-            }
-        });
+        }, errorListener);
 
+        queue.add(req);
+    }
+
+    public void postQuestion(Question question, final Bitmap bm, final Runnable runnable) {
+        JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, API.POST_QUESTION,
+                QuestionParser.getInstance().toJSON(question), new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Question returned = QuestionParser.getInstance().parse(response);
+                uploadImage(returned.questionId, bm, new NetworkCallback<Question>() {
+                    @Override
+                    public void handle(Question object) {
+                        if (runnable != null)
+                            runnable.run();
+                    }
+                });
+            }
+        }, errorListener);
         queue.add(req);
     }
 
     /**
      * POSTS *
      */
+    public void uploadImage(final String questionId, Bitmap bm, final NetworkCallback<Question> callback) {
+        queue.add(
+                new MultiPartRequest(questionId + "image" + System.currentTimeMillis(), API.POST_UPLOAD_IMAGE, bm, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        JSONObject update = new JSONObject();
+                        try {
+                            update.put("id", questionId);
+                            update.put("url", response.getString("url"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
 
-    public void postQuestion(JSONObject jsonObject, final Runnable runnable) {
-        JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, API.CREATE_QUESTION_ENDPOINT,
-                jsonObject, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Log.d("Boolio Server stuff", response.toString());
-                if (runnable != null)
-                    runnable.run();
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("Boolio Server Error", "Posting Question Failed");
-                error.printStackTrace();
-            }
-        });
-        queue.add(req);
+                        queue.add(new JsonObjectRequest(Request.Method.POST, API.POST_UPDATE_QUESTION, update, new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                callback.handle(QuestionParser.getInstance().parse(response));
+                            }
+                        }, errorListener));
+                    }
+                }, errorListener)
+        );
     }
 
     public void searchQuestion(String search, final QuestionsCallback callback) {
@@ -219,7 +225,7 @@ public class BoolioServer {
             e.printStackTrace();
         }
         JsonArrayRequest req = new JsonArrayRequest(Request.Method.POST,
-                API.SEARCH_ENDPOINT,
+                API.POST_SEARCH,
                 jsonObject, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -229,13 +235,7 @@ public class BoolioServer {
                     e.printStackTrace();
                 }
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("searchQuestion", "error " + error.getMessage());
-                error.printStackTrace();
-            }
-        });
+        }, errorListener);
 
         queue.add(req);
     }
@@ -250,24 +250,17 @@ public class BoolioServer {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, API.POST_ANSWER_ENDPOINT,
+        JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, API.POST_ANSWER,
                 answer, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 if (questionNetworkCallback != null)
                     questionNetworkCallback.handle(QuestionParser.getInstance().parse(response));
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("Boolio Server Error", "Posting Answer failed");
-                error.printStackTrace();
-            }
-        });
+        }, errorListener);
 
         queue.add(req);
     }
-
 
     public ImageLoader getImageLoader() {
         return imageLoader;

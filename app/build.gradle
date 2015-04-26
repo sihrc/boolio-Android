@@ -31,16 +31,25 @@ android {
             url 'https://github.com/bsphere/aws-android-sdk-mvn-repo/raw/master/releases'
         }
     }
+
+    packagingOptions {
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/LICENSE.txt'
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.0.0'
+    /// Facebook SDK
     compile 'com.facebook.android:facebook-android-sdk:3.21.1'
+    // Network Handling
     compile 'com.mcxiaoke.volley:library:1.0.15'
-    compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.5'
+    // Progress Bar
     compile 'com.github.castorflex.smoothprogressbar:library-circular:1.0.0'
+    // Cropping Library
     compile 'com.soundcloud.android:android-crop:0.9.10@aar'
-    compile 'com.amazonaws:android-sdk-core:1.7.0'
-    compile 'com.amazonaws:android-sdk-s3:1.7.0'
+    // Multipart
+    compile 'org.apache.httpcomponents:httpcore:4.0-alpha6'
+    compile "org.apache.httpcomponents:httpmime:4.2.3"
 }

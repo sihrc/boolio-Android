@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -107,7 +106,6 @@ public class ProfileFragment extends BoolioFragment {
         profileDisplayName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.v("Debugdebug","IM HERE");
             }
         });
 
@@ -131,21 +129,6 @@ public class ProfileFragment extends BoolioFragment {
         scrollView.requestFocus();
     }
 
-    private void setupTabOnClick(){
-        askedView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewPager.setCurrentItem(0);
-            }
-        });
-        answerView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewPager.setCurrentItem(1);
-            }
-        });
-
-    }
     private void setupScrolling() {
         scrollView.setSmoothScrollingEnabled(true);
         scrollView.setScrollViewListener(new ScrollViewListener() {
@@ -239,6 +222,22 @@ public class ProfileFragment extends BoolioFragment {
         });
     }
 
+    private void setupTabOnClick() {
+        askedView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewPager.setCurrentItem(0);
+            }
+        });
+        answerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewPager.setCurrentItem(1);
+            }
+        });
+
+    }
+
 //    private void setupViews() {
 //        // Settings Button
 //        profileSetting.setOnClickListener(new View.OnClickListener() {
@@ -273,11 +272,8 @@ public class ProfileFragment extends BoolioFragment {
             return;
 
         if (user.userId.equals(BoolioUserHandler.getInstance(context).getUser().userId)) {
-//            profileSetting.setVisibility(View.VISIBLE);
             profileDisplayName.setText(R.string.my_profile_page);
-            Log.v("debugdebug", " me "+ user.name + " ." + profileDisplayName.getText().toString() + " end");
         } else {
-//            profileSetting.setVisibility(View.GONE);
             profileDisplayName.setText(R.string.profile_page);
         }
 

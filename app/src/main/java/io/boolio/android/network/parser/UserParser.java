@@ -3,6 +3,7 @@ package io.boolio.android.network.parser;
 import android.util.Log;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import io.boolio.android.models.User;
 
@@ -35,5 +36,10 @@ public class UserParser extends Parser<User> {
         }
 
         return user;
+    }
+
+    @Override
+    public JSONObject toJSON(User object) {
+        return null;
     }
 }

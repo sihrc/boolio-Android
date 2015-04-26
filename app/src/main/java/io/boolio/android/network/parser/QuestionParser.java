@@ -2,22 +2,20 @@ package io.boolio.android.network.parser;
 
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import io.boolio.android.models.Question;
-import io.boolio.android.models.User;
 
 /**
  * Created by james on 4/17/15.
  */
 public class QuestionParser extends Parser<Question> {
-    static QuestionParser instance;
     static JSONArrayParser<String> stringArray = new JSONArrayParser<>();
 
     public static QuestionParser getInstance() {
-        if (instance == null)
-            instance = new QuestionParser();
-        return instance;
+        return new QuestionParser();
     }
 
     @Override
@@ -44,5 +42,22 @@ public class QuestionParser extends Parser<Question> {
         }
 
         return question;
+    }
+
+    @Override
+    public JSONObject toJSON(Question object) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            put(jsonObject, "question", object.question);
+            put(jsonObject, "left", object.left);
+            put(jsonObject, "right", object.right);
+            put(jsonObject, "creatorName", object.creatorName);
+            put(jsonObject, "creatorPic", object.creatorImage);
+            put(jsonObject, "tags", new JSONArray(object.tags));
+            put(jsonObject, "dateCreated", System.currentTimeMillis());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 }

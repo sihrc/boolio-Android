@@ -8,7 +8,6 @@ import java.util.List;
 public class Question {
 
     public String dateCreated, creatorName, image, left, right, question, creatorImage, questionId;
-    public User creator;
     public int leftCount, rightCount;
     public List<String> usersWhoLeft, usersWhoRight, tags;
 

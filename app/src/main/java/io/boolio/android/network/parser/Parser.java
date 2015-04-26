@@ -46,4 +46,12 @@ public abstract class Parser<T> {
     }
 
     public abstract T parse();
+
+    void put(JSONObject object, String key, Object value) throws JSONException {
+        if (value == null)
+            return;
+        object.put(key, value);
+    }
+
+    public abstract JSONObject toJSON(T object);
 }

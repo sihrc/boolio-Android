@@ -16,6 +16,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by Chris on 4/17/15.
@@ -61,6 +64,16 @@ public class Utils {
         return new File(tempFile, System.currentTimeMillis() + ".jpg");
     }
 
+    public static List<String> parseStringArray(String input) {
+        List<String> result = new ArrayList<>();
+        if (input.isEmpty())
+            return result;
+
+        Collections.addAll(result, input.replace(" ", "").split(","));
+
+        return result;
+    }
+
     /**
      * ACCESS PRIVATE METHOD *
      */
@@ -91,7 +104,6 @@ public class Utils {
 
         // Determine how much to scale down the image
         int scaleFactor = calculateInSampleSize(bmOptions, width, height);
-        Log.i("DebugDebug", scaleFactor + " scale Factor");
         // Decode the image file into a Bitmap sized to fill the View
         bmOptions.inJustDecodeBounds = false;
         bmOptions.inSampleSize = scaleFactor;

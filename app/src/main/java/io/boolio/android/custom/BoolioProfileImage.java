@@ -28,6 +28,11 @@ public class BoolioProfileImage extends NetworkImageView {
         super(context, attrs, defStyle);
     }
 
+    @Override
+    public void setImageBitmap(Bitmap bm) {
+        super.setImageBitmap(getCroppedBitmap(bm, getWidth()));
+    }
+
     public static Bitmap getCroppedBitmap(Bitmap bmp, int radius) {
         Bitmap sbmp;
         if (bmp == null) {
@@ -55,11 +60,6 @@ public class BoolioProfileImage extends NetworkImageView {
 
 
         return output;
-    }
-
-    @Override
-    public void setImageBitmap(Bitmap bm) {
-        super.setImageBitmap(getCroppedBitmap(bm, getWidth()));
     }
 
 }

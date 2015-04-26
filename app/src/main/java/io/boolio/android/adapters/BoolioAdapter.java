@@ -1,7 +1,6 @@
 package io.boolio.android.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +12,10 @@ import com.android.volley.toolbox.NetworkImageView;
 
 import io.boolio.android.R;
 import io.boolio.android.animation.TextAnimation;
+import io.boolio.android.custom.BoolioProfileImage;
 import io.boolio.android.helpers.Utils;
 import io.boolio.android.models.Question;
 import io.boolio.android.network.BoolioServer;
-import io.boolio.android.custom.BoolioProfileImage;
 
 /**
  * Created by james on 4/24/15.
@@ -71,7 +70,7 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
         holder.creator.setText(question.creatorName);
         holder.date.setText(Utils.formatTimeDifferences(question.dateCreated) + " ago");
 
-        if (question.image.equals("")){
+        if (question.image.equals("")) {
             holder.questionImage.setVisibility(View.GONE);
         } else {
             holder.questionImage.setVisibility(View.VISIBLE);
@@ -84,6 +83,7 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
 
     }
 
+    public abstract void fillContent(QuestionHolder holder, Question question);
 
     public class QuestionHolder {
         View view;
@@ -92,6 +92,4 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
         BoolioProfileImage creatorImage;
         NetworkImageView questionImage;
     }
-
-    public abstract void fillContent(QuestionHolder holder, Question question);
 }

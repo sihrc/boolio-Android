@@ -34,6 +34,9 @@ public class BoolioUserHandler {
         if (user == null || user.userId.isEmpty()) {
             user = new User();
             user.userId = PrefsHelper.getInstance(context).getString("userId");
+            if (user.userId.isEmpty()) {
+                logout();
+            }
         }
         return user;
     }

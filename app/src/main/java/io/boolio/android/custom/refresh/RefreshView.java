@@ -81,6 +81,19 @@ public class RefreshView extends BaseRefreshView implements Animatable {
         });
     }
 
+    private void setupAnimations() {
+        mAnimation = new Animation() {
+            @Override
+            public void applyTransformation(float interpolatedTime, Transformation t) {
+                setRotate(interpolatedTime);
+            }
+        };
+        mAnimation.setRepeatCount(Animation.INFINITE);
+        mAnimation.setRepeatMode(Animation.RESTART);
+        mAnimation.setInterpolator(LINEAR_INTERPOLATOR);
+        mAnimation.setDuration(ANIMATION_DURATION);
+    }
+
     public void initiateDimens(int viewWidth) {
         if (viewWidth <= 0 || viewWidth == mScreenWidth) return;
 
@@ -102,6 +115,11 @@ public class RefreshView extends BaseRefreshView implements Animatable {
         createBitmaps();
     }
 
+    public void setRotate(float rotate) {
+        mRotate = rotate;
+        invalidateSelf();
+    }
+
     private void createBitmaps() {
         background = BitmapFactory.decodeResource(getContext().getResources(), drawables[0]);
         background = Bitmap.createScaledBitmap(background, mScreenWidth, mSkyHeight, true);
@@ -121,6 +139,25 @@ public class RefreshView extends BaseRefreshView implements Animatable {
     public void offsetTopAndBottom(int offset) {
         mTop += offset;
         invalidateSelf();
+    }
+
+    @Override
+    public void setAlpha(int alpha) {
+
+    }
+
+    @Override
+    public void setColorFilter(ColorFilter colorFilter) {
+
+    }
+
+    @Override
+    public int getOpacity() {
+        return PixelFormat.TRANSLUCENT;
+    }
+
+    public void setPercent(float percent) {
+        mPercent = percent;
     }
 
     @Override
@@ -161,44 +198,6 @@ public class RefreshView extends BaseRefreshView implements Animatable {
         matrix.postScale(skyScale, skyScale);
         matrix.postTranslate(offsetX, offsetY);
         canvas.drawBitmap(background, matrix, null);
-    }
-
-    private void drawTown(Canvas canvas) {
-        Matrix matrix = mMatrix;
-        matrix.reset();
-
-        float dragPercent = Math.min(1f, Math.abs(mPercent));
-
-        float townScale;
-        float townTopOffset;
-        float townMoveOffset;
-        float scalePercentDelta = dragPercent - SCALE_START_PERCENT;
-        if (scalePercentDelta > 0) {
-            /**
-             * Change townScale between {@link #TOWN_INITIAL_SCALE} and {@link #TOWN_FINAL_SCALE} depending on {@link #mPercent}
-             * Change townTopOffset between {@link #mTownInitialTopOffset} and {@link #mTownFinalTopOffset} depending on {@link #mPercent}
-             */
-            float scalePercent = scalePercentDelta / (1.0f - SCALE_START_PERCENT);
-            townScale = TOWN_INITIAL_SCALE + (TOWN_FINAL_SCALE - TOWN_INITIAL_SCALE) * scalePercent;
-            townTopOffset = mTownInitialTopOffset - (mTownFinalTopOffset - mTownInitialTopOffset) * scalePercent;
-            townMoveOffset = mTownMoveOffset * (1.0f - scalePercent);
-        } else {
-            float scalePercent = dragPercent / SCALE_START_PERCENT;
-            townScale = TOWN_INITIAL_SCALE;
-            townTopOffset = mTownInitialTopOffset;
-            townMoveOffset = mTownMoveOffset * scalePercent;
-        }
-
-        float offsetX = -(mScreenWidth * townScale - mScreenWidth) / 2.0f;
-        float offsetY = (1.0f - dragPercent) * mParent.getTotalDragDistance() // Offset canvas moving
-                + townTopOffset
-                - mTownHeight * (townScale - 1.0f) / 2 // Offset town scaling
-                + townMoveOffset; // Give it a little move
-
-        matrix.postScale(townScale, townScale);
-        matrix.postTranslate(offsetX, offsetY);
-
-        canvas.drawBitmap(foreground, matrix, null);
     }
 
     private void drawSun(Canvas canvas) {
@@ -244,23 +243,42 @@ public class RefreshView extends BaseRefreshView implements Animatable {
         canvas.drawBitmap(rotating, matrix, null);
     }
 
-    public void setPercent(float percent) {
-        mPercent = percent;
-    }
+    private void drawTown(Canvas canvas) {
+        Matrix matrix = mMatrix;
+        matrix.reset();
 
-    public void setRotate(float rotate) {
-        mRotate = rotate;
-        invalidateSelf();
-    }
+        float dragPercent = Math.min(1f, Math.abs(mPercent));
 
-    public void resetOriginals() {
-        setPercent(0);
-        setRotate(0);
-    }
+        float townScale;
+        float townTopOffset;
+        float townMoveOffset;
+        float scalePercentDelta = dragPercent - SCALE_START_PERCENT;
+        if (scalePercentDelta > 0) {
+            /**
+             * Change townScale between {@link #TOWN_INITIAL_SCALE} and {@link #TOWN_FINAL_SCALE} depending on {@link #mPercent}
+             * Change townTopOffset between {@link #mTownInitialTopOffset} and {@link #mTownFinalTopOffset} depending on {@link #mPercent}
+             */
+            float scalePercent = scalePercentDelta / (1.0f - SCALE_START_PERCENT);
+            townScale = TOWN_INITIAL_SCALE + (TOWN_FINAL_SCALE - TOWN_INITIAL_SCALE) * scalePercent;
+            townTopOffset = mTownInitialTopOffset - (mTownFinalTopOffset - mTownInitialTopOffset) * scalePercent;
+            townMoveOffset = mTownMoveOffset * (1.0f - scalePercent);
+        } else {
+            float scalePercent = dragPercent / SCALE_START_PERCENT;
+            townScale = TOWN_INITIAL_SCALE;
+            townTopOffset = mTownInitialTopOffset;
+            townMoveOffset = mTownMoveOffset * scalePercent;
+        }
 
-    @Override
-    protected void onBoundsChange(Rect bounds) {
-        super.onBoundsChange(bounds);
+        float offsetX = -(mScreenWidth * townScale - mScreenWidth) / 2.0f;
+        float offsetY = (1.0f - dragPercent) * mParent.getTotalDragDistance() // Offset canvas moving
+                + townTopOffset
+                - mTownHeight * (townScale - 1.0f) / 2 // Offset town scaling
+                + townMoveOffset; // Give it a little move
+
+        matrix.postScale(townScale, townScale);
+        matrix.postTranslate(offsetX, offsetY);
+
+        canvas.drawBitmap(foreground, matrix, null);
     }
 
     @Override
@@ -269,23 +287,8 @@ public class RefreshView extends BaseRefreshView implements Animatable {
     }
 
     @Override
-    public void setAlpha(int alpha) {
-
-    }
-
-    @Override
-    public void setColorFilter(ColorFilter colorFilter) {
-
-    }
-
-    @Override
-    public int getOpacity() {
-        return PixelFormat.TRANSLUCENT;
-    }
-
-    @Override
-    public boolean isRunning() {
-        return false;
+    protected void onBoundsChange(Rect bounds) {
+        super.onBoundsChange(bounds);
     }
 
     @Override
@@ -302,17 +305,14 @@ public class RefreshView extends BaseRefreshView implements Animatable {
         resetOriginals();
     }
 
-    private void setupAnimations() {
-        mAnimation = new Animation() {
-            @Override
-            public void applyTransformation(float interpolatedTime, Transformation t) {
-                setRotate(interpolatedTime);
-            }
-        };
-        mAnimation.setRepeatCount(Animation.INFINITE);
-        mAnimation.setRepeatMode(Animation.RESTART);
-        mAnimation.setInterpolator(LINEAR_INTERPOLATOR);
-        mAnimation.setDuration(ANIMATION_DURATION);
+    public void resetOriginals() {
+        setPercent(0);
+        setRotate(0);
+    }
+
+    @Override
+    public boolean isRunning() {
+        return false;
     }
 
 }

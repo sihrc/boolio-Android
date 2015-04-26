@@ -51,15 +51,6 @@ public class TutorialPagerFragment extends BoolioFragment {
         return tutorialPagerFragment;
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        context = activity;
-        ((MainActivity) activity).showNavBar(false);
-        inactiveIndicator = getResources().getDrawable(R.drawable.inactive_indicator);
-        activeIndicator = getResources().getDrawable(R.drawable.active_indicator);
-    }
-
     // Set the Tutorial Fragments
     private void setTutorials(Integer... args) {
         fragmentList = new ArrayList<>();
@@ -67,6 +58,15 @@ public class TutorialPagerFragment extends BoolioFragment {
         while (index < total)
             fragmentList.add(TutorialFragment.newInstance(args[index++], args[index++]));
         fragmentList.add(LoginFragment.newInstance());
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        context = activity;
+        ((MainActivity) activity).showNavBar(false);
+        inactiveIndicator = getResources().getDrawable(R.drawable.inactive_indicator);
+        activeIndicator = getResources().getDrawable(R.drawable.active_indicator);
     }
 
     @Override

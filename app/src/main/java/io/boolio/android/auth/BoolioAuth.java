@@ -20,13 +20,13 @@ public class BoolioAuth extends Auth {
     }
 
     @Override
-    public boolean isAuthed() {
-        return false;
+    public void onCreate(Activity activity, Bundle savedInstanceState) {
+
     }
 
     @Override
-    public void onCreate(Activity activity, Bundle savedInstanceState) {
-
+    public boolean isAuthed() {
+        return false;
     }
 
     @Override

@@ -30,7 +30,8 @@ public class BoolioQuestionAdapter extends BoolioAdapter {
                 animation.setStartOffset(2000);
                 animation.setAnimationListener(new Animation.AnimationListener() {
                     @Override
-                    public void onAnimationStart(Animation animation) {}
+                    public void onAnimationStart(Animation animation) {
+                    }
 
                     @Override
                     public void onAnimationEnd(Animation animation) {
@@ -39,7 +40,8 @@ public class BoolioQuestionAdapter extends BoolioAdapter {
                     }
 
                     @Override
-                    public void onAnimationRepeat(Animation animation) {}
+                    public void onAnimationRepeat(Animation animation) {
+                    }
                 });
                 holder.view.startAnimation(animation);
             }

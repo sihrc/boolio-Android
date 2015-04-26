@@ -37,11 +37,6 @@ public class FacebookAuth extends Auth {
         return instance;
     }
 
-    public boolean isAuthed() {
-        Session session = Session.getActiveSession();
-        return (session != null && session.isOpened());
-    }
-
     public void onCreate(final Activity activity, Bundle savedInstanceState) {
         fbUIHelper = new UiLifecycleHelper(activity, new Session.StatusCallback() {
             @Override
@@ -59,6 +54,43 @@ public class FacebookAuth extends Auth {
             }
         });
         fbUIHelper.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        fbUIHelper.onResume();
+        updateInformation();
+
+        // Facebook Logger
+        AppEventsLogger.activateApp(activity);
+    }
+
+    public boolean isAuthed() {
+        Session session = Session.getActiveSession();
+        return (session != null && session.isOpened());
+    }
+
+    @Override
+    public void onPause() {
+        fbUIHelper.onPause();
+
+        //Facebook Logger
+        AppEventsLogger.deactivateApp(activity);
+    }
+
+    @Override
+    public void onDestroy() {
+        fbUIHelper.onDestroy();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        fbUIHelper.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        fbUIHelper.onActivityResult(requestCode, resultCode, data);
     }
 
     // Facebook Get OAuthID From Me Request
@@ -106,37 +138,5 @@ public class FacebookAuth extends Auth {
                 updateInformation();
             }
         }
-    }
-
-    @Override
-    public void onResume() {
-        fbUIHelper.onResume();
-        updateInformation();
-
-        // Facebook Logger
-        AppEventsLogger.activateApp(activity);
-    }
-
-    @Override
-    public void onPause() {
-        fbUIHelper.onPause();
-
-        //Facebook Logger
-        AppEventsLogger.deactivateApp(activity);
-    }
-
-    @Override
-    public void onDestroy() {
-        fbUIHelper.onDestroy();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        fbUIHelper.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        fbUIHelper.onActivityResult(requestCode, resultCode, data);
     }
 }

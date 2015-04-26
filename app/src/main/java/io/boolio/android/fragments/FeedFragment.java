@@ -13,10 +13,7 @@ import java.util.List;
 
 import io.boolio.android.MainActivity;
 import io.boolio.android.R;
-import io.boolio.android.adapters.BoolioAdapter;
 import io.boolio.android.adapters.BoolioQuestionAdapter;
-import io.boolio.android.adapters.QuestionAdapter;
-import io.boolio.android.animation.AnimationHelper;
 import io.boolio.android.callbacks.QuestionsCallback;
 import io.boolio.android.custom.PullToRefreshView;
 import io.boolio.android.custom.ScrollingListView;
@@ -29,7 +26,25 @@ import io.boolio.android.network.BoolioServer;
  */
 public class FeedFragment extends BoolioFragment {
     final public static int REFRESH_DELAY = 2000;
-
+    QuestionsCallback callback = new QuestionsCallback() {
+        @Override
+        public void handleQuestions(final List<Question> questionList) {
+            pullToRefreshLayout.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    questionAdapter.clear();
+                    questionAdapter.addAll(questionList);
+                    questionAdapter.notifyDataSetChanged();
+                    pullToRefreshLayout.setRefreshing(false);
+                    gifLoading.setVisibility(View.GONE);
+                    if (questionAdapter.getCount() == 0) {
+                        loadingMessage.setVisibility(View.VISIBLE);
+                        context.showNavBar(true);
+                    }
+                }
+            }, REFRESH_DELAY);
+        }
+    };
     static FeedFragment instance;
     MainActivity context;
     PullToRefreshView pullToRefreshLayout;
@@ -88,7 +103,6 @@ public class FeedFragment extends BoolioFragment {
         return rootView;
     }
 
-
     @Override
     public void onResume() {
         super.onResume();
@@ -99,27 +113,11 @@ public class FeedFragment extends BoolioFragment {
     }
 
     private void pullQuestions() {
+        if (BoolioUserHandler.getInstance(context).getUser().userId == null) {
+            Log.e("Pulling Questions", "UserId is null");
+            return;
+        }
         loadingMessage.setVisibility(View.GONE);
         BoolioServer.getInstance(context).getQuestionFeed(prevSeenQuestions, callback);
     }
-
-    QuestionsCallback callback = new QuestionsCallback() {
-        @Override
-        public void handleQuestions(final List<Question> questionList) {
-            pullToRefreshLayout.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    questionAdapter.clear();
-                    questionAdapter.addAll(questionList);
-                    questionAdapter.notifyDataSetChanged();
-                    pullToRefreshLayout.setRefreshing(false);
-                    gifLoading.setVisibility(View.GONE);
-                    if (questionAdapter.getCount() == 0) {
-                        loadingMessage.setVisibility(View.VISIBLE);
-                        context.showNavBar(true);
-                    }
-                }
-            }, REFRESH_DELAY);
-        }
-    };
 }

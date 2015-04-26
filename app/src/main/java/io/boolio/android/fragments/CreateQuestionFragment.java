@@ -9,18 +9,11 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.Arrays;
 
 import io.boolio.android.MainActivity;
 import io.boolio.android.R;
@@ -28,6 +21,7 @@ import io.boolio.android.custom.BoolioNetworkImageView;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.PictureHelper;
 import io.boolio.android.helpers.Utils;
+import io.boolio.android.models.Question;
 import io.boolio.android.network.BoolioServer;
 
 /**
@@ -40,7 +34,7 @@ public class CreateQuestionFragment extends BoolioFragment {
     BoolioNetworkImageView networkImageView;
     PictureHelper helper;
 
-    String imageSaved = "";
+    Bitmap imageSaved;
     String imageType = "";
 
     public static CreateQuestionFragment newInstance() {
@@ -54,7 +48,7 @@ public class CreateQuestionFragment extends BoolioFragment {
             public void onBitmap(Bitmap bitmap) {
                 networkImageView.setLocalImageBitmap(bitmap);
                 if (imageType.equals("string")) {
-                    imageSaved = Utils.bitmapTo64String(bitmap);
+                    imageSaved = bitmap;
                 } else {
                     // TODO URL
                 }
@@ -96,38 +90,28 @@ public class CreateQuestionFragment extends BoolioFragment {
     }
 
     private void submitOnClickSetup() {
-        JSONObject jsonObject = new JSONObject();
-        if (questionText.getText().toString().length() == 0) {
-            Toast.makeText(context, "Please enter a question", Toast.LENGTH_SHORT).show();
-        } else {
-            try {
-                jsonObject.put("question", questionText.getText().toString());
-                jsonObject.put("left", left.getText().toString().equals("") ? "No" : left.getText().toString());
-                jsonObject.put("right", right.getText().toString().equals("") ? "Yes" : right.getText().toString());
-                jsonObject.put("creatorName", BoolioUserHandler.getInstance(context).getUser().name);
-                jsonObject.put("creatorPic", BoolioUserHandler.getInstance(context).getUser().profilePic);
-                JSONArray array = new JSONArray(Arrays.asList(tags.getText().toString().split(", ")));
-                jsonObject.put("tags", array);
-                jsonObject.put("dateCreated", System.currentTimeMillis());
-                jsonObject.put("creator", BoolioUserHandler.getInstance(context).getUser().userId);
-                jsonObject.put("imageType", imageType);
-                jsonObject.put("image", imageSaved);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-
-            // Upload Image to Server
-            progress.setVisibility(View.VISIBLE);
-            BoolioServer.getInstance(context).postQuestion(jsonObject, new Runnable() {
-                @Override
-                public void run() {
-                    progress.setVisibility(View.GONE);
-                    ((MainActivity) getActivity()).switchFragment(0);
-                }
-            });
-
+        if (questionText.getText().length() == 0 && imageSaved == null) {
+            Toast.makeText(context, "Please enter a question or choose an image", Toast.LENGTH_SHORT).show();
         }
+
+        Question question = new Question();
+        question.question = questionText.getText().toString();
+        question.left = left.getText().length() == 0 ? "No" : left.getText().toString();
+        question.right = right.getText().length() == 0 ? "Yes" : right.getText().toString();
+        question.creatorName = BoolioUserHandler.getInstance(context).getUser().name;
+        question.creatorImage = BoolioUserHandler.getInstance(context).getUser().profilePic;
+        question.tags = Utils.parseStringArray(tags.getText().toString());
+
+
+        // Upload Image to Server
+        progress.setVisibility(View.VISIBLE);
+        BoolioServer.getInstance(context).postQuestion(question, imageSaved, new Runnable() {
+            @Override
+            public void run() {
+                progress.setVisibility(View.GONE);
+                ((MainActivity) getActivity()).switchFragment(0);
+            }
+        });
     }
 
     private void setupImageView() {

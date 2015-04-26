@@ -17,24 +17,6 @@ public class ScrollingListView extends ListView {
         setOnScrollListener(null);
     }
 
-    public ScrollingListView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        setOnScrollListener(null);
-    }
-
-    public ScrollingListView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-        setOnScrollListener(null);
-    }
-
-    public void setScrollChangeListener(ScrollChangeListener scrollChangeListener) {
-        this.scrollChangeListener = scrollChangeListener;
-    }
-
-    public static interface ScrollChangeListener {
-        public void onScroll(boolean isScrollingUp);
-    }
-
     @Override
     public void setOnScrollListener(final OnScrollListener onScrollListener) {
         super.setOnScrollListener(new OnScrollListener() {
@@ -64,5 +46,23 @@ public class ScrollingListView extends ListView {
                 }
             }
         });
+    }
+
+    public ScrollingListView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        setOnScrollListener(null);
+    }
+
+    public ScrollingListView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        setOnScrollListener(null);
+    }
+
+    public void setScrollChangeListener(ScrollChangeListener scrollChangeListener) {
+        this.scrollChangeListener = scrollChangeListener;
+    }
+
+    public static interface ScrollChangeListener {
+        public void onScroll(boolean isScrollingUp);
     }
 }

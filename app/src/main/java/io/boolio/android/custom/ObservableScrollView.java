@@ -13,9 +13,8 @@ import io.boolio.android.callbacks.ScrollViewListener;
 
 public class ObservableScrollView extends ScrollView {
 
-    private ScrollViewListener scrollViewListener = null;
-
     boolean enabled = true;
+    private ScrollViewListener scrollViewListener = null;
 
     public ObservableScrollView(Context context) {
         super(context);
@@ -34,16 +33,16 @@ public class ObservableScrollView extends ScrollView {
     }
 
     @Override
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    @Override
     protected void onScrollChanged(int x, int y, int oldx, int oldy) {
         super.onScrollChanged(x, y, oldx, oldy);
         if (scrollViewListener != null) {
             scrollViewListener.onScrollChanged(this, x, y, oldx, oldy);
         }
-    }
-
-    @Override
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
     }
 
     @Override

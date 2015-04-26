@@ -25,14 +25,17 @@ import io.boolio.android.helpers.Utils;
  */
 public class PullToRefreshView extends ViewGroup {
 
+    public static final int MAX_OFFSET_ANIMATION_DURATION = 700;
     private static final int DRAG_MAX_DISTANCE = 120;
     private static final float DRAG_RATE = .5f;
     private static final float DECELERATE_INTERPOLATION_FACTOR = 2f;
-
-    public static final int MAX_OFFSET_ANIMATION_DURATION = 700;
-
     private static final int INVALID_POINTER = -1;
-
+    private final Animation mAnimateToStartPosition = new Animation() {
+        @Override
+        public void applyTransformation(float interpolatedTime, Transformation t) {
+            moveToStart(interpolatedTime);
+        }
+    };
     private View mTarget;
     private ImageView mRefreshView;
     private Interpolator mDecelerateInterpolator;
@@ -41,12 +44,41 @@ public class PullToRefreshView extends ViewGroup {
     private BaseRefreshView mBaseRefreshView;
     private float mCurrentDragPercent;
     private int mCurrentOffsetTop;
+    private Animation.AnimationListener mToStartListener = new Animation.AnimationListener() {
+        @Override
+        public void onAnimationStart(Animation animation) {
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+            mBaseRefreshView.stop();
+            mCurrentOffsetTop = mTarget.getTop();
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+        }
+    };
     private boolean mRefreshing;
     private int mActivePointerId;
     private boolean mIsBeingDragged;
     private float mInitialMotionY;
     private int mFrom;
     private float mFromDragPercent;
+    private final Animation mAnimateToCorrectPosition = new Animation() {
+        @Override
+        public void applyTransformation(float interpolatedTime, Transformation t) {
+            int targetTop;
+            int endTarget = mTotalDragDistance;
+            targetTop = (mFrom + (int) ((endTarget - mFrom) * interpolatedTime));
+            int offset = targetTop - mTarget.getTop();
+
+            mCurrentDragPercent = mFromDragPercent - (mFromDragPercent - 1.0f) * interpolatedTime;
+            mBaseRefreshView.setPercent(mCurrentDragPercent, false);
+
+            setTargetOffsetTop(offset, false /* requires update */);
+        }
+    };
     private boolean mNotify;
     private OnRefreshListener mListener;
 
@@ -71,26 +103,28 @@ public class PullToRefreshView extends ViewGroup {
 
     public void setRefreshDrawables(int background, int foreground, int rotating) {
         setRefreshing(false);
-        mBaseRefreshView = new RefreshView(getContext(), this, new int[] {background, foreground, rotating});
+        mBaseRefreshView = new RefreshView(getContext(), this, new int[]{background, foreground, rotating});
         mRefreshView.setImageDrawable(mBaseRefreshView);
     }
 
-    public int getTotalDragDistance() {
-        return mTotalDragDistance;
+    public void setRefreshing(boolean refreshing) {
+        if (mRefreshing != refreshing) {
+            setRefreshing(refreshing, false /* notify */);
+        }
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-
-        ensureTarget();
-        if (mTarget == null)
-            return;
-
-        widthMeasureSpec = MeasureSpec.makeMeasureSpec(getMeasuredWidth() - getPaddingRight() - getPaddingLeft(), MeasureSpec.EXACTLY);
-        heightMeasureSpec = MeasureSpec.makeMeasureSpec(getMeasuredHeight() - getPaddingTop() - getPaddingBottom(), MeasureSpec.EXACTLY);
-        mTarget.measure(widthMeasureSpec, heightMeasureSpec);
-        mRefreshView.measure(widthMeasureSpec, heightMeasureSpec);
+    private void setRefreshing(boolean refreshing, final boolean notify) {
+        if (mRefreshing != refreshing) {
+            mNotify = notify;
+            ensureTarget();
+            mRefreshing = refreshing;
+            if (mRefreshing) {
+                mBaseRefreshView.setPercent(1f, true);
+                animateOffsetToCorrectPosition();
+            } else {
+                animateOffsetToStartPosition();
+            }
+        }
     }
 
     private void ensureTarget() {
@@ -103,6 +137,48 @@ public class PullToRefreshView extends ViewGroup {
                     mTarget = child;
             }
         }
+    }
+
+    private void animateOffsetToCorrectPosition() {
+        mFrom = mCurrentOffsetTop;
+        mFromDragPercent = mCurrentDragPercent;
+
+        mAnimateToCorrectPosition.reset();
+        mAnimateToCorrectPosition.setDuration(MAX_OFFSET_ANIMATION_DURATION);
+        mAnimateToCorrectPosition.setInterpolator(mDecelerateInterpolator);
+        mRefreshView.clearAnimation();
+        mRefreshView.startAnimation(mAnimateToCorrectPosition);
+
+        if (mRefreshing) {
+            mBaseRefreshView.start();
+            if (mNotify) {
+                if (mListener != null) {
+                    mListener.onRefresh();
+                }
+            }
+        } else {
+            mBaseRefreshView.stop();
+            animateOffsetToStartPosition();
+        }
+        mCurrentOffsetTop = mTarget.getTop();
+        mTarget.setPadding(0, 0, 0, mTotalDragDistance);
+    }
+
+    private void animateOffsetToStartPosition() {
+        mFrom = mCurrentOffsetTop;
+        mFromDragPercent = mCurrentDragPercent;
+        long animationDuration = Math.abs((long) (MAX_OFFSET_ANIMATION_DURATION * mFromDragPercent));
+
+        mAnimateToStartPosition.reset();
+        mAnimateToStartPosition.setDuration(animationDuration);
+        mAnimateToStartPosition.setInterpolator(mDecelerateInterpolator);
+        mAnimateToStartPosition.setAnimationListener(mToStartListener);
+        mRefreshView.clearAnimation();
+        mRefreshView.startAnimation(mAnimateToStartPosition);
+    }
+
+    public int getTotalDragDistance() {
+        return mTotalDragDistance;
     }
 
     @Override
@@ -149,6 +225,65 @@ public class PullToRefreshView extends ViewGroup {
         }
 
         return mIsBeingDragged;
+    }
+
+    private boolean canChildScrollUp() {
+        if (android.os.Build.VERSION.SDK_INT < 14) {
+            if (mTarget instanceof AbsListView) {
+                final AbsListView absListView = (AbsListView) mTarget;
+                return absListView.getChildCount() > 0
+                        && (absListView.getFirstVisiblePosition() > 0 || absListView.getChildAt(0)
+                        .getTop() < absListView.getPaddingTop());
+            } else {
+                return mTarget.getScrollY() > 0;
+            }
+        } else {
+            return ViewCompat.canScrollVertically(mTarget, -1);
+        }
+    }
+
+    private void setTargetOffsetTop(int offset, boolean requiresUpdate) {
+        mTarget.offsetTopAndBottom(offset);
+        mBaseRefreshView.offsetTopAndBottom(offset);
+        mCurrentOffsetTop = mTarget.getTop();
+        if (requiresUpdate && android.os.Build.VERSION.SDK_INT < 11) {
+            invalidate();
+        }
+    }
+
+    private float getMotionEventY(MotionEvent ev, int activePointerId) {
+        final int index = MotionEventCompat.findPointerIndex(ev, activePointerId);
+        if (index < 0) {
+            return -1;
+        }
+        return MotionEventCompat.getY(ev, index);
+    }
+
+    private void onSecondaryPointerUp(MotionEvent ev) {
+        final int pointerIndex = MotionEventCompat.getActionIndex(ev);
+        final int pointerId = MotionEventCompat.getPointerId(ev, pointerIndex);
+        if (pointerId == mActivePointerId) {
+            final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
+            mActivePointerId = MotionEventCompat.getPointerId(ev, newPointerIndex);
+        }
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+
+        ensureTarget();
+        if (mTarget == null)
+            return;
+
+        int height = getMeasuredHeight();
+        int width = getMeasuredWidth();
+        int left = getPaddingLeft();
+        int top = getPaddingTop();
+        int right = getPaddingRight();
+        int bottom = getPaddingBottom();
+
+        mTarget.layout(left, top + mCurrentOffsetTop, left + width - right, top + height - bottom + mCurrentOffsetTop);
+        mRefreshView.layout(left, top, left + width - right, top + height - bottom);
     }
 
     @Override
@@ -218,65 +353,19 @@ public class PullToRefreshView extends ViewGroup {
         return true;
     }
 
-    private void animateOffsetToStartPosition() {
-        mFrom = mCurrentOffsetTop;
-        mFromDragPercent = mCurrentDragPercent;
-        long animationDuration = Math.abs((long) (MAX_OFFSET_ANIMATION_DURATION * mFromDragPercent));
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        mAnimateToStartPosition.reset();
-        mAnimateToStartPosition.setDuration(animationDuration);
-        mAnimateToStartPosition.setInterpolator(mDecelerateInterpolator);
-        mAnimateToStartPosition.setAnimationListener(mToStartListener);
-        mRefreshView.clearAnimation();
-        mRefreshView.startAnimation(mAnimateToStartPosition);
+        ensureTarget();
+        if (mTarget == null)
+            return;
+
+        widthMeasureSpec = MeasureSpec.makeMeasureSpec(getMeasuredWidth() - getPaddingRight() - getPaddingLeft(), MeasureSpec.EXACTLY);
+        heightMeasureSpec = MeasureSpec.makeMeasureSpec(getMeasuredHeight() - getPaddingTop() - getPaddingBottom(), MeasureSpec.EXACTLY);
+        mTarget.measure(widthMeasureSpec, heightMeasureSpec);
+        mRefreshView.measure(widthMeasureSpec, heightMeasureSpec);
     }
-
-    private void animateOffsetToCorrectPosition() {
-        mFrom = mCurrentOffsetTop;
-        mFromDragPercent = mCurrentDragPercent;
-
-        mAnimateToCorrectPosition.reset();
-        mAnimateToCorrectPosition.setDuration(MAX_OFFSET_ANIMATION_DURATION);
-        mAnimateToCorrectPosition.setInterpolator(mDecelerateInterpolator);
-        mRefreshView.clearAnimation();
-        mRefreshView.startAnimation(mAnimateToCorrectPosition);
-
-        if (mRefreshing) {
-            mBaseRefreshView.start();
-            if (mNotify) {
-                if (mListener != null) {
-                    mListener.onRefresh();
-                }
-            }
-        } else {
-            mBaseRefreshView.stop();
-            animateOffsetToStartPosition();
-        }
-        mCurrentOffsetTop = mTarget.getTop();
-        mTarget.setPadding(0, 0, 0, mTotalDragDistance);
-    }
-
-    private final Animation mAnimateToStartPosition = new Animation() {
-        @Override
-        public void applyTransformation(float interpolatedTime, Transformation t) {
-            moveToStart(interpolatedTime);
-        }
-    };
-
-    private final Animation mAnimateToCorrectPosition = new Animation() {
-        @Override
-        public void applyTransformation(float interpolatedTime, Transformation t) {
-            int targetTop;
-            int endTarget = mTotalDragDistance;
-            targetTop = (mFrom + (int) ((endTarget - mFrom) * interpolatedTime));
-            int offset = targetTop - mTarget.getTop();
-
-            mCurrentDragPercent = mFromDragPercent - (mFromDragPercent - 1.0f) * interpolatedTime;
-            mBaseRefreshView.setPercent(mCurrentDragPercent, false);
-
-            setTargetOffsetTop(offset, false /* requires update */);
-        }
-    };
 
     private void moveToStart(float interpolatedTime) {
         int targetTop = mFrom - (int) (mFrom * interpolatedTime);
@@ -287,101 +376,6 @@ public class PullToRefreshView extends ViewGroup {
         mBaseRefreshView.setPercent(mCurrentDragPercent, true);
         mTarget.setPadding(0, 0, 0, targetTop);
         setTargetOffsetTop(offset, false);
-    }
-
-    public void setRefreshing(boolean refreshing) {
-        if (mRefreshing != refreshing) {
-            setRefreshing(refreshing, false /* notify */);
-        }
-    }
-
-    private void setRefreshing(boolean refreshing, final boolean notify) {
-        if (mRefreshing != refreshing) {
-            mNotify = notify;
-            ensureTarget();
-            mRefreshing = refreshing;
-            if (mRefreshing) {
-                mBaseRefreshView.setPercent(1f, true);
-                animateOffsetToCorrectPosition();
-            } else {
-                animateOffsetToStartPosition();
-            }
-        }
-    }
-
-    private Animation.AnimationListener mToStartListener = new Animation.AnimationListener() {
-        @Override
-        public void onAnimationStart(Animation animation) {
-        }
-
-        @Override
-        public void onAnimationRepeat(Animation animation) {
-        }
-
-        @Override
-        public void onAnimationEnd(Animation animation) {
-            mBaseRefreshView.stop();
-            mCurrentOffsetTop = mTarget.getTop();
-        }
-    };
-
-    private void onSecondaryPointerUp(MotionEvent ev) {
-        final int pointerIndex = MotionEventCompat.getActionIndex(ev);
-        final int pointerId = MotionEventCompat.getPointerId(ev, pointerIndex);
-        if (pointerId == mActivePointerId) {
-            final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
-            mActivePointerId = MotionEventCompat.getPointerId(ev, newPointerIndex);
-        }
-    }
-
-    private float getMotionEventY(MotionEvent ev, int activePointerId) {
-        final int index = MotionEventCompat.findPointerIndex(ev, activePointerId);
-        if (index < 0) {
-            return -1;
-        }
-        return MotionEventCompat.getY(ev, index);
-    }
-
-    private void setTargetOffsetTop(int offset, boolean requiresUpdate) {
-        mTarget.offsetTopAndBottom(offset);
-        mBaseRefreshView.offsetTopAndBottom(offset);
-        mCurrentOffsetTop = mTarget.getTop();
-        if (requiresUpdate && android.os.Build.VERSION.SDK_INT < 11) {
-            invalidate();
-        }
-    }
-
-    private boolean canChildScrollUp() {
-        if (android.os.Build.VERSION.SDK_INT < 14) {
-            if (mTarget instanceof AbsListView) {
-                final AbsListView absListView = (AbsListView) mTarget;
-                return absListView.getChildCount() > 0
-                        && (absListView.getFirstVisiblePosition() > 0 || absListView.getChildAt(0)
-                        .getTop() < absListView.getPaddingTop());
-            } else {
-                return mTarget.getScrollY() > 0;
-            }
-        } else {
-            return ViewCompat.canScrollVertically(mTarget, -1);
-        }
-    }
-
-    @Override
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-
-        ensureTarget();
-        if (mTarget == null)
-            return;
-
-        int height = getMeasuredHeight();
-        int width = getMeasuredWidth();
-        int left = getPaddingLeft();
-        int top = getPaddingTop();
-        int right = getPaddingRight();
-        int bottom = getPaddingBottom();
-
-        mTarget.layout(left, top + mCurrentOffsetTop, left + width - right, top + height - bottom + mCurrentOffsetTop);
-        mRefreshView.layout(left, top, left + width - right, top + height - bottom);
     }
 
     public void setOnRefreshListener(OnRefreshListener listener) {

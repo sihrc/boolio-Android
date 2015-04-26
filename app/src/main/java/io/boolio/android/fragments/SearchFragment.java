@@ -18,7 +18,6 @@ import java.util.List;
 
 import io.boolio.android.R;
 import io.boolio.android.adapters.BoolioQuestionAdapter;
-import io.boolio.android.adapters.QuestionAdapter;
 import io.boolio.android.callbacks.QuestionsCallback;
 import io.boolio.android.callbacks.QuestionsPullInterface;
 import io.boolio.android.models.Question;
@@ -92,28 +91,6 @@ public class SearchFragment extends BoolioFragment {
         return rootView;
     }
 
-    private void setupTabOnClick(){
-        questionsTab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewPager.setCurrentItem(0);
-            }
-        });
-
-        friendsTab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewPager.setCurrentItem(1);
-            }
-        });
-
-        catergoriesTab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewPager.setCurrentItem(2);
-            }
-        });
-    }
     private void setupPager() {
         questionsTab.setAlpha(1f);
         friendsTab.setAlpha(0.25f);
@@ -209,6 +186,29 @@ public class SearchFragment extends BoolioFragment {
             @Override
             public int getCount() {
                 return fragmentList.size();
+            }
+        });
+    }
+
+    private void setupTabOnClick() {
+        questionsTab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewPager.setCurrentItem(0);
+            }
+        });
+
+        friendsTab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewPager.setCurrentItem(1);
+            }
+        });
+
+        catergoriesTab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewPager.setCurrentItem(2);
             }
         });
     }

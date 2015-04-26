@@ -55,11 +55,6 @@ public abstract class BaseRefreshView extends Drawable implements Drawable.Callb
     }
 
     @Override
-    public int getOpacity() {
-        return PixelFormat.TRANSLUCENT;
-    }
-
-    @Override
     public void setAlpha(int alpha) {
 
     }
@@ -67,6 +62,11 @@ public abstract class BaseRefreshView extends Drawable implements Drawable.Callb
     @Override
     public void setColorFilter(ColorFilter cf) {
 
+    }
+
+    @Override
+    public int getOpacity() {
+        return PixelFormat.TRANSLUCENT;
     }
 
     /**
