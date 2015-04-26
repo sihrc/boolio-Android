@@ -1,22 +1,19 @@
 package io.boolio.android.fragments;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,17 +21,16 @@ import java.util.List;
 import io.boolio.android.MainActivity;
 import io.boolio.android.R;
 import io.boolio.android.adapters.BoolioAnswerAdapter;
-import io.boolio.android.adapters.QuestionAdapter;
 import io.boolio.android.callbacks.QuestionsCallback;
 import io.boolio.android.callbacks.QuestionsPullInterface;
 import io.boolio.android.callbacks.ScrollViewListener;
 import io.boolio.android.callbacks.UserCallback;
+import io.boolio.android.custom.BoolioProfileImage;
 import io.boolio.android.custom.ObservableScrollView;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.models.Question;
 import io.boolio.android.models.User;
 import io.boolio.android.network.BoolioServer;
-import io.boolio.android.custom.BoolioProfileImage;
 
 /**
  * Created by Chris on 4/17/15.
@@ -107,6 +103,14 @@ public class ProfileFragment extends BoolioFragment {
         profileUsername = (TextView) rootView.findViewById(R.id.profile_username);
         answeredCount = (TextView) rootView.findViewById(R.id.answered_count);
         profileDisplayName = (TextView) rootView.findViewById(R.id.profile_user_name);
+
+        profileDisplayName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.v("Debugdebug","IM HERE");
+            }
+        });
+
         karmaCount = (TextView) rootView.findViewById(R.id.karma_count);
 
         viewPager = (ViewPager) rootView.findViewById(R.id.asked_answered_view_pager);
@@ -152,6 +156,7 @@ public class ProfileFragment extends BoolioFragment {
                     scrollView.setScrollY((int) (movingFeed.getY()));
                     scrollView.setEnabled(false);
                 }
+                ((MainActivity) context).showNavBar(movingFeedIsTop);
             }
         });
     }
@@ -266,9 +271,11 @@ public class ProfileFragment extends BoolioFragment {
     private void updateViews() {
         if (user == null)
             return;
+
         if (user.userId.equals(BoolioUserHandler.getInstance(context).getUser().userId)) {
 //            profileSetting.setVisibility(View.VISIBLE);
             profileDisplayName.setText(R.string.my_profile_page);
+            Log.v("debugdebug", " me "+ user.name + " ." + profileDisplayName.getText().toString() + " end");
         } else {
 //            profileSetting.setVisibility(View.GONE);
             profileDisplayName.setText(R.string.profile_page);

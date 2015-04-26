@@ -116,6 +116,7 @@ public class FeedFragment extends BoolioFragment {
                     gifLoading.setVisibility(View.GONE);
                     if (questionAdapter.getCount() == 0) {
                         loadingMessage.setVisibility(View.VISIBLE);
+                        context.showNavBar(true);
                     }
                 }
             }, REFRESH_DELAY);
