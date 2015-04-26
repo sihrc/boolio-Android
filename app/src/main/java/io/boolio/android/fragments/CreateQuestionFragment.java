@@ -116,13 +116,6 @@ public class CreateQuestionFragment extends BoolioFragment {
                 e.printStackTrace();
             }
 
-            questionText.setText("");
-            left.setText("");
-            right.setText("");
-            tags.setText("");
-            imageSaved = null;
-            imageType = null;
-
 
             // Upload Image to Server
             progress.setVisibility(View.VISIBLE);

@@ -27,6 +27,7 @@ public class AuthActivity extends FragmentActivity {
         FacebookAuth.newInstance(this);
         BoolioAuth.newInstance();
         super.onCreate(savedInstanceState);
+        Auth.getAuth().onCreate(this, savedInstanceState);
 
         fragmentManager = getSupportFragmentManager();
 
@@ -41,8 +42,6 @@ public class AuthActivity extends FragmentActivity {
                 postLogoutCallback();
             }
         });
-
-        Auth.getAuth().onCreate(this, savedInstanceState);
     }
 
     /**
