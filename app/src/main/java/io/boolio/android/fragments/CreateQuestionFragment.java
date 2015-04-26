@@ -42,6 +42,11 @@ public class CreateQuestionFragment extends BoolioFragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(new Bundle());
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         helper.onActivityResult(this, requestCode, resultCode, data, networkImageView, new PictureHelper.BitmapCallback() {
             @Override
