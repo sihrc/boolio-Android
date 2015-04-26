@@ -7,11 +7,11 @@ import java.util.List;
  */
 public class User {
 
-    public String name, userId, profilePic;
+    public String name, userId, profilePic, oauthId;
     public List<String> questionsAsked, questionsAnswered, questionsSkipped;
 
-    public User() {
-
+    public User(String oauthId, String name) {
+        this.name = name;
+        this.oauthId = oauthId;
     }
-
 }

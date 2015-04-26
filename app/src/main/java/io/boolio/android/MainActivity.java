@@ -2,14 +2,15 @@ package io.boolio.android;
 
 import android.graphics.Point;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.facebook.Profile;
+
 import io.boolio.android.animation.AnimationHelper;
-import io.boolio.android.auth.AuthActivity;
 import io.boolio.android.fragments.BoolioFragment;
 import io.boolio.android.fragments.CategoriesFragment;
 import io.boolio.android.fragments.CreateQuestionFragment;
@@ -17,9 +18,15 @@ import io.boolio.android.fragments.FeedFragment;
 import io.boolio.android.fragments.ProfileFragment;
 import io.boolio.android.fragments.SearchFragment;
 import io.boolio.android.fragments.tutorials.TutorialPagerFragment;
+import io.boolio.android.helpers.BoolioUserHandler;
+import io.boolio.android.helpers.FacebookAuth;
+import io.boolio.android.models.User;
+import io.boolio.android.network.BoolioServer;
+import io.boolio.android.network.NetworkCallback;
+import io.boolio.android.network.parser.UserParser;
 
 
-public class MainActivity extends AuthActivity {
+public class MainActivity extends FacebookAuth {
     final static float selectedAlpha = .5f;
     public static int SCREEN_WIDTH, SCREEN_HEIGHT;
     FragmentManager fragmentManager;
@@ -34,13 +41,8 @@ public class MainActivity extends AuthActivity {
         setContentView(R.layout.activity_main);
 
         fragmentManager = getSupportFragmentManager();
-        if (savedInstanceState == null) {
-            Fragment fragment = TutorialPagerFragment.newInstance();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.container, fragment, fragment.getClass().getName())
-                    .commit();
-        }
 
+        // Get Screen Size
         Point size = new Point();
         getWindowManager().getDefaultDisplay().getSize(size);
         SCREEN_WIDTH = size.x;
@@ -50,18 +52,29 @@ public class MainActivity extends AuthActivity {
     }
 
     @Override
-    protected void postLoginCallback() {
-        showNavBar(true);
-        if (boolioFragment == null || boolioFragment.getClass() == TutorialPagerFragment.class)
-            switchFragment(FeedFragment.getInstance());
-        else if (boolioFragment == FeedFragment.getInstance())
-            FeedFragment.getInstance().onResume();
-        else
-            boolioFragment.onResume();
+    public void loggedIn(Profile profile) {
+        NetworkCallback<User> userCallback = new NetworkCallback<User>() {
+            @Override
+            public void handle(User object) {
+                BoolioUserHandler.getInstance(MainActivity.this).setUser(object);
+                if (boolioFragment == null || boolioFragment.getClass() == TutorialPagerFragment.class)
+                    switchFragment(FeedFragment.getInstance());
+                else if (boolioFragment == FeedFragment.getInstance())
+                    FeedFragment.getInstance().onResume();
+                else
+                    boolioFragment.onResume();
+                showNavBar(true);
+            }
+        };
+
+        User user = new User(profile.getId(), profile.getName());
+        BoolioUserHandler.getInstance(this).setUser(user);
+        BoolioServer.getInstance(this).getBoolioUserFromFacebook
+                (UserParser.getInstance().toJSON(user), userCallback);
     }
 
     @Override
-    protected void postLogoutCallback() {
+    public void loggedOut() {
         showNavBar(false);
         switchFragment(TutorialPagerFragment.newInstance());
     }

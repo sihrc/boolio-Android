@@ -24,6 +24,7 @@ import io.boolio.android.callbacks.QuestionsCallback;
 import io.boolio.android.callbacks.UserCallback;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.models.Question;
+import io.boolio.android.models.User;
 import io.boolio.android.network.parser.JSONArrayParser;
 import io.boolio.android.network.parser.QuestionParser;
 import io.boolio.android.network.parser.UserParser;
@@ -77,12 +78,13 @@ public class BoolioServer {
      * GET *
      */
 
-    public void getBoolioUserFromFacebook(JSONObject jsonObject) {
+    public void getBoolioUserFromFacebook(JSONObject jsonObject, final NetworkCallback<User> callback) {
         JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, API.FACEBOOK_USER_ENDPOINT,
                 jsonObject, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                BoolioUserHandler.getInstance(context).setUser(UserParser.getInstance().parse(response));
+                if (callback != null)
+                    callback.handle(UserParser.getInstance().parse(response));
 
             }
         }, new Response.ErrorListener() {

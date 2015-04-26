@@ -3,7 +3,6 @@ package io.boolio.android.fragments;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -113,10 +112,6 @@ public class FeedFragment extends BoolioFragment {
     }
 
     private void pullQuestions() {
-        if (BoolioUserHandler.getInstance(context).getUser().userId == null) {
-            Log.e("Pulling Questions", "UserId is null");
-            return;
-        }
         loadingMessage.setVisibility(View.GONE);
         BoolioServer.getInstance(context).getQuestionFeed(prevSeenQuestions, callback);
     }
