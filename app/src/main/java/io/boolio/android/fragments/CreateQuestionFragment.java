@@ -105,6 +105,7 @@ public class CreateQuestionFragment extends BoolioFragment {
         question.right = right.getText().length() == 0 ? "Yes" : right.getText().toString();
         question.creatorName = BoolioUserHandler.getInstance(context).getUser().name;
         question.creatorImage = BoolioUserHandler.getInstance(context).getUser().profilePic;
+        question.creatorId = BoolioUserHandler.getInstance(context).getUser().userId;
         question.tags = Utils.parseStringArray(tags.getText().toString());
 
 

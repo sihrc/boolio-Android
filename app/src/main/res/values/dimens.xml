@@ -50,8 +50,8 @@
     <dimen name="profile_large_size">20sp</dimen>
     <dimen name="profile_medium_size">18sp</dimen>
     <dimen name="profile_small_size">14sp</dimen>
-    <dimen name="profile_padding">32dp</dimen>
-    <dimen name="profile_image_size">90dp</dimen>
+    <dimen name="profile_padding">12dp</dimen>
+    <dimen name="profile_image_size">60dp</dimen>
     <dimen name="profile_score_margin">20dp</dimen>
     <dimen name="profile_pane_height">300dp</dimen>
 

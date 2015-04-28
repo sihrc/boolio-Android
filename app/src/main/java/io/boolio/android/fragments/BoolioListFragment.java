@@ -30,11 +30,10 @@ public class BoolioListFragment extends BoolioFragment {
     QuestionsPullInterface pullInterface;
 
     public static BoolioListFragment newInstance(BoolioAdapter questionAdapter,
-                                                 QuestionsPullInterface pullQuestions, Runnable callback) {
+                                                 QuestionsPullInterface pullQuestions) {
         BoolioListFragment fragment = new BoolioListFragment();
         fragment.questionAdapter = questionAdapter;
         fragment.pullInterface = pullQuestions;
-        fragment.callback = callback;
         return fragment;
     }
 

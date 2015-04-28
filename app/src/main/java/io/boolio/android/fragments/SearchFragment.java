@@ -114,7 +114,7 @@ public class SearchFragment extends BoolioFragment {
                             }
                     );
                 }
-            }, runnable));
+            }));
 
 
             add(BoolioListFragment.newInstance(friendsTabAdapter, new QuestionsPullInterface() {
@@ -131,7 +131,7 @@ public class SearchFragment extends BoolioFragment {
                             }
                     );
                 }
-            }, runnable));
+            }));
             add(BoolioListFragment.newInstance(catergoriesTabAdapter, new QuestionsPullInterface() {
                 @Override
                 public void pullQuestions() {
@@ -145,7 +145,7 @@ public class SearchFragment extends BoolioFragment {
                             }
                     );
                 }
-            }, runnable));
+            }));
         }};
 
 

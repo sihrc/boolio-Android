@@ -30,7 +30,7 @@
         <item name="android:textColor">@color/profile_text_color</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:textSize">@dimen/profile_large_size</item>
-        <item name="android:padding">@dimen/search_padding</item>
+
     </style>
 
     <style name="header_big_text" parent="@android:style/Widget.TextView">
