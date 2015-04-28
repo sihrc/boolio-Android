@@ -70,6 +70,8 @@ public class SearchFragment extends BoolioFragment {
         searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                if (viewPager.getCurrentItem() != 0)
+                    return false;
                 if (query.length() > 0) {
                     fragmentList.get(viewPager.getCurrentItem()).pullInterface.pullQuestions();
                 }
@@ -78,6 +80,8 @@ public class SearchFragment extends BoolioFragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                if (viewPager.getCurrentItem() != 0)
+                    return false;
                 if (newText.length() > 0) {
                     fragmentList.get(viewPager.getCurrentItem()).pullInterface.pullQuestions();
                 }
@@ -98,54 +102,58 @@ public class SearchFragment extends BoolioFragment {
         questionsTabAdapter = new BoolioQuestionAdapter(context);
         friendsTabAdapter = new BoolioQuestionAdapter(context);
         catergoriesTabAdapter = new BoolioQuestionAdapter(context);
-        fragmentList = new ArrayList<BoolioListFragment>() {{
-            add(BoolioListFragment.newInstance(questionsTabAdapter, new QuestionsPullInterface() {
-                @Override
-                public void pullQuestions() {
-                    BoolioServer.getInstance(context).searchQuestion(
-                            searchBar.getQuery().toString().length() == 0 ?
-                                    "   " : searchBar.getQuery().toString(),
-                            new QuestionsCallback() {
-                                @Override
-                                public void handleQuestions(List<Question> questionList) {
-                                    questionsTabAdapter.clear();
-                                    questionsTabAdapter.addAll(questionList);
+        fragmentList = new ArrayList<BoolioListFragment>() {
+            {
+                add(BoolioListFragment.newInstance(questionsTabAdapter, new QuestionsPullInterface() {
+                    @Override
+                    public void pullQuestions() {
+                        if (searchBar.getQuery().toString().length() == 0)
+                            return;
+                        BoolioServer.getInstance(context).searchQuestion(
+                                searchBar.getQuery().toString(),
+                                new QuestionsCallback() {
+                                    @Override
+                                    public void handleQuestions(List<Question> questionList) {
+                                        questionsTabAdapter.clear();
+                                        questionsTabAdapter.addAll(questionList);
+                                    }
                                 }
-                            }
-                    );
-                }
-            }, runnable));
+                        );
+                    }
+                }, runnable));
 
-
-            add(BoolioListFragment.newInstance(friendsTabAdapter, new QuestionsPullInterface() {
-                @Override
-                public void pullQuestions() {
-                    // TODO
-                    BoolioServer.getInstance(context).getUserAnswered(
-                            null,
-                            new QuestionsCallback() {
-                                @Override
-                                public void handleQuestions(List<Question> questionList) {
-
-                                }
-                            }
-                    );
-                }
-            }, runnable));
-            add(BoolioListFragment.newInstance(catergoriesTabAdapter, new QuestionsPullInterface() {
-                @Override
-                public void pullQuestions() {
-                    // TODO
-                    BoolioServer.getInstance(context).getUserAsked(
-                            null,
-                            new QuestionsCallback() {
-                                @Override
-                                public void handleQuestions(List<Question> questionList) {
-                                }
-                            }
-                    );
-                }
-            }, runnable));
+                add(ComingSoonFragment.newInstance("Search for friends coming soon!"));
+                add(ComingSoonFragment.newInstance("Search for tags coming soon!"));
+//            TODO
+//              add(BoolioListFragment.getInstance(friendsTabAdapter, new QuestionsPullInterface() {
+//                @Override
+//                public void pullQuestions() {
+//                    // TODO
+//                    BoolioServer.getInstance(context).getUserAnswered(
+//                            null,
+//                            new QuestionsCallback() {
+//                                @Override
+//                                public void handleQuestions(List<Question> questionList) {
+//
+//                                }
+//                            }
+//                    );
+//                }
+//            }, runnable));
+//            add(BoolioListFragment.newInstance(catergoriesTabAdapter, new QuestionsPullInterface() {
+//                @Override
+//                public void pullQuestions() {
+//                    // TODO
+//                    BoolioServer.getInstance(context).getUserAsked(
+//                            null,
+//                            new QuestionsCallback() {
+//                                @Override
+//                                public void handleQuestions(List<Question> questionList) {
+//                                }
+//                            }
+//                    );
+//                }
+//            }, runnable));
         }};
 
 
