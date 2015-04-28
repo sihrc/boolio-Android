@@ -86,6 +86,7 @@
         android:layout_alignRight="@id/create_question_buttons"
         android:layout_below="@+id/create_question_buttons"
         android:background="@drawable/left_answer_button"
+        android:layout_marginBottom="40dp"
         android:gravity="center"
         android:text="@string/create_question_submit" />
 
