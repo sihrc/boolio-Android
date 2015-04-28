@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,12 @@ public class MainFragment extends BoolioFragment {
     ViewPager viewPager;
 
     List<BoolioFragment> fragmentList;
+    ScrollingListView.ScrollChangeListener changeListener = new ScrollingListView.ScrollChangeListener() {
+        @Override
+        public void onScroll(boolean isScrollingUp) {
+            showNavBar(isScrollingUp);
+        }
+    };
 
     public static MainFragment newInstance() {
         return new MainFragment();
@@ -50,20 +57,56 @@ public class MainFragment extends BoolioFragment {
         return rootView;
     }
 
-    ScrollingListView.ScrollChangeListener changeListener = new ScrollingListView.ScrollChangeListener() {
-        @Override
-        public void onScroll(boolean isScrollingUp) {
-            showNavBar(isScrollingUp);
-        }
-    };
+    private void setupNavigationBar() {
+        // Initially Selected
+        View feedButton = navBar.findViewById(R.id.nav_bar_feed);
+        curNavButton = feedButton;
+        feedButton.setAlpha(1f);
+
+        navBarAdd.setOnClickListener(getNavClickListener(2, new Runnable() {
+            @Override
+            public void run() {
+                navBar.setAlpha(1f);
+            }
+        }));
+        
+        feedButton.setOnClickListener(getNavClickListener(0, null));
+        navBar.findViewById(R.id.nav_bar_profile).setOnClickListener(getNavClickListener(1, null));
+        navBar.findViewById(R.id.nav_bar_category).setOnClickListener(getNavClickListener(3, null));
+        navBar.findViewById(R.id.nav_bar_search).setOnClickListener(getNavClickListener(4, null));
+    }
 
     private void setupViewPager() {
         fragmentList = new ArrayList<BoolioFragment>() {{
             add(FeedFragment.getInstance(changeListener));
             add(ProfileFragment.newInstance(BoolioUserHandler.getInstance(activity).getUser().userId, changeListener));
+            add(CreateQuestionFragment.newInstance(new Runnable() {
+                @Override
+                public void run() {
+                    navBar.getChildAt(0).performClick();
+                }
+            }));
             add(CategoriesFragment.getInstance());
             add(SearchFragment.getInstance(changeListener));
         }};
+
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (navBar != null)
+                    selectNavBar(navBar.getChildAt(position));
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         viewPager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager()) {
             @Override
@@ -78,6 +121,30 @@ public class MainFragment extends BoolioFragment {
         });
     }
 
+    private void selectNavBar(View v) {
+        v.setAlpha(1f);
+        if (curNavButton != navBarAdd) {
+            curNavButton.setAlpha(selectedAlpha);
+        }
+        curNavButton = v;
+    }
+
+    private View.OnClickListener getNavClickListener(final int index, final Runnable callback) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (v == curNavButton) {
+                    return;
+                }
+
+//                viewPager.setCurrentItem(index, true);
+
+                if (callback != null) {
+                    callback.run();
+                }
+            }
+        };
+    }
 
     public void showNavBar(boolean visible) {
         if (navBar == null)
@@ -89,46 +156,5 @@ public class MainFragment extends BoolioFragment {
             AnimationHelper.getInstance(activity).animateViewBottomOut(navBar);
             AnimationHelper.getInstance(activity).animateViewBottomOut(navBarAdd);
         }
-    }
-
-    private void setupNavigationBar() {
-        // Initially Selected
-        curNavButton = navBar.getChildAt(0);
-        curNavButton.setAlpha(1f);
-
-        navBarAdd.setOnClickListener(getNavClickListener(3, new Runnable() {
-            @Override
-            public void run() {
-                navBar.setAlpha(1f);
-            }
-        }));
-        navBar.findViewById(R.id.nav_bar_feed).setOnClickListener(getNavClickListener(0, null));
-        navBar.findViewById(R.id.nav_bar_search).setOnClickListener(getNavClickListener(1, null));
-        navBar.findViewById(R.id.nav_bar_category).setOnClickListener(getNavClickListener(2, null));
-        navBar.findViewById(R.id.nav_bar_profile).setOnClickListener(getNavClickListener(3, null));
-    }
-
-    private View.OnClickListener getNavClickListener(final int index, final Runnable callback) {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (v == curNavButton) {
-                    return;
-                }
-
-                selectNavBar(v);
-                viewPager.setCurrentItem(index, true);
-
-                if (callback != null)
-                    callback.run();
-            }
-        };
-    }
-
-    private void selectNavBar(View v) {
-        v.setAlpha(1f);
-        if (curNavButton != navBarAdd)
-            curNavButton.setAlpha(selectedAlpha);
-        curNavButton = v;
     }
 }
