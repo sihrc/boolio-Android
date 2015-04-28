@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
     android:id="@+id/profile_relativelayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -18,7 +19,7 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/general_padding"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"/>
 
         <ImageView
             android:id="@+id/profile_setting"
@@ -27,10 +28,11 @@
             android:layout_alignParentRight="true"
             android:contentDescription="@string/content_desc_settings"
             android:scaleType="fitCenter"
-            android:src="@drawable/settings" />
+            android:src="@drawable/settings"/>
 
     </RelativeLayout>
 
+    <!-- PROFILE -->
     <RelativeLayout
         android:id="@+id/profile_karma"
         android:layout_width="wrap_content"
@@ -44,7 +46,7 @@
             android:layout_width="@dimen/profile_image_size"
             android:layout_height="@dimen/profile_image_size"
             android:layout_alignParentLeft="true"
-            android:background="@drawable/default_profile" />
+            android:background="@drawable/default_profile"/>
 
         <LinearLayout
             android:id="@+id/karma_bar"
@@ -63,7 +65,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/general_padding"
-                android:textStyle="normal" />
+                android:textStyle="normal"/>
 
             <!-- KARMA -->
             <TextView
@@ -74,7 +76,7 @@
 
                 android:padding="@dimen/general_padding"
                 android:textSize="@dimen/profile_large_size"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
 
             <!-- ANSWERED -->
             <TextView
@@ -83,7 +85,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/general_padding"
-                android:textStyle="normal" />
+                android:textStyle="normal"/>
         </LinearLayout>
 
         <TextView
@@ -95,16 +97,16 @@
             android:layout_toLeftOf="@id/karma_bar"
             android:layout_toRightOf="@+id/profile_user_image"
             android:ellipsize="end"
-            android:padding="@dimen/general_padding" />
+            android:padding="@dimen/general_padding"/>
 
     </RelativeLayout>
 
+    <!-- TABS -->
     <LinearLayout
         android:id="@+id/asked_answered_view_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/profile_karma"
-        android:background="@color/profile_tab_color"
         android:orientation="horizontal">
 
         <TextView
@@ -115,7 +117,7 @@
             android:gravity="center"
             android:padding="@dimen/profile_asked_answered_padding"
             android:text="@string/profile_asked_view_text"
-            android:textColor="@color/feed_question_left_color" />
+            android:textColor="@color/feed_question_left_color"/>
 
         <TextView
             android:id="@+id/profile_answered_view"
@@ -125,12 +127,99 @@
             android:gravity="center"
             android:padding="@dimen/profile_asked_answered_padding"
             android:text="@string/profile_answered_view_text"
-            android:textColor="@color/feed_question_right_color" />
+            android:textColor="@color/feed_question_right_color"/>
     </LinearLayout>
+
 
     <android.support.v4.view.ViewPager
         android:id="@+id/asked_answered_view_pager"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@id/asked_answered_view_layout" />
+        android:layout_below="@id/asked_answered_view_layout"/>
+
+    <!-- HIDDEN VIEW -->
+    <RelativeLayout
+        android:id="@+id/karma_show"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/profile_karma"
+        android:background="@color/theme_blue"
+        android:padding="@dimen/general_padding"
+        android:visibility="invisible">
+
+
+        <!-- KARMA -->
+        <LinearLayout
+            android:id="@+id/karma"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="@dimen/profile_score_margin"
+            android:layout_marginRight="@dimen/profile_score_margin"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/profile_medium_text_in"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/karma"/>
+
+            <TextView
+                android:id="@+id/karma_count_in"
+                style="@style/profile_medium_text_in"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <!-- ASKED -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignTop="@id/karma"
+            android:layout_marginLeft="@dimen/profile_score_margin"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/profile_medium_text_in"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/asked"/>
+
+            <TextView
+                android:id="@+id/asked_count_in"
+                style="@style/profile_medium_text_in"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="normal"/>
+        </LinearLayout>
+
+
+        <!-- ANSWERED -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@id/karma"
+            android:layout_marginRight="@dimen/profile_score_margin"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/profile_medium_text_in"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/answered"/>
+
+            <TextView
+                android:id="@+id/answered_count_in"
+                style="@style/profile_medium_text_in"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="normal"/>
+        </LinearLayout>
+    </RelativeLayout>
+
 </RelativeLayout>

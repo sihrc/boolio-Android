@@ -7,9 +7,13 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -38,7 +42,11 @@ public class ProfileFragment extends BoolioFragment {
     // Profile Page
 //    ImageView profileSetting;
     BoolioProfileImage profileUserImage;
-    TextView askedCount, profileUsername, answeredCount, karmaCount, profileDisplayName;
+    TextView askedCount, profileUsername, answeredCount, karmaCount, profileDisplayName, answeredCountIn, karmaCountIn, askedCountIn;
+
+    LinearLayout karmaBar;
+    RelativeLayout karmaShow;
+    ImageView profileSetting;
 
     // List Fragment Pager
     ViewPager viewPager;
@@ -72,21 +80,33 @@ public class ProfileFragment extends BoolioFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
 
-//        profileSetting = (ImageView) rootView.findViewById(R.id.profile_setting);
+        profileSetting = (ImageView) rootView.findViewById(R.id.profile_setting);
         profileUserImage = (BoolioProfileImage) rootView.findViewById(R.id.profile_user_image);
 
+        karmaShow = (RelativeLayout) rootView.findViewById(R.id.karma_show);
+
         askedCount = (TextView) rootView.findViewById(R.id.asked_count);
+        askedCountIn = (TextView) rootView.findViewById(R.id.asked_count_in); // duplicate
         profileUsername = (TextView) rootView.findViewById(R.id.profile_username);
         answeredCount = (TextView) rootView.findViewById(R.id.answered_count);
+        answeredCountIn = (TextView) rootView.findViewById(R.id.answered_count_in); // duplicate
         profileDisplayName = (TextView) rootView.findViewById(R.id.profile_user_name);
+        karmaBar = (LinearLayout) rootView.findViewById(R.id.karma_bar);
 
-        profileDisplayName.setOnClickListener(new View.OnClickListener() {
+        karmaBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(karmaShow.getVisibility() == View.VISIBLE) {
+                    karmaShow.setVisibility(View.INVISIBLE);
+                } else {
+                    karmaShow.setVisibility(View.VISIBLE);
+                }
             }
         });
 
+
         karmaCount = (TextView) rootView.findViewById(R.id.karma_count);
+        karmaCountIn = (TextView) rootView.findViewById(R.id.karma_count_in);  // duplicate
 
         viewPager = (ViewPager) rootView.findViewById(R.id.asked_answered_view_pager);
         askedView = rootView.findViewById(R.id.profile_asked_view);
@@ -220,6 +240,9 @@ public class ProfileFragment extends BoolioFragment {
         askedCount.setText(String.valueOf(user.questionsAsked.size()));
         answeredCount.setText(String.valueOf(user.questionsAnswered.size()));
         karmaCount.setText(String.valueOf(user.questionsAnswered.size() + user.questionsAsked.size())); //FIXME IMPLEMENT ON BACKEND
+        askedCountIn.setText(String.valueOf(user.questionsAsked.size()));
+        answeredCountIn.setText(String.valueOf(user.questionsAnswered.size()));
+        karmaCountIn.setText(String.valueOf(user.questionsAnswered.size() + user.questionsAsked.size()));
         profileUsername.setText(user.name); // FIXME ADD USERNAME
     }
 }
