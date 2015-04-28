@@ -16,6 +16,7 @@ import java.util.List;
 import io.boolio.android.R;
 import io.boolio.android.animation.AnimationHelper;
 import io.boolio.android.custom.ScrollingListView;
+import io.boolio.android.helpers.BoolioUserHandler;
 
 /**
  * Created by Chris on 4/28/15.
@@ -59,7 +60,7 @@ public class MainFragment extends BoolioFragment {
     private void setupViewPager() {
         fragmentList = new ArrayList<BoolioFragment>() {{
             add(FeedFragment.getInstance(changeListener));
-            add(ProfileFragment.newInstance(null, changeListener));
+            add(ProfileFragment.newInstance(BoolioUserHandler.getInstance(activity).getUser().userId, changeListener));
             add(CategoriesFragment.getInstance());
             add(SearchFragment.getInstance(changeListener));
         }};

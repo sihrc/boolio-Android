@@ -21,7 +21,6 @@ import org.json.JSONObject;
 import java.util.List;
 
 import io.boolio.android.callbacks.QuestionsCallback;
-import io.boolio.android.callbacks.UserCallback;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.models.Question;
 import io.boolio.android.models.User;
@@ -125,14 +124,13 @@ public class BoolioServer {
         queue.add(req);
     }
 
-    public void getUserProfile(String userId, final UserCallback callback) {
+    public void getUserProfile(String userId, final NetworkCallback<User> callback) {
         JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET,
                 API.GET_USER_ENDPOINT(userId),
                 new JSONObject(), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                callback.handleUser(UserParser.getInstance().parse(response));
-
+                callback.handle(UserParser.getInstance().parse(response));
             }
         }, errorListener);
 

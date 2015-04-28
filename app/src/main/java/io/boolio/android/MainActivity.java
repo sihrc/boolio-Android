@@ -4,6 +4,8 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -51,6 +53,7 @@ public class MainActivity extends FacebookAuth {
         NetworkCallback<User> userCallback = new NetworkCallback<User>() {
             @Override
             public void handle(User object) {
+                BoolioUserHandler.getInstance(MainActivity.this).setUser(object);
                 fragmentManager.beginTransaction().replace(R.id.container, MainFragment.newInstance()).commit();
             }
         };

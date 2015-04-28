@@ -23,14 +23,13 @@ import io.boolio.android.R;
 import io.boolio.android.adapters.BoolioAnswerAdapter;
 import io.boolio.android.callbacks.QuestionsCallback;
 import io.boolio.android.callbacks.QuestionsPullInterface;
-import io.boolio.android.callbacks.UserCallback;
 import io.boolio.android.custom.BoolioProfileImage;
-import io.boolio.android.custom.ObservableScrollView;
 import io.boolio.android.custom.ScrollingListView;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.models.Question;
 import io.boolio.android.models.User;
 import io.boolio.android.network.BoolioServer;
+import io.boolio.android.network.NetworkCallback;
 
 /**
  * Created by Chris on 4/17/15.
@@ -41,7 +40,6 @@ public class ProfileFragment extends BoolioFragment {
     User user;
 
     // Profile Page
-//    ImageView profileSetting;
     BoolioProfileImage profileUserImage;
     TextView askedCount, profileUsername, answeredCount, karmaCount, profileDisplayName, answeredCountIn, karmaCountIn, askedCountIn;
 
@@ -69,11 +67,12 @@ public class ProfileFragment extends BoolioFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         context = activity;
+        user = BoolioUserHandler.getInstance(activity).getUser();
         BoolioServer.getInstance(context).getUserProfile(
                 userId == null ? BoolioUserHandler.getInstance(context).getUser().userId : userId,
-                new UserCallback() {
+                new NetworkCallback<User>() {
                     @Override
-                    public void handleUser(User user) {
+                    public void handle(User user) {
                         ProfileFragment.this.user = user;
                         updateViews();
                     }
@@ -133,7 +132,7 @@ public class ProfileFragment extends BoolioFragment {
                 @Override
                 public void pullQuestions() {
                     BoolioServer.getInstance(context).getUserAsked(
-                            BoolioUserHandler.getInstance(context).getUser().userId,
+                            userId,
                             new QuestionsCallback() {
                                 @Override
                                 public void handleQuestions(List<Question> questionList) {
@@ -151,7 +150,7 @@ public class ProfileFragment extends BoolioFragment {
                 @Override
                 public void pullQuestions() {
                     BoolioServer.getInstance(context).getUserAnswered(
-                            BoolioUserHandler.getInstance(context).getUser().userId,
+                            userId,
                             new QuestionsCallback() {
                                 @Override
                                 public void handleQuestions(List<Question> questionList) {
@@ -223,7 +222,7 @@ public class ProfileFragment extends BoolioFragment {
         if (user == null)
             return;
 
-        if (user.userId.equals(BoolioUserHandler.getInstance(context).getUser().userId)) {
+        if (userId.equals(BoolioUserHandler.getInstance(context).getUser().userId)) {
             profileDisplayName.setText(R.string.my_profile_page);
         } else {
             profileDisplayName.setText(R.string.profile_page);
