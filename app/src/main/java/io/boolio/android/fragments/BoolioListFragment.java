@@ -24,16 +24,19 @@ public class BoolioListFragment extends BoolioFragment {
     MainActivity context;
     BoolioAdapter questionAdapter;
     ScrollingListView listView;
+    ScrollingListView.ScrollChangeListener scrollChangeListener;
     Runnable callback;
 
     // Callbacks
     QuestionsPullInterface pullInterface;
 
     public static BoolioListFragment newInstance(BoolioAdapter questionAdapter,
-                                                 QuestionsPullInterface pullQuestions) {
+                                                 QuestionsPullInterface pullQuestions,
+                                                 ScrollingListView.ScrollChangeListener scrollChangeListener) {
         BoolioListFragment fragment = new BoolioListFragment();
         fragment.questionAdapter = questionAdapter;
         fragment.pullInterface = pullQuestions;
+        fragment.scrollChangeListener = scrollChangeListener;
         return fragment;
     }
 
@@ -70,12 +73,7 @@ public class BoolioListFragment extends BoolioFragment {
             }
         });
         listView.setAdapter(questionAdapter);
-        listView.setScrollChangeListener(new ScrollingListView.ScrollChangeListener() {
-            @Override
-            public void onScroll(boolean isScrollingUp) {
-                context.showNavBar(isScrollingUp);
-            }
-        });
+        listView.setScrollChangeListener(scrollChangeListener);
         hideKeyBoard(listView);
 
         return rootView;

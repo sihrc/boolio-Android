@@ -26,6 +26,7 @@ import io.boolio.android.callbacks.QuestionsPullInterface;
 import io.boolio.android.callbacks.UserCallback;
 import io.boolio.android.custom.BoolioProfileImage;
 import io.boolio.android.custom.ObservableScrollView;
+import io.boolio.android.custom.ScrollingListView;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.models.Question;
 import io.boolio.android.models.User;
@@ -53,10 +54,13 @@ public class ProfileFragment extends BoolioFragment {
     View answerView, askedView;
     BoolioAnswerAdapter askedAdapter, answeredAdapter;
     List<BoolioListFragment> fragmentList;
+    ScrollingListView.ScrollChangeListener scrollChangeListener;
 
-    public static ProfileFragment newInstance(String userId) {
+    public static ProfileFragment newInstance(String userId, ScrollingListView.ScrollChangeListener scrollChangeListener) {
         ProfileFragment fragment = new ProfileFragment();
+
         fragment.userId = userId;
+        fragment.scrollChangeListener = scrollChangeListener;
 
         return fragment;
     }
@@ -113,16 +117,9 @@ public class ProfileFragment extends BoolioFragment {
         answerView = rootView.findViewById(R.id.profile_answered_view);
 
         setupPager();
-//        setupViews();
         setupTabOnClick();
 
         return rootView;
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-//        scrollView.requestFocus();
     }
 
     private void setupPager() {
@@ -147,7 +144,7 @@ public class ProfileFragment extends BoolioFragment {
                             }
                     );
                 }
-            }));
+            }, scrollChangeListener));
 
 
             add(BoolioListFragment.newInstance(answeredAdapter, new QuestionsPullInterface() {
@@ -164,7 +161,7 @@ public class ProfileFragment extends BoolioFragment {
                             }
                     );
                 }
-            }));
+            },scrollChangeListener));
         }};
 
 
@@ -217,10 +214,6 @@ public class ProfileFragment extends BoolioFragment {
             }
         });
 
-    }
-
-    private void setupViews() {
-        // Settings Button
     }
 
     /**

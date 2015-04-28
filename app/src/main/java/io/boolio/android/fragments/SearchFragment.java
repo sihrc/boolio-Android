@@ -20,6 +20,7 @@ import io.boolio.android.R;
 import io.boolio.android.adapters.BoolioQuestionAdapter;
 import io.boolio.android.callbacks.QuestionsCallback;
 import io.boolio.android.callbacks.QuestionsPullInterface;
+import io.boolio.android.custom.ScrollingListView;
 import io.boolio.android.models.Question;
 import io.boolio.android.network.BoolioServer;
 
@@ -32,21 +33,17 @@ public class SearchFragment extends BoolioFragment {
 
     SearchView searchBar;
     ViewPager viewPager;
-    TextView questionsTab, friendsTab, catergoriesTab;
+    TextView questionsTab, friendsTab, categoriesTab;
 
     List<BoolioListFragment> fragmentList;
+    ScrollingListView.ScrollChangeListener scrollChangeListener;
 
-    BoolioQuestionAdapter questionsTabAdapter, friendsTabAdapter, catergoriesTabAdapter;
-    Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
+    BoolioQuestionAdapter questionsTabAdapter, friendsTabAdapter, categoriesTabTabAdapter;
 
-        }
-    };
-
-    public static SearchFragment getInstance() {
+    public static SearchFragment getInstance(ScrollingListView.ScrollChangeListener scrollChangeListener) {
         if (instance == null) {
             instance = new SearchFragment();
+            instance.scrollChangeListener = scrollChangeListener;
         }
         return instance;
     }
@@ -65,7 +62,7 @@ public class SearchFragment extends BoolioFragment {
         viewPager = (ViewPager) rootView.findViewById(R.id.search_view_pager);
         questionsTab = (TextView) rootView.findViewById(R.id.search_questions_tab);
         friendsTab = (TextView) rootView.findViewById(R.id.search_friends_tab);
-        catergoriesTab = (TextView) rootView.findViewById(R.id.search_categories_tab);
+        categoriesTab = (TextView) rootView.findViewById(R.id.search_categories_tab);
 
         searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -94,10 +91,10 @@ public class SearchFragment extends BoolioFragment {
     private void setupPager() {
         questionsTab.setAlpha(1f);
         friendsTab.setAlpha(0.25f);
-        catergoriesTab.setAlpha(0.25f);
+        categoriesTab.setAlpha(0.25f);
         questionsTabAdapter = new BoolioQuestionAdapter(context);
         friendsTabAdapter = new BoolioQuestionAdapter(context);
-        catergoriesTabAdapter = new BoolioQuestionAdapter(context);
+        categoriesTabTabAdapter = new BoolioQuestionAdapter(context);
         fragmentList = new ArrayList<BoolioListFragment>() {{
             add(BoolioListFragment.newInstance(questionsTabAdapter, new QuestionsPullInterface() {
                 @Override
@@ -114,7 +111,7 @@ public class SearchFragment extends BoolioFragment {
                             }
                     );
                 }
-            }));
+            }, scrollChangeListener));
 
 
             add(BoolioListFragment.newInstance(friendsTabAdapter, new QuestionsPullInterface() {
@@ -131,8 +128,8 @@ public class SearchFragment extends BoolioFragment {
                             }
                     );
                 }
-            }));
-            add(BoolioListFragment.newInstance(catergoriesTabAdapter, new QuestionsPullInterface() {
+            }, scrollChangeListener));
+            add(BoolioListFragment.newInstance(categoriesTabTabAdapter, new QuestionsPullInterface() {
                 @Override
                 public void pullQuestions() {
                     // TODO
@@ -145,7 +142,7 @@ public class SearchFragment extends BoolioFragment {
                             }
                     );
                 }
-            }));
+            }, scrollChangeListener));
         }};
 
 
@@ -159,15 +156,15 @@ public class SearchFragment extends BoolioFragment {
                 if (position == 0) {
                     questionsTab.setAlpha(1f);
                     friendsTab.setAlpha(.25f);
-                    catergoriesTab.setAlpha(.25f);
+                    categoriesTab.setAlpha(.25f);
                 } else if (position == 1) {
                     questionsTab.setAlpha(.25f);
                     friendsTab.setAlpha(1f);
-                    catergoriesTab.setAlpha(.25f);
+                    categoriesTab.setAlpha(.25f);
                 } else {
                     questionsTab.setAlpha(.25f);
                     friendsTab.setAlpha(.25f);
-                    catergoriesTab.setAlpha(1f);
+                    categoriesTab.setAlpha(1f);
                 }
             }
 
@@ -205,7 +202,7 @@ public class SearchFragment extends BoolioFragment {
             }
         });
 
-        catergoriesTab.setOnClickListener(new View.OnClickListener() {
+        categoriesTab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 viewPager.setCurrentItem(2);

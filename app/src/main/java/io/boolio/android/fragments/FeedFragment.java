@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,37 +25,36 @@ import io.boolio.android.network.BoolioServer;
  * Created by Chris on 4/16/15.
  */
 public class FeedFragment extends BoolioFragment {
-    final public static int REFRESH_DELAY = 2000;
+    final public static int REFRESH_DELAY = 500;
+    static FeedFragment instance;
+
     QuestionsCallback callback = new QuestionsCallback() {
         @Override
         public void handleQuestions(final List<Question> questionList) {
-            pullToRefreshLayout.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    questionAdapter.clear();
-                    questionAdapter.addAll(questionList);
-                    questionAdapter.notifyDataSetChanged();
-                    pullToRefreshLayout.setRefreshing(false);
-                    gifLoading.setVisibility(View.GONE);
-                    if (questionAdapter.getCount() == 0) {
-                        loadingMessage.setVisibility(View.VISIBLE);
-                        context.showNavBar(true);
-                    }
-                }
-            }, REFRESH_DELAY);
+            questionAdapter.clear();
+            questionAdapter.addAll(questionList);
+            questionAdapter.notifyDataSetChanged();
+            pullToRefreshLayout.setRefreshing(false);
+            gifLoading.setVisibility(View.GONE);
+            if (questionAdapter.getCount() == 0) {
+                loadingMessage.setVisibility(View.VISIBLE);
+            }
         }
     };
-    static FeedFragment instance;
+
     MainActivity context;
     PullToRefreshView pullToRefreshLayout;
     BoolioQuestionAdapter questionAdapter;
     List<String> prevSeenQuestions;
     View gifLoading, loadingMessage;
     View headerBar;
+    ScrollingListView.ScrollChangeListener scrollListener;
 
-    public static FeedFragment getInstance() {
-        if (instance == null)
+    public static FeedFragment getInstance(ScrollingListView.ScrollChangeListener scrollListener) {
+        if (instance == null) {
             instance = new FeedFragment();
+            instance.scrollListener = scrollListener;
+        }
         return instance;
     }
 
@@ -63,6 +63,15 @@ public class FeedFragment extends BoolioFragment {
         super.onAttach(activity);
         prevSeenQuestions = new ArrayList<>();
         context = (MainActivity) activity;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (questionAdapter.getCount() == 0) {
+            gifLoading.setVisibility(View.VISIBLE);
+        }
+        pullQuestions();
     }
 
     @Override
@@ -85,12 +94,7 @@ public class FeedFragment extends BoolioFragment {
         ScrollingListView listView = (ScrollingListView) rootView.findViewById(R.id.question_feed);
         questionAdapter = new BoolioQuestionAdapter(context);
         listView.setAdapter(questionAdapter);
-        listView.setScrollChangeListener(new ScrollingListView.ScrollChangeListener() {
-            @Override
-            public void onScroll(boolean isScrollingUp) {
-                context.showNavBar(isScrollingUp);
-            }
-        });
+        listView.setScrollChangeListener(scrollListener);
 
         BoolioUserHandler.getInstance(context).setUserCallback(new Runnable() {
             @Override
@@ -100,15 +104,6 @@ public class FeedFragment extends BoolioFragment {
         });
 
         return rootView;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (questionAdapter.getCount() == 0) {
-            gifLoading.setVisibility(View.VISIBLE);
-        }
-        pullQuestions();
     }
 
     private void pullQuestions() {

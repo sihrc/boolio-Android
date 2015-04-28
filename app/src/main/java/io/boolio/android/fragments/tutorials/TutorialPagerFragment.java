@@ -64,7 +64,6 @@ public class TutorialPagerFragment extends BoolioFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         context = activity;
-        ((MainActivity) activity).showNavBar(false);
         inactiveIndicator = getResources().getDrawable(R.drawable.inactive_indicator);
         activeIndicator = getResources().getDrawable(R.drawable.active_indicator);
     }

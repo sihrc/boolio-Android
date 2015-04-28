@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import io.boolio.android.MainActivity;
 import io.boolio.android.R;
 import io.boolio.android.custom.BoolioNetworkImageView;
 import io.boolio.android.helpers.BoolioUserHandler;
@@ -33,12 +32,15 @@ public class CreateQuestionFragment extends BoolioFragment {
     View progress;
     BoolioNetworkImageView networkImageView;
     PictureHelper helper;
+    Runnable runnable;
 
     Bitmap imageSaved;
     String imageType = "";
 
-    public static CreateQuestionFragment newInstance() {
-        return new CreateQuestionFragment();
+    public static CreateQuestionFragment newInstance(Runnable runnable) {
+        CreateQuestionFragment fragment =  new CreateQuestionFragment();
+        fragment.runnable = runnable;
+        return fragment;
     }
 
     @Override
@@ -115,7 +117,9 @@ public class CreateQuestionFragment extends BoolioFragment {
             @Override
             public void run() {
                 progress.setVisibility(View.GONE);
-                ((MainActivity) getActivity()).switchFragment(0);
+                reset();
+                if (runnable != null)
+                    runnable.run();
             }
         });
     }
@@ -153,5 +157,15 @@ public class CreateQuestionFragment extends BoolioFragment {
                 alert.show();
             }
         });
+    }
+
+    private void reset() {
+        networkImageView.setLocalImageBitmap(null);
+        imageSaved = null;
+        imageType = "";
+        questionText.setText("");
+        left.setText("");
+        right.setText("");
+        tags.setText("");
     }
 }
