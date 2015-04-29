@@ -10,33 +10,38 @@ import org.json.JSONObject;
  * Created by Chris on 4/16/15.
  */
 public abstract class Parser<T> {
+    private final static boolean DEBUG = false;
     JSONObject object;
 
     String getString(String key) throws JSONException {
         if (object.has(key))
             return object.getString(key);
-        Log.e("Parser", "Missing Key: " + key);
+        if (DEBUG)
+            Log.e("Parser", "Missing Key: " + key);
         return null;
     }
 
     int getInt(String key) throws JSONException {
         if (object.has(key))
             return object.getInt(key);
-        Log.e("Parser", "Missing Key: " + key);
+        if (DEBUG)
+            Log.e("Parser", "Missing Key: " + key);
         return 0;
     }
 
     JSONObject getJSONObject(String key) throws JSONException {
         if (object.has(key))
             return object.getJSONObject(key);
-        Log.e("Parser", "Missing Key: " + key);
+        if (DEBUG)
+            Log.e("Parser", "Missing Key: " + key);
         return null;
     }
 
     JSONArray getJSONArray(String key) throws JSONException {
         if (object.has(key))
             return object.getJSONArray(key);
-        Log.w("Parser", "Missing Key: " + key);
+        if (DEBUG)
+            Log.w("Parser", "Missing Key: " + key);
         return new JSONArray();
     }
 

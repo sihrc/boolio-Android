@@ -1,5 +1,6 @@
 package io.boolio.android;
 
+import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -30,7 +31,6 @@ import io.boolio.android.network.parser.UserParser;
 
 public class MainActivity extends FacebookAuth {
     public static int SCREEN_WIDTH, SCREEN_HEIGHT;
-    public boolean isTransitioning;
 
     FragmentManager fragmentManager;
 

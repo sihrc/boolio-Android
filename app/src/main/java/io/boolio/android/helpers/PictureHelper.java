@@ -23,8 +23,8 @@ import io.boolio.android.R;
  * Created by chris on 2/19/15.
  */
 public class PictureHelper {
-    final static int REQUEST_TAKE_PHOTO = 0;
-    final static int REQUEST_PICK_PHOTO = 1;
+    public final static int REQUEST_TAKE_PHOTO = 0;
+    public final static int REQUEST_PICK_PHOTO = 1;
 
     Context context;
 
@@ -105,5 +105,9 @@ public class PictureHelper {
 
     public static interface BitmapCallback {
         public void onBitmap(Bitmap bitmap);
+    }
+
+    public static boolean isRequest(int code) {
+        return code == PictureHelper.REQUEST_PICK_PHOTO || code == PictureHelper.REQUEST_TAKE_PHOTO || code == Crop.REQUEST_CROP;
     }
 }

@@ -1,15 +1,12 @@
 package io.boolio.android.fragments;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,30 +25,27 @@ import io.boolio.android.network.BoolioServer;
  * Created by james on 4/17/15.
  */
 public class CreateQuestionFragment extends BoolioFragment {
-    Context context;
-    EditText questionText, left, right, tags;
+    EditText left;
+    EditText right;
+    EditText tags;
     View progress;
     BoolioNetworkImageView networkImageView;
     PictureHelper helper;
     Runnable runnable;
-
     Bitmap imageSaved;
     String imageType = "";
+    private EditText questionText;
 
     public static CreateQuestionFragment newInstance(Runnable runnable) {
-        CreateQuestionFragment fragment =  new CreateQuestionFragment();
+        CreateQuestionFragment fragment = new CreateQuestionFragment();
         fragment.runnable = runnable;
+        fragment.helper = new PictureHelper();
         return fragment;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(new Bundle());
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        helper.onActivityResult(this, requestCode, resultCode, data, networkImageView, new PictureHelper.BitmapCallback() {
+        helper.onActivityResult(this.getParentFragment(), requestCode, resultCode, data, networkImageView, new PictureHelper.BitmapCallback() {
             @Override
             public void onBitmap(Bitmap bitmap) {
                 networkImageView.setLocalImageBitmap(bitmap);
@@ -62,15 +56,11 @@ public class CreateQuestionFragment extends BoolioFragment {
                 }
             }
         });
-
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        this.context = activity;
-        this.helper = new PictureHelper();
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(new Bundle());
     }
 
     @Override
@@ -99,7 +89,7 @@ public class CreateQuestionFragment extends BoolioFragment {
 
     private void submitOnClickSetup() {
         if (questionText.getText().length() == 0 && imageSaved == null) {
-            Toast.makeText(context, "Please enter a question or choose an image", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, "Please enter a question or choose an image", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -107,16 +97,16 @@ public class CreateQuestionFragment extends BoolioFragment {
         question.question = questionText.getText().toString();
         question.left = left.getText().length() == 0 ? "No" : left.getText().toString();
         question.right = right.getText().length() == 0 ? "Yes" : right.getText().toString();
-        question.creatorName = BoolioUserHandler.getInstance(context).getUser().name;
-        question.creatorImage = BoolioUserHandler.getInstance(context).getUser().profilePic;
-        question.creatorId = BoolioUserHandler.getInstance(context).getUser().userId;
+        question.creatorName = BoolioUserHandler.getInstance(activity).getUser().name;
+        question.creatorImage = BoolioUserHandler.getInstance(activity).getUser().profilePic;
+        question.creatorId = BoolioUserHandler.getInstance(activity).getUser().userId;
         question.tags = Utils.parseStringArray(tags.getText().toString());
 
 
         // Upload Image to Server
         progress.setVisibility(View.VISIBLE);
 
-        BoolioServer.getInstance(context).postQuestion(question, imageSaved, new Runnable() {
+        BoolioServer.getInstance(activity).postQuestion(question, imageSaved, new Runnable() {
             @Override
             public void run() {
                 progress.setVisibility(View.GONE);
@@ -128,23 +118,23 @@ public class CreateQuestionFragment extends BoolioFragment {
     }
 
     private void setupImageView() {
-        final Dialog alert = new AlertDialog.Builder(context).setItems(
+        final Dialog alert = new AlertDialog.Builder(activity).setItems(
                 new CharSequence[]{"Load from Gallery", "Take a picture", "Search", "Cancel"},
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case 0: // Load from Gallery
-                                helper.dispatchChoosePictureIntent(getActivity(), CreateQuestionFragment.this);
                                 imageType = "string";
+                                helper.dispatchChoosePictureIntent(activity, CreateQuestionFragment.this.getParentFragment());
                                 break;
                             case 1: // Take a picture
-                                helper.dispatchTakePictureIntent(getActivity(), CreateQuestionFragment.this);
                                 imageType = "string";
+                                helper.dispatchTakePictureIntent(activity, CreateQuestionFragment.this.getParentFragment());
                                 break;
                             case 2: // Search
                                 imageType = "url";
-                                Toast.makeText(context, "Sorry, this isn't implemented yet!", Toast.LENGTH_LONG).show();
+                                Toast.makeText(activity, "Sorry, this isn't implemented yet!", Toast.LENGTH_LONG).show();
                                 break;
                             case 3:
                             default:
@@ -165,7 +155,6 @@ public class CreateQuestionFragment extends BoolioFragment {
     private void reset() {
         networkImageView.setLocalImageBitmap(null);
         imageSaved = null;
-        imageType = "";
         questionText.setText("");
         left.setText("");
         right.setText("");

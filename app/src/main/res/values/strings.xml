@@ -34,17 +34,17 @@
     <string name="create_question_answer_left_hint">No</string>
     <string name="create_question_answer_right_hint">Yes</string>
     <string name="place_image">Tap to place an image</string>
+    <string name="create_question">Create Question</string>
 
     <!-- Profile Fragment -->
     <string name="answered">ANSWERED</string>
     <string name="asked">ASKED</string>
     <string name="karma">KARMA</string>
-    <string name="my_profile_page">My Profile Page</string>
-    <string name="profile_page">Profile Page</string>
     <string name="settings">Settings</string>
     <string name="profile_asked_view_text">ASKED</string>
     <string name="profile_answered_view_text">ANSWERED</string>
     <string name="profile_logo">My Profile</string>
+    <string name="my_profile">My Profile</string>
 
     <!-- Feed Fragment -->
     <string name="empty_feed_message">Great Job! Your question feed is empty. Pull down to see if there are more.</string>

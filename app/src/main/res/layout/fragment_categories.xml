@@ -10,13 +10,8 @@
         android:background="@color/theme_blue"
         android:padding="@dimen/general_padding">
 
-        <!--<ImageView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:contentDescription="@string/content_description_header"-->
-            <!--android:src="@drawable/logo_white" />-->
-
         <TextView
+            style="@style/header_text"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center"

@@ -13,13 +13,14 @@
 
         <TextView
             android:id="@+id/profile_user_name"
-            style="@style/profile_big_text"
+            style="@style/header_text"
+            android:text="@string/my_profile"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
+            android:layout_centerInParent="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/general_padding"
-            android:textColor="@color/white"/>
+            android:textColor="@android:color/white"/>
 
         <ImageView
             android:id="@+id/profile_setting"
@@ -70,7 +71,7 @@
             <!-- KARMA -->
             <TextView
                 android:id="@+id/karma_count"
-                style="@style/profile_big_text"
+                style="@style/profile_large_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 

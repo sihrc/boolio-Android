@@ -1,7 +1,9 @@
 package io.boolio.android.fragments;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 
 import io.boolio.android.MainActivity;
 
@@ -17,17 +19,7 @@ public class BoolioFragment extends Fragment {
         this.activity = (MainActivity) activity;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (activity != null)
-            activity.isTransitioning = false;
-    }
+    public void refreshPage() {
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (activity != null)
-            activity.isTransitioning = true;
     }
 }

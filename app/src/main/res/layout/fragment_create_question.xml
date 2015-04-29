@@ -1,110 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#fcfcfc"
-    android:gravity="center"
-    android:padding="@dimen/create_question_padding">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#fcfcfc">
 
-
-    <TextView
+    <RelativeLayout
+        android:id="@+id/header_bar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/question_image_height"
-        android:background="@android:color/transparent"
-        android:gravity="center"
-        android:text="@string/place_image"
-        android:textSize="@dimen/general_large_text" />
+        android:layout_height="@dimen/header_height"
+        android:background="@color/theme_blue">
 
-    <io.boolio.android.custom.BoolioNetworkImageView
-        android:id="@+id/create_question_image"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/question_image_height"
-        android:scaleType="centerCrop" />
+        <TextView
+            android:id="@+id/profile_user_name"
+            style="@style/header_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="@dimen/general_padding"
+            android:text="@string/create_question"
+            android:textColor="@android:color/white"/>
 
-    <EditText
-        android:id="@+id/create_question_text"
-        style="@style/input_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/create_question_image"
-        android:layout_marginBottom="@dimen/general_padding"
-        android:gravity="center"
-        android:hint="@string/create_question_text_hint" />
+    </RelativeLayout>
 
-    <EditText
-        android:id="@+id/create_question_tag"
-        style="@style/input_text"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/create_question_text"
-        android:layout_marginBottom="@dimen/general_padding"
-        android:gravity="center"
-        android:hint="@string/create_question_tags_hint" />
+        android:layout_below="@id/header_bar"
+        android:padding="@dimen/general_padding">
 
-    <LinearLayout
-        android:id="@+id/create_question_buttons"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/create_question_tag"
-        android:layout_marginBottom="@dimen/general_padding"
-        android:orientation="horizontal">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/question_image_height"
+            android:background="@android:color/transparent"
+            android:gravity="center"
+            android:text="@string/place_image"
+            android:textSize="@dimen/general_large_text"/>
+
+        <io.boolio.android.custom.BoolioNetworkImageView
+            android:id="@+id/create_question_image"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/question_image_height"
+            android:scaleType="centerCrop"/>
 
         <EditText
-            android:id="@+id/create_question_left_answer"
-            style="@style/input_button_style"
-            android:layout_width="0dp"
-            android:layout_height="fill_parent"
-            android:layout_marginRight="@dimen/general_padding"
-            android:layout_weight="1"
+            android:id="@+id/create_question_text"
+            style="@style/input_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/create_question_image"
+            android:layout_marginBottom="@dimen/general_padding"
+            android:gravity="center"
+            android:hint="@string/create_question_text_hint"/>
+
+        <EditText
+            android:id="@+id/create_question_tag"
+            style="@style/input_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/create_question_text"
+            android:layout_marginBottom="@dimen/general_padding"
+            android:gravity="center"
+            android:hint="@string/create_question_tags_hint"/>
+
+        <LinearLayout
+            android:id="@+id/create_question_buttons"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/create_question_tag"
+            android:layout_marginBottom="@dimen/general_padding"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/create_question_left_answer"
+                style="@style/input_button_style"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_marginRight="@dimen/general_padding"
+                android:layout_weight="1"
+                android:background="@drawable/left_answer_button"
+                android:gravity="center"
+                android:hint="@string/create_question_answer_left_hint"
+                android:imeOptions="actionNext"
+                android:textColor="@color/feed_question_left_color"
+                android:textColorHint="@color/feed_question_left_color"/>
+
+            <EditText
+                android:id="@+id/create_question_right_answer"
+                style="@style/input_button_style"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="@dimen/general_padding"
+                android:layout_weight="1"
+                android:background="@drawable/right_answer_button"
+                android:gravity="center"
+                android:hint="@string/create_question_answer_right_hint"
+                android:imeOptions="actionDone"
+                android:textColor="@color/feed_question_right_color"
+                android:textColorHint="@color/feed_question_right_color"/>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/create_question_submit"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/create_question_buttons"
+            android:layout_alignRight="@id/create_question_buttons"
+            android:layout_below="@+id/create_question_buttons"
+            android:layout_marginBottom="40dp"
             android:background="@drawable/left_answer_button"
             android:gravity="center"
-            android:hint="@string/create_question_answer_left_hint"
-            android:imeOptions="actionNext"
-            android:textColor="@color/feed_question_left_color"
-            android:textColorHint="@color/feed_question_left_color" />
+            android:text="@string/create_question_submit"/>
 
-        <EditText
-            android:id="@+id/create_question_right_answer"
-            style="@style/input_button_style"
-            android:layout_width="0dp"
-            android:layout_height="fill_parent"
-            android:layout_marginLeft="@dimen/general_padding"
-            android:layout_weight="1"
-            android:background="@drawable/right_answer_button"
-            android:gravity="center"
-            android:hint="@string/create_question_answer_right_hint"
-            android:imeOptions="actionDone"
-            android:textColor="@color/feed_question_right_color"
-            android:textColorHint="@color/feed_question_right_color" />
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/create_question_submit"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/create_question_buttons"
-        android:layout_alignRight="@id/create_question_buttons"
-        android:layout_below="@+id/create_question_buttons"
-        android:background="@drawable/left_answer_button"
-        android:layout_marginBottom="40dp"
-        android:gravity="center"
-        android:text="@string/create_question_submit" />
-
-    <fr.castorflex.android.circularprogressbar.CircularProgressBar
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/progress_bar_saving"
-        android:layout_width="@dimen/progress_small_size"
-        android:layout_height="@dimen/progress_small_size"
-        android:layout_centerInParent="true"
-        android:background="@android:color/transparent"
-        android:indeterminate="true"
-        android:visibility="gone"
-        app:cpb_color="#FFee44"
-        app:cpb_colors="@array/progress_colors"
-        app:cpb_max_sweep_angle="300"
-        app:cpb_min_sweep_angle="10"
-        app:cpb_rotation_speed="1.0"
-        app:cpb_stroke_width="6dp"
-        app:cpb_sweep_speed="1.0" />
+        <fr.castorflex.android.circularprogressbar.CircularProgressBar
+            android:id="@+id/progress_bar_saving"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="@dimen/progress_small_size"
+            android:layout_height="@dimen/progress_small_size"
+            android:layout_centerInParent="true"
+            android:background="@android:color/transparent"
+            android:indeterminate="true"
+            android:visibility="gone"
+            app:cpb_color="#FFee44"
+            app:cpb_colors="@array/progress_colors"
+            app:cpb_max_sweep_angle="300"
+            app:cpb_min_sweep_angle="10"
+            app:cpb_rotation_speed="1.0"
+            app:cpb_stroke_width="6dp"
+            app:cpb_sweep_speed="1.0"/>
+    </RelativeLayout>
 </RelativeLayout>

@@ -1,5 +1,6 @@
 package io.boolio.android.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.soundcloud.android.crop.Crop;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,9 +21,7 @@ import io.boolio.android.R;
 import io.boolio.android.animation.AnimationHelper;
 import io.boolio.android.custom.ScrollingListView;
 import io.boolio.android.helpers.BoolioUserHandler;
-import io.boolio.android.models.User;
-import io.boolio.android.network.BoolioServer;
-import io.boolio.android.network.NetworkCallback;
+import io.boolio.android.helpers.PictureHelper;
 
 /**
  * Created by Chris on 4/28/15.
@@ -43,6 +44,15 @@ public class MainFragment extends BoolioFragment {
 
     public static MainFragment newInstance() {
         return new MainFragment();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.i("DebugDebugHere", requestCode + " requestCode");
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PictureHelper.REQUEST_TAKE_PHOTO || requestCode == PictureHelper.REQUEST_PICK_PHOTO || requestCode == Crop.REQUEST_CROP) {
+            fragmentList.get(2).onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     @Override
@@ -97,26 +107,14 @@ public class MainFragment extends BoolioFragment {
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
             }
 
             @Override
             public void onPageSelected(int position) {
                 if (navBar != null) {
                     selectNavBar(navBar.getChildAt(position * 2));
-                    if (viewPager.getCurrentItem() == 1) {
-                        final ProfileFragment frag = (ProfileFragment) getChildFragmentManager().findFragmentByTag("android:switcher:" + R.id.main_view_pager + ":" + viewPager.getCurrentItem());
-                        frag.fragmentList.get(0).pullInterface.pullQuestions();
-                        frag.fragmentList.get(1).pullInterface.pullQuestions();
-                        BoolioServer.getInstance(activity).getUserProfile(frag.userId,
-                                new NetworkCallback<User>() {
-                                    @Override
-                                    public void handle(User user) {
-                                        frag.user = user;
-                                        frag.updateViews();
-                                    }
-                                });
-                    } else if (viewPager.getCurrentItem() == 2){
+                    fragmentList.get(position).refreshPage();
+                    if (viewPager.getCurrentItem() == 2) {
                         showNavBar(true);
                     }
                 }
@@ -124,7 +122,6 @@ public class MainFragment extends BoolioFragment {
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
             }
         });
 
@@ -141,14 +138,6 @@ public class MainFragment extends BoolioFragment {
         });
     }
 
-    private void selectNavBar(View v) {
-        v.setAlpha(1f);
-        if (curNavButton != navBarAdd) {
-            curNavButton.setAlpha(selectedAlpha);
-
-        }
-        curNavButton = v;
-    }
 
     private View.OnClickListener getNavClickListener(final int index, final Runnable callback) {
         return new View.OnClickListener() {
@@ -165,6 +154,14 @@ public class MainFragment extends BoolioFragment {
                 }
             }
         };
+    }
+
+    private void selectNavBar(View v) {
+        v.setAlpha(1f);
+        if (curNavButton != navBarAdd) {
+            curNavButton.setAlpha(selectedAlpha);
+        }
+        curNavButton = v;
     }
 
     public void showNavBar(boolean visible) {

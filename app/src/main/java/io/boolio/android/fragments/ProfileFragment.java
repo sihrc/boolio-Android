@@ -225,12 +225,6 @@ public class ProfileFragment extends BoolioFragment {
         if (user == null)
             return;
 
-        if (userId.equals(BoolioUserHandler.getInstance(context).getUser().userId)) {
-            profileDisplayName.setText(R.string.my_profile_page);
-        } else {
-            profileDisplayName.setText(R.string.profile_page);
-        }
-
         profileUserImage.setImageUrl(user.profilePic, BoolioServer.getInstance(context).getImageLoader());
         askedCount.setText(String.valueOf(user.questionsAsked.size()));
         answeredCount.setText(String.valueOf(user.questionsAnswered.size()));

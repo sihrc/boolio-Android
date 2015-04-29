@@ -25,6 +25,16 @@ public abstract class FacebookAuth extends FragmentActivity {
     ProfileTracker profileTracker;
     AccessTokenTracker accessTokenTracker;
 
+    boolean shouldLoginAuth = true;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        shouldLoginAuth = false;
+        Log.i("DebugDebug", shouldLoginAuth + " boolean," + requestCode +  " code");
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,21 +80,12 @@ public abstract class FacebookAuth extends FragmentActivity {
                 });
     }
 
-    private void getProfileInfo() {
-        Profile gottenProfile = Profile.getCurrentProfile();
-        if(Profile.getCurrentProfile() != null && AccessToken.getCurrentAccessToken() != null) {
-            loggedIn(gottenProfile);
-        } else {
-            AccessToken.getCurrentAccessToken();
-            Profile.fetchProfileForCurrentAccessToken();
-            loggedOut();
-        }
-    }
-
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data);
+    protected void onPause() {
+        super.onPause();
+        AppEventsLogger.deactivateApp(this);
+        profileTracker.stopTracking();
+        accessTokenTracker.stopTracking();
     }
 
     @Override
@@ -99,16 +100,24 @@ public abstract class FacebookAuth extends FragmentActivity {
     protected void onResumeFragments() {
         super.onResumeFragments();
         getProfileInfo();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        AppEventsLogger.deactivateApp(this);
-        profileTracker.stopTracking();
-        accessTokenTracker.stopTracking();
+        shouldLoginAuth = true;
     }
 
     public abstract void loggedIn(Profile profile);
+
     public abstract void loggedOut();
+
+    private void getProfileInfo() {
+        Log.i("DebugDebug", shouldLoginAuth + " boolean");
+        if (!shouldLoginAuth)
+            return;
+        Profile gottenProfile = Profile.getCurrentProfile();
+        if (Profile.getCurrentProfile() != null && AccessToken.getCurrentAccessToken() != null) {
+            loggedIn(gottenProfile);
+        } else {
+            AccessToken.getCurrentAccessToken();
+            Profile.fetchProfileForCurrentAccessToken();
+            loggedOut();
+        }
+    }
 }

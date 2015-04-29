@@ -26,7 +26,6 @@ import io.boolio.android.network.BoolioServer;
  * Created by Chris on 4/16/15.
  */
 public class FeedFragment extends BoolioFragment {
-    final public static int REFRESH_DELAY = 500;
     static FeedFragment instance;
 
     QuestionsCallback callback = new QuestionsCallback() {
@@ -67,12 +66,11 @@ public class FeedFragment extends BoolioFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void refreshPage() {
+        pullQuestions();
         if (questionAdapter.getCount() == 0) {
             gifLoading.setVisibility(View.VISIBLE);
         }
-        pullQuestions();
     }
 
     @Override
@@ -95,13 +93,13 @@ public class FeedFragment extends BoolioFragment {
         ScrollingListView listView = (ScrollingListView) rootView.findViewById(R.id.question_feed);
         questionAdapter = new BoolioQuestionAdapter(context);
         listView.setAdapter(questionAdapter);
-//        listView.setScrollChangeListener(scrollListener);
-        listView.setScrollChangeListener(new ScrollingListView.ScrollChangeListener() {
-            @Override
-            public void onScroll(boolean isScrollingUp) {
-                ((MainFragment)getParentFragment()).showNavBar(isScrollingUp);
-            }
-        });
+        listView.setScrollChangeListener(scrollListener);
+//        listView.setScrollChangeListener(new ScrollingListView.ScrollChangeListener() {
+//            @Override
+//            public void onScroll(boolean isScrollingUp) {
+//                ((MainFragment)getParentFragment()).showNavBar(isScrollingUp);
+//            }
+//        });
 
         BoolioUserHandler.getInstance(context).setUserCallback(new Runnable() {
             @Override
@@ -110,6 +108,7 @@ public class FeedFragment extends BoolioFragment {
             }
         });
 
+        instance.pullQuestions();
         return rootView;
     }
 
