@@ -85,7 +85,7 @@ public class MainFragment extends BoolioFragment {
                 @Override
                 public void run() {
                     Log.i("debugdebug", "after reset");
-                    navBar.getChildAt(0).performClick();
+//                    navBar.getChildAt(0).performClick();
                 }
             }));
             add(SearchFragment.getInstance(changeListener));
@@ -142,6 +142,11 @@ public class MainFragment extends BoolioFragment {
                 }
 
                 viewPager.setCurrentItem(index, true);
+                if (viewPager.getCurrentItem() == 1) {
+                    ProfileFragment frag = (ProfileFragment) getChildFragmentManager().findFragmentByTag("android:switcher:" + R.id.main_view_pager + ":" + viewPager.getCurrentItem());
+                    frag.fragmentList.get(0).pullInterface.pullQuestions();
+                    frag.fragmentList.get(1).pullInterface.pullQuestions();
+                }
 
                 if (callback != null) {
                     callback.run();

@@ -119,7 +119,6 @@ public class CreateQuestionFragment extends BoolioFragment {
             public void run() {
                 progress.setVisibility(View.GONE);
                 reset();
-                Log.i("debugdebug", "after reset");
                 if (runnable != null)
                     runnable.run();
             }

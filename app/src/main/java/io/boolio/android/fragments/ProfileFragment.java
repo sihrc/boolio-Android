@@ -21,6 +21,7 @@ import java.util.List;
 
 import io.boolio.android.R;
 import io.boolio.android.adapters.BoolioAnswerAdapter;
+import io.boolio.android.animation.AnimationHelper;
 import io.boolio.android.callbacks.QuestionsCallback;
 import io.boolio.android.callbacks.QuestionsPullInterface;
 import io.boolio.android.custom.BoolioProfileImage;
@@ -96,17 +97,6 @@ public class ProfileFragment extends BoolioFragment {
         profileDisplayName = (TextView) rootView.findViewById(R.id.profile_user_name);
         karmaBar = (LinearLayout) rootView.findViewById(R.id.karma_bar);
 
-        karmaBar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(karmaShow.getVisibility() == View.VISIBLE) {
-                    karmaShow.setVisibility(View.INVISIBLE);
-                } else {
-                    karmaShow.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-
 
         karmaCount = (TextView) rootView.findViewById(R.id.karma_count);
         karmaCountIn = (TextView) rootView.findViewById(R.id.karma_count_in);  // duplicate
@@ -117,6 +107,7 @@ public class ProfileFragment extends BoolioFragment {
 
         setupPager();
         setupTabOnClick();
+        setupKarmaView();
 
         return rootView;
     }
@@ -138,7 +129,6 @@ public class ProfileFragment extends BoolioFragment {
                                 public void handleQuestions(List<Question> questionList) {
                                     askedAdapter.clear();
                                     askedAdapter.addAll(questionList);
-
                                 }
                             }
                     );
@@ -160,7 +150,7 @@ public class ProfileFragment extends BoolioFragment {
                             }
                     );
                 }
-            },scrollChangeListener));
+            }, scrollChangeListener));
         }};
 
 
@@ -215,6 +205,19 @@ public class ProfileFragment extends BoolioFragment {
 
     }
 
+    private void setupKarmaView() {
+        karmaBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (karmaShow.getVisibility() == View.VISIBLE) {
+                    karmaShow.setVisibility(View.INVISIBLE);
+                } else {
+                    karmaShow.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+    }
+
     /**
      * Update Views with User Information once populated *
      */
@@ -236,5 +239,12 @@ public class ProfileFragment extends BoolioFragment {
         answeredCountIn.setText(String.valueOf(user.questionsAnswered.size()));
         karmaCountIn.setText(String.valueOf(user.questionsAnswered.size() + user.questionsAsked.size()));
         profileUsername.setText(user.name); // FIXME ADD USERNAME
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.v("debugdebug", "when is this called");
+
     }
 }
