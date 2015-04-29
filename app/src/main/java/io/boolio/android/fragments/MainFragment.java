@@ -87,8 +87,7 @@ public class MainFragment extends BoolioFragment {
             add(CreateQuestionFragment.newInstance(new Runnable() {
                 @Override
                 public void run() {
-                    Log.i("debugdebug", "after reset");
-//                    navBar.getChildAt(0).performClick();
+                    navBar.getChildAt(0).callOnClick();
                 }
             }));
             add(SearchFragment.getInstance(changeListener));
@@ -105,6 +104,21 @@ public class MainFragment extends BoolioFragment {
             public void onPageSelected(int position) {
                 if (navBar != null) {
                     selectNavBar(navBar.getChildAt(position * 2));
+                    if (viewPager.getCurrentItem() == 1) {
+                        final ProfileFragment frag = (ProfileFragment) getChildFragmentManager().findFragmentByTag("android:switcher:" + R.id.main_view_pager + ":" + viewPager.getCurrentItem());
+                        frag.fragmentList.get(0).pullInterface.pullQuestions();
+                        frag.fragmentList.get(1).pullInterface.pullQuestions();
+                        BoolioServer.getInstance(activity).getUserProfile(frag.userId,
+                                new NetworkCallback<User>() {
+                                    @Override
+                                    public void handle(User user) {
+                                        frag.user = user;
+                                        frag.updateViews();
+                                    }
+                                });
+                    } else if (viewPager.getCurrentItem() == 2){
+                        showNavBar(true);
+                    }
                 }
             }
 
@@ -145,19 +159,6 @@ public class MainFragment extends BoolioFragment {
                 }
 
                 viewPager.setCurrentItem(index, true);
-                if (viewPager.getCurrentItem() == 1) {
-                    final ProfileFragment frag = (ProfileFragment) getChildFragmentManager().findFragmentByTag("android:switcher:" + R.id.main_view_pager + ":" + viewPager.getCurrentItem());
-                    frag.fragmentList.get(0).pullInterface.pullQuestions();
-                    frag.fragmentList.get(1).pullInterface.pullQuestions();
-                    BoolioServer.getInstance(getActivity()).getUserProfile(frag.userId,
-                            new NetworkCallback<User>() {
-                                @Override
-                                public void handle(User user) {
-                                    frag.user = user;
-                                    frag.updateViews();
-                                }
-                            });
-                }
 
                 if (callback != null) {
                     callback.run();

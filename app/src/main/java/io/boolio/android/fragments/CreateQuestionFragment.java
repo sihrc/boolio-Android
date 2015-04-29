@@ -100,6 +100,7 @@ public class CreateQuestionFragment extends BoolioFragment {
     private void submitOnClickSetup() {
         if (questionText.getText().length() == 0 && imageSaved == null) {
             Toast.makeText(context, "Please enter a question or choose an image", Toast.LENGTH_SHORT).show();
+            return;
         }
 
         Question question = new Question();
@@ -114,6 +115,7 @@ public class CreateQuestionFragment extends BoolioFragment {
 
         // Upload Image to Server
         progress.setVisibility(View.VISIBLE);
+
         BoolioServer.getInstance(context).postQuestion(question, imageSaved, new Runnable() {
             @Override
             public void run() {

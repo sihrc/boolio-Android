@@ -178,6 +178,8 @@ public class BoolioServer {
             @Override
             public void onResponse(JSONObject response) {
                 Question returned = QuestionParser.getInstance().parse(response);
+                if (bm == null && runnable != null)
+                    runnable.run();
                 uploadImage(returned.questionId, bm, new NetworkCallback<Question>() {
                     @Override
                     public void handle(Question object) {
