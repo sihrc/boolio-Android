@@ -82,6 +82,8 @@ public class BoolioListFragment extends BoolioFragment {
     @Override
     public void onResume() {
         super.onResume();
+        if (pullInterface == null)
+            return;
         pullInterface.pullQuestions();
     }
 

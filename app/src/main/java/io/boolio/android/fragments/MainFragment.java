@@ -69,7 +69,7 @@ public class MainFragment extends BoolioFragment {
                 navBar.setAlpha(1f);
             }
         }));
-        
+
         feedButton.setOnClickListener(getNavClickListener(0, null));
         navBar.findViewById(R.id.nav_bar_profile).setOnClickListener(getNavClickListener(1, null));
         navBar.findViewById(R.id.nav_bar_search).setOnClickListener(getNavClickListener(3, null));
@@ -84,6 +84,7 @@ public class MainFragment extends BoolioFragment {
             add(CreateQuestionFragment.newInstance(new Runnable() {
                 @Override
                 public void run() {
+                    Log.i("debugdebug", "after reset");
                     navBar.getChildAt(0).performClick();
                 }
             }));
@@ -99,8 +100,8 @@ public class MainFragment extends BoolioFragment {
 
             @Override
             public void onPageSelected(int position) {
-                if (navBar != null){
-                    selectNavBar(navBar.getChildAt(position*2));
+                if (navBar != null) {
+                    selectNavBar(navBar.getChildAt(position * 2));
                 }
             }
 
