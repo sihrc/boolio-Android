@@ -221,7 +221,7 @@ public class ProfileFragment extends BoolioFragment {
     /**
      * Update Views with User Information once populated *
      */
-    private void updateViews() {
+    public void updateViews() {
         if (user == null)
             return;
 
@@ -239,12 +239,5 @@ public class ProfileFragment extends BoolioFragment {
         answeredCountIn.setText(String.valueOf(user.questionsAnswered.size()));
         karmaCountIn.setText(String.valueOf(user.questionsAnswered.size() + user.questionsAsked.size()));
         profileUsername.setText(user.name); // FIXME ADD USERNAME
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.v("debugdebug", "when is this called");
-
     }
 }

@@ -18,6 +18,9 @@ import io.boolio.android.R;
 import io.boolio.android.animation.AnimationHelper;
 import io.boolio.android.custom.ScrollingListView;
 import io.boolio.android.helpers.BoolioUserHandler;
+import io.boolio.android.models.User;
+import io.boolio.android.network.BoolioServer;
+import io.boolio.android.network.NetworkCallback;
 
 /**
  * Created by Chris on 4/28/15.
@@ -143,9 +146,17 @@ public class MainFragment extends BoolioFragment {
 
                 viewPager.setCurrentItem(index, true);
                 if (viewPager.getCurrentItem() == 1) {
-                    ProfileFragment frag = (ProfileFragment) getChildFragmentManager().findFragmentByTag("android:switcher:" + R.id.main_view_pager + ":" + viewPager.getCurrentItem());
+                    final ProfileFragment frag = (ProfileFragment) getChildFragmentManager().findFragmentByTag("android:switcher:" + R.id.main_view_pager + ":" + viewPager.getCurrentItem());
                     frag.fragmentList.get(0).pullInterface.pullQuestions();
                     frag.fragmentList.get(1).pullInterface.pullQuestions();
+                    BoolioServer.getInstance(getActivity()).getUserProfile(frag.userId,
+                            new NetworkCallback<User>() {
+                                @Override
+                                public void handle(User user) {
+                                    frag.user = user;
+                                    frag.updateViews();
+                                }
+                            });
                 }
 
                 if (callback != null) {
