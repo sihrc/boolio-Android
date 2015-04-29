@@ -24,6 +24,7 @@ public class QuestionParser extends Parser<Question> {
         try {
             question.creatorName = getString("creatorName");
             question.creatorImage = getString("creatorPic");
+            question.creatorId = getString("creatorId");
             question.question = getString("question");
             question.questionId = getString("_id");
             question.image = getString("image") == null ? "" : getString("image");
@@ -53,6 +54,7 @@ public class QuestionParser extends Parser<Question> {
             put(jsonObject, "right", object.right);
             put(jsonObject, "creatorName", object.creatorName);
             put(jsonObject, "creatorPic", object.creatorImage);
+            put(jsonObject, "creatorId", object.creatorId);
             put(jsonObject, "tags", new JSONArray(object.tags));
             put(jsonObject, "dateCreated", System.currentTimeMillis());
         } catch (JSONException e) {

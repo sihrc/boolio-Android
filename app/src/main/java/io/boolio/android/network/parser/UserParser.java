@@ -45,6 +45,7 @@ public class UserParser extends Parser<User> {
     public JSONObject toJSON(User object) {
         JSONObject jUser = new JSONObject();
         try {
+            put(jUser, "id", object.userId);
             put(jUser, "oauthId", object.oauthId);
             put(jUser, "name", object.name);
             put(jUser, "asked", object.questionsAsked);

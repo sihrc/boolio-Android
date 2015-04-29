@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <FrameLayout
         android:id="@+id/header_bar"
@@ -14,7 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:contentDescription="@string/content_description_header"
-            android:src="@drawable/logo_white" />
+            android:src="@drawable/logo_white"/>
 
     </FrameLayout>
 
@@ -34,15 +34,15 @@
                 android:layout_height="fill_parent"
                 android:background="@color/white"
                 android:divider="@color/white"
-                android:dividerHeight="0dp" />
+                android:dividerHeight="0dp"/>
 
         </io.boolio.android.custom.PullToRefreshView>
     </FrameLayout>
 
     <fr.castorflex.android.circularprogressbar.CircularProgressBar
+        android:id="@+id/gif_loading"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/gif_loading"
         android:layout_width="@dimen/progress_size"
         android:layout_height="@dimen/progress_size"
         android:layout_centerInParent="true"
@@ -54,7 +54,7 @@
         app:cpb_min_sweep_angle="10"
         app:cpb_rotation_speed="1.0"
         app:cpb_stroke_width="12dp"
-        app:cpb_sweep_speed="1.0" />
+        app:cpb_sweep_speed="1.0"/>
 
     <RelativeLayout
         android:id="@+id/empty_list_message"
@@ -72,7 +72,7 @@
             android:layout_centerHorizontal="true"
             android:contentDescription="@string/content_desc_good_job"
             android:padding="@dimen/question_feed_padding"
-            android:src="@drawable/heartbear" />
+            android:src="@drawable/heartbear"/>
 
         <TextView
             android:layout_width="fill_parent"
@@ -82,6 +82,6 @@
             android:gravity="center"
             android:padding="@dimen/question_feed_padding"
             android:text="@string/empty_feed_message"
-            android:textSize="@dimen/general_large_text" />
+            android:textSize="@dimen/general_large_text"/>
     </RelativeLayout>
 </RelativeLayout>

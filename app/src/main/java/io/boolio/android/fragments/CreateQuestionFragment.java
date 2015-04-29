@@ -9,13 +9,13 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import io.boolio.android.MainActivity;
 import io.boolio.android.R;
 import io.boolio.android.custom.BoolioNetworkImageView;
 import io.boolio.android.helpers.BoolioUserHandler;
@@ -33,12 +33,15 @@ public class CreateQuestionFragment extends BoolioFragment {
     View progress;
     BoolioNetworkImageView networkImageView;
     PictureHelper helper;
+    Runnable runnable;
 
     Bitmap imageSaved;
     String imageType = "";
 
-    public static CreateQuestionFragment newInstance() {
-        return new CreateQuestionFragment();
+    public static CreateQuestionFragment newInstance(Runnable runnable) {
+        CreateQuestionFragment fragment =  new CreateQuestionFragment();
+        fragment.runnable = runnable;
+        return fragment;
     }
 
     @Override
@@ -105,6 +108,7 @@ public class CreateQuestionFragment extends BoolioFragment {
         question.right = right.getText().length() == 0 ? "Yes" : right.getText().toString();
         question.creatorName = BoolioUserHandler.getInstance(context).getUser().name;
         question.creatorImage = BoolioUserHandler.getInstance(context).getUser().profilePic;
+        question.creatorId = BoolioUserHandler.getInstance(context).getUser().userId;
         question.tags = Utils.parseStringArray(tags.getText().toString());
 
 
@@ -114,7 +118,10 @@ public class CreateQuestionFragment extends BoolioFragment {
             @Override
             public void run() {
                 progress.setVisibility(View.GONE);
-                ((MainActivity) getActivity()).switchFragment(0);
+                reset();
+                Log.i("debugdebug", "after reset");
+                if (runnable != null)
+                    runnable.run();
             }
         });
     }
@@ -152,5 +159,15 @@ public class CreateQuestionFragment extends BoolioFragment {
                 alert.show();
             }
         });
+    }
+
+    private void reset() {
+        networkImageView.setLocalImageBitmap(null);
+        imageSaved = null;
+        imageType = "";
+        questionText.setText("");
+        left.setText("");
+        right.setText("");
+        tags.setText("");
     }
 }

@@ -24,13 +24,13 @@
         android:layout_weight="1"/>
 
     <ImageView
-        android:id="@+id/nav_bar_search"
+        android:id="@+id/nav_bar_profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:alpha=".5"
         android:background="@drawable/nav_bar_button"
         android:contentDescription="@string/content_desc_nav_bar_button"
-        android:src="@drawable/search"/>
+        android:src="@drawable/profile"/>
 
     <View
         android:layout_width="0dp"
@@ -52,13 +52,13 @@
         android:layout_weight="1"/>
 
     <ImageView
-        android:id="@+id/nav_bar_category"
+        android:id="@+id/nav_bar_search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:alpha=".5"
         android:background="@drawable/nav_bar_button"
         android:contentDescription="@string/content_desc_nav_bar_button"
-        android:src="@drawable/categories"/>
+        android:src="@drawable/search"/>
 
     <View
         android:layout_width="0dp"
@@ -66,12 +66,12 @@
         android:layout_weight="1"/>
 
     <ImageView
-        android:id="@+id/nav_bar_profile"
+        android:id="@+id/nav_bar_category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:alpha=".5"
         android:background="@drawable/nav_bar_button"
         android:contentDescription="@string/content_desc_nav_bar_button"
-        android:src="@drawable/profile"/>
+        android:src="@drawable/categories"/>
 
 </LinearLayout>

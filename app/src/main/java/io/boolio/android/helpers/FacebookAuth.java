@@ -93,6 +93,11 @@ public abstract class FacebookAuth extends FragmentActivity {
         AppEventsLogger.activateApp(this);
         profileTracker.startTracking();
         accessTokenTracker.startTracking();
+    }
+
+    @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
         getProfileInfo();
     }
 

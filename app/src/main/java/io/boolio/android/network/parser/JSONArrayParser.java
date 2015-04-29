@@ -21,6 +21,10 @@ public class JSONArrayParser<T> {
 
     public List<T> toArray(JSONArray array, Parser<T> parser, boolean reverse) throws JSONException {
         List<T> results = new ArrayList<>(array.length());
+
+        if (array.length() == 0)
+            return results;
+
         if (reverse) {
             for (int i = array.length() - 1; i >= 0; i--) {
                 results.add(parser == null ? (T) array.get(i) : parser.parse((JSONObject) array.get(i)));
