@@ -3,6 +3,7 @@ package io.boolio.android.fragments;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,7 +95,13 @@ public class FeedFragment extends BoolioFragment {
         ScrollingListView listView = (ScrollingListView) rootView.findViewById(R.id.question_feed);
         questionAdapter = new BoolioQuestionAdapter(context);
         listView.setAdapter(questionAdapter);
-        listView.setScrollChangeListener(scrollListener);
+//        listView.setScrollChangeListener(scrollListener);
+        listView.setScrollChangeListener(new ScrollingListView.ScrollChangeListener() {
+            @Override
+            public void onScroll(boolean isScrollingUp) {
+                ((MainFragment)getParentFragment()).showNavBar(isScrollingUp);
+            }
+        });
 
         BoolioUserHandler.getInstance(context).setUserCallback(new Runnable() {
             @Override
