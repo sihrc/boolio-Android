@@ -72,8 +72,9 @@ public class MainFragment extends BoolioFragment {
         
         feedButton.setOnClickListener(getNavClickListener(0, null));
         navBar.findViewById(R.id.nav_bar_profile).setOnClickListener(getNavClickListener(1, null));
-        navBar.findViewById(R.id.nav_bar_category).setOnClickListener(getNavClickListener(3, null));
-        navBar.findViewById(R.id.nav_bar_search).setOnClickListener(getNavClickListener(4, null));
+        navBar.findViewById(R.id.nav_bar_search).setOnClickListener(getNavClickListener(3, null));
+        navBar.findViewById(R.id.nav_bar_category).setOnClickListener(getNavClickListener(4, null));
+
     }
 
     private void setupViewPager() {
@@ -86,8 +87,8 @@ public class MainFragment extends BoolioFragment {
                     navBar.getChildAt(0).performClick();
                 }
             }));
-            add(CategoriesFragment.getInstance());
             add(SearchFragment.getInstance(changeListener));
+            add(CategoriesFragment.getInstance());
         }};
 
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -98,8 +99,9 @@ public class MainFragment extends BoolioFragment {
 
             @Override
             public void onPageSelected(int position) {
-                if (navBar != null)
-                    selectNavBar(navBar.getChildAt(position));
+                if (navBar != null){
+                    selectNavBar(navBar.getChildAt(position*2));
+                }
             }
 
             @Override
@@ -125,6 +127,7 @@ public class MainFragment extends BoolioFragment {
         v.setAlpha(1f);
         if (curNavButton != navBarAdd) {
             curNavButton.setAlpha(selectedAlpha);
+
         }
         curNavButton = v;
     }
@@ -137,7 +140,7 @@ public class MainFragment extends BoolioFragment {
                     return;
                 }
 
-//                viewPager.setCurrentItem(index, true);
+                viewPager.setCurrentItem(index, true);
 
                 if (callback != null) {
                     callback.run();
