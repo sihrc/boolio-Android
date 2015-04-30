@@ -111,6 +111,7 @@ public class MainFragment extends BoolioFragment {
             public void onPageSelected(int position) {
                 if (navBar != null) {
                     selectNavBar(navBar.getChildAt(position * 2));
+                    showNavBar(true);
                     fragmentList.get(position).refreshPage();
                     if (viewPager.getCurrentItem() == 2) {
                         showNavBar(true);

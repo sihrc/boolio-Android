@@ -27,6 +27,7 @@ public class BoolioQuestionAdapter extends BoolioAdapter {
         holder.leftAnswer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                holder.leftAnswer.setEnabled(false);
                 BoolioServer.getInstance(context).postAnswer(question.questionId, "left", getNewNetworkCallback(holder, question));
 
             }
@@ -34,6 +35,7 @@ public class BoolioQuestionAdapter extends BoolioAdapter {
         holder.rightAnswer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                holder.rightAnswer.setEnabled(false);
                 BoolioServer.getInstance(context).postAnswer(question.questionId, "right",
                         getNewNetworkCallback(holder, question));
             }
