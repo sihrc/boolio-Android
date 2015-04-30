@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -163,10 +164,28 @@ public class Utils {
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
 
-    public static String bitmapTo64String(Bitmap bm) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.JPEG, 90, baos); //bm is the bitmap object
-        byte[] b = baos.toByteArray();
-        return Base64.encodeToString(b, Base64.DEFAULT);
+    public static ArrayToStringBuilder<String> stringArrayToString = new ArrayToStringBuilder<String>() {
+        @Override
+        public String getItem(String object) {
+            return object;
+        }
+    };
+
+    public static abstract class ArrayToStringBuilder<T> {
+        public String build(Collection<T> objects) {
+            if (objects == null) {
+                return "";
+            }
+
+            StringBuilder builder = new StringBuilder();
+            for (T object : objects) {
+                builder.append(getItem(object));
+                builder.append(",");
+            }
+
+            return builder.length() > 1 ? builder.substring(0, builder.length() - 1) : builder.toString();
+        }
+
+        public abstract String getItem(T object);
     }
 }

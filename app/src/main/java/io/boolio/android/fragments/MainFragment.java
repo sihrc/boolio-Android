@@ -48,7 +48,6 @@ public class MainFragment extends BoolioFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.i("DebugDebugHere", requestCode + " requestCode");
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PictureHelper.REQUEST_TAKE_PHOTO || requestCode == PictureHelper.REQUEST_PICK_PHOTO || requestCode == Crop.REQUEST_CROP) {
             fragmentList.get(2).onActivityResult(requestCode, resultCode, data);

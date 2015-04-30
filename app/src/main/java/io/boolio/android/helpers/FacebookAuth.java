@@ -31,7 +31,6 @@ public abstract class FacebookAuth extends FragmentActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         shouldLoginAuth = false;
-        Log.i("DebugDebug", shouldLoginAuth + " boolean," + requestCode +  " code");
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -108,7 +107,6 @@ public abstract class FacebookAuth extends FragmentActivity {
     public abstract void loggedOut();
 
     private void getProfileInfo() {
-        Log.i("DebugDebug", shouldLoginAuth + " boolean");
         if (!shouldLoginAuth)
             return;
         Profile gottenProfile = Profile.getCurrentProfile();

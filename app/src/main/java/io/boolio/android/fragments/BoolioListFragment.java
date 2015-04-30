@@ -28,15 +28,10 @@ public class BoolioListFragment extends BoolioFragment {
     ScrollingListView.ScrollChangeListener scrollChangeListener;
     Runnable callback;
 
-    // Callbacks
-    QuestionsPullInterface pullInterface;
-
     public static BoolioListFragment newInstance(BoolioAdapter questionAdapter,
-                                                 QuestionsPullInterface pullQuestions,
                                                  ScrollingListView.ScrollChangeListener scrollChangeListener) {
         BoolioListFragment fragment = new BoolioListFragment();
         fragment.questionAdapter = questionAdapter;
-        fragment.pullInterface = pullQuestions;
         fragment.scrollChangeListener = scrollChangeListener;
         return fragment;
     }
@@ -78,14 +73,6 @@ public class BoolioListFragment extends BoolioFragment {
         hideKeyBoard(listView);
 
         return rootView;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (pullInterface == null)
-            return;
-        pullInterface.pullQuestions();
     }
 
     private void hideKeyBoard(final View view) {

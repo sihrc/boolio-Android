@@ -15,19 +15,10 @@ public class API {
     final static public String POST_QUESTION = BASE + "/questions/create";
     final static public String POST_ANSWER = BASE + "/questions/answer";
     final static public String POST_UPDATE_QUESTION = BASE + "/questions/updateImage";
+    final static public String POST_GET_QUESTIONS = BASE + "/questions/ids";
     final static public String POST_SEARCH = BASE + "/questions/search";
-
 
     static public String GET_USER_ENDPOINT(String id) {
         return BASE + "/users/" + id;
     }
-
-    static public String GET_USER_ASKED(String id) {
-        return BASE + "/questions/" + id + "/asked";
-    }
-
-    static public String GET_USER_ANSWERED(String id) {
-        return BASE + "/questions/" + id + "/answered";
-    }
-
 }

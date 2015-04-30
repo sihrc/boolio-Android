@@ -21,9 +21,7 @@ import java.util.List;
 
 import io.boolio.android.R;
 import io.boolio.android.adapters.BoolioAnswerAdapter;
-import io.boolio.android.animation.AnimationHelper;
 import io.boolio.android.callbacks.QuestionsCallback;
-import io.boolio.android.callbacks.QuestionsPullInterface;
 import io.boolio.android.custom.BoolioProfileImage;
 import io.boolio.android.custom.ScrollingListView;
 import io.boolio.android.helpers.BoolioUserHandler;
@@ -55,6 +53,24 @@ public class ProfileFragment extends BoolioFragment {
     List<BoolioListFragment> fragmentList;
     ScrollingListView.ScrollChangeListener scrollChangeListener;
 
+    // Question Request Callbacks
+    QuestionsCallback askedCallback = new QuestionsCallback() {
+        @Override
+        public void handleQuestions(List<Question> questionList) {
+            askedAdapter.clear();
+            askedAdapter.addAll(questionList);
+            askedAdapter.notifyDataSetChanged();
+        }
+    };
+    QuestionsCallback answeredCallback = new QuestionsCallback() {
+        @Override
+        public void handleQuestions(List<Question> questionList) {
+            answeredAdapter.clear();
+            answeredAdapter.addAll(questionList);
+            answeredAdapter.notifyDataSetChanged();
+        }
+    };
+
     public static ProfileFragment newInstance(String userId, ScrollingListView.ScrollChangeListener scrollChangeListener) {
         ProfileFragment fragment = new ProfileFragment();
 
@@ -78,6 +94,38 @@ public class ProfileFragment extends BoolioFragment {
                         updateViews();
                     }
                 });
+    }
+
+    @Override
+    public void refreshPage() {
+        BoolioServer.getInstance(context).getUserProfile(
+                userId == null ? BoolioUserHandler.getInstance(context).getUser().userId : userId,
+                new NetworkCallback<User>() {
+                    @Override
+                    public void handle(User user) {
+                        ProfileFragment.this.user = user;
+                        updateViews();
+                        BoolioServer.getInstance(context).getQuestions(user.questionsAnswered, answeredCallback);
+                        BoolioServer.getInstance(context).getQuestions(user.questionsAsked, askedCallback);
+                    }
+                });
+
+    }
+
+    /**
+     * Update Views with User Information once populated *
+     */
+    public void updateViews() {
+        if (user == null)
+            return;
+        profileUserImage.setImageUrl(user.profilePic, BoolioServer.getInstance(context).getImageLoader());
+        askedCount.setText(String.valueOf(user.questionsAsked.size()));
+        answeredCount.setText(String.valueOf(user.questionsAnswered.size()));
+        karmaCount.setText(String.valueOf(user.questionsAnswered.size() + user.questionsAsked.size())); //FIXME IMPLEMENT ON BACKEND
+        askedCountIn.setText(String.valueOf(user.questionsAsked.size()));
+        answeredCountIn.setText(String.valueOf(user.questionsAnswered.size()));
+        karmaCountIn.setText(String.valueOf(user.questionsAnswered.size() + user.questionsAsked.size()));
+        profileUsername.setText(user.name); // FIXME ADD USERNAME
     }
 
     @Override
@@ -119,38 +167,8 @@ public class ProfileFragment extends BoolioFragment {
         askedAdapter = new BoolioAnswerAdapter(context);
         answeredAdapter = new BoolioAnswerAdapter(context);
         fragmentList = new ArrayList<BoolioListFragment>() {{
-            add(BoolioListFragment.newInstance(askedAdapter, new QuestionsPullInterface() {
-                @Override
-                public void pullQuestions() {
-                    BoolioServer.getInstance(context).getUserAsked(
-                            userId,
-                            new QuestionsCallback() {
-                                @Override
-                                public void handleQuestions(List<Question> questionList) {
-                                    askedAdapter.clear();
-                                    askedAdapter.addAll(questionList);
-                                }
-                            }
-                    );
-                }
-            }, scrollChangeListener));
-
-
-            add(BoolioListFragment.newInstance(answeredAdapter, new QuestionsPullInterface() {
-                @Override
-                public void pullQuestions() {
-                    BoolioServer.getInstance(context).getUserAnswered(
-                            userId,
-                            new QuestionsCallback() {
-                                @Override
-                                public void handleQuestions(List<Question> questionList) {
-                                    answeredAdapter.clear();
-                                    answeredAdapter.addAll(questionList);
-                                }
-                            }
-                    );
-                }
-            }, scrollChangeListener));
+            add(BoolioListFragment.newInstance(askedAdapter, scrollChangeListener));
+            add(BoolioListFragment.newInstance(answeredAdapter, scrollChangeListener));
         }};
 
 
@@ -216,22 +234,5 @@ public class ProfileFragment extends BoolioFragment {
                 }
             }
         });
-    }
-
-    /**
-     * Update Views with User Information once populated *
-     */
-    public void updateViews() {
-        if (user == null)
-            return;
-
-        profileUserImage.setImageUrl(user.profilePic, BoolioServer.getInstance(context).getImageLoader());
-        askedCount.setText(String.valueOf(user.questionsAsked.size()));
-        answeredCount.setText(String.valueOf(user.questionsAnswered.size()));
-        karmaCount.setText(String.valueOf(user.questionsAnswered.size() + user.questionsAsked.size())); //FIXME IMPLEMENT ON BACKEND
-        askedCountIn.setText(String.valueOf(user.questionsAsked.size()));
-        answeredCountIn.setText(String.valueOf(user.questionsAnswered.size()));
-        karmaCountIn.setText(String.valueOf(user.questionsAnswered.size() + user.questionsAsked.size()));
-        profileUsername.setText(user.name); // FIXME ADD USERNAME
     }
 }

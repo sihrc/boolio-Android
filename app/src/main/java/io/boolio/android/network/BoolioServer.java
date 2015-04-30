@@ -18,10 +18,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Collection;
 import java.util.List;
 
 import io.boolio.android.callbacks.QuestionsCallback;
 import io.boolio.android.helpers.BoolioUserHandler;
+import io.boolio.android.helpers.Utils;
 import io.boolio.android.models.Question;
 import io.boolio.android.models.User;
 import io.boolio.android.network.parser.JSONArrayParser;
@@ -138,31 +140,20 @@ public class BoolioServer {
         queue.add(req);
     }
 
-    public void getUserAsked(String userId, final QuestionsCallback callback) {
-        JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET,
-                API.GET_USER_ASKED(userId),
-                new JSONObject(), new Response.Listener<JSONArray>() {
+    public void getQuestions(Collection<String> questionIds, final QuestionsCallback callback) {
+        JSONObject postPackage = new JSONObject();
+        try {
+            postPackage.put("ids", Utils.stringArrayToString.build(questionIds));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonArrayRequest req = new JsonArrayRequest(Request.Method.POST, API.POST_GET_QUESTIONS, postPackage, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 try {
-                    callback.handleQuestions(new JSONArrayParser<Question>().toArray(response, QuestionParser.getInstance(), true));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, errorListener);
-
-        queue.add(req);
-    }
-
-    public void getUserAnswered(String userId, final QuestionsCallback callback) {
-        JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET,
-                API.GET_USER_ANSWERED(userId),
-                new JSONObject(), new Response.Listener<JSONArray>() {
-            @Override
-            public void onResponse(JSONArray response) {
-                try {
-                    callback.handleQuestions(new JSONArrayParser<Question>().toArray(response, QuestionParser.getInstance(), true));
+                    if (callback != null)
+                        callback.handleQuestions(new JSONArrayParser<Question>().toArray(response, QuestionParser.getInstance()));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -178,8 +169,11 @@ public class BoolioServer {
             @Override
             public void onResponse(JSONObject response) {
                 Question returned = QuestionParser.getInstance().parse(response);
-                if (bm == null && runnable != null)
-                    runnable.run();
+                if (bm == null) {
+                    if (runnable != null)
+                        runnable.run();
+                    return;
+                }
                 uploadImage(returned.questionId, bm, new NetworkCallback<Question>() {
                     @Override
                     public void handle(Question object) {
