@@ -13,7 +13,7 @@
     <!-- Google Android API Key -->
     <string name="google_api_key">AIzaSyDYYgGwy7mEProLithc-fx9aLLfwb2UBY0</string>
     <string name="google_cx_key">007715071266837083845:nqg2-xtnsga</string>
-    
+
     <!-- Content Descriptions -->
     <string name="content_desc_tutorial_image">Fragment tutorial image</string>
     <string name="question_creator_image_description">Image of the creator</string>
