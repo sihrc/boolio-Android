@@ -153,7 +153,7 @@ public class BoolioServer {
             public void onResponse(JSONArray response) {
                 try {
                     if (callback != null)
-                        callback.handleQuestions(new JSONArrayParser<Question>().toArray(response, QuestionParser.getInstance()));
+                        callback.handleQuestions(new JSONArrayParser<Question>().toArray(response, QuestionParser.getInstance(), true));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

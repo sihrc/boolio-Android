@@ -1,25 +1,12 @@
 package io.boolio.android;
 
-import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.LinearLayout;
 
 import com.facebook.Profile;
 
-import io.boolio.android.animation.AnimationHelper;
-import io.boolio.android.fragments.BoolioFragment;
-import io.boolio.android.fragments.CategoriesFragment;
-import io.boolio.android.fragments.CreateQuestionFragment;
-import io.boolio.android.fragments.FeedFragment;
 import io.boolio.android.fragments.MainFragment;
-import io.boolio.android.fragments.ProfileFragment;
-import io.boolio.android.fragments.SearchFragment;
 import io.boolio.android.fragments.tutorials.TutorialPagerFragment;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.FacebookAuth;

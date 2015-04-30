@@ -97,7 +97,7 @@ public class FeedFragment extends BoolioFragment {
         listView.setScrollChangeListener(new ScrollingListView.ScrollChangeListener() {
             @Override
             public void onScroll(boolean isScrollingUp) {
-                ((MainFragment)getParentFragment()).showNavBar(isScrollingUp);
+                ((MainFragment) getParentFragment()).showNavBar(isScrollingUp);
             }
         });
 
