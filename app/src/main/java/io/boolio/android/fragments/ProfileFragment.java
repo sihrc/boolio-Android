@@ -119,7 +119,7 @@ public class ProfileFragment extends BoolioFragment {
                         BoolioServer.getInstance(context).getQuestions(user.questionsAsked, askedCallback);
                     }
                 });
-
+        hideKeyBoard(profileUsername);
     }
 
     /**

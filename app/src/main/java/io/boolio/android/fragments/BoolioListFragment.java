@@ -74,18 +74,4 @@ public class BoolioListFragment extends BoolioFragment {
 
         return rootView;
     }
-
-    private void hideKeyBoard(final View view) {
-        view.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (v == view) {
-                    InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-//                    return true;
-                }
-                return false;
-            }
-        });
-    }
 }
