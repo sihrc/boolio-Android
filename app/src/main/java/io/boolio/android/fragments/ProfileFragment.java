@@ -9,11 +9,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -26,6 +24,7 @@ import java.util.List;
 
 import io.boolio.android.R;
 import io.boolio.android.adapters.BoolioAnswerAdapter;
+import io.boolio.android.animation.AnimationHelper;
 import io.boolio.android.callbacks.QuestionsCallback;
 import io.boolio.android.custom.BoolioProfileImage;
 import io.boolio.android.custom.ScrollingListView;
@@ -53,10 +52,12 @@ public class ProfileFragment extends BoolioFragment {
 
     // List Fragment Pager
     ViewPager viewPager;
-    View answerView, askedView;
+    TextView answerView, askedView;
     BoolioAnswerAdapter askedAdapter, answeredAdapter;
     List<BoolioListFragment> fragmentList;
     ScrollingListView.ScrollChangeListener scrollChangeListener;
+
+    int white_color, dark_gray, theme_blue, orange;
 
     // Question Request Callbacks
     QuestionsCallback askedCallback = new QuestionsCallback() {
@@ -90,6 +91,10 @@ public class ProfileFragment extends BoolioFragment {
         super.onAttach(activity);
         context = activity;
         user = BoolioUserHandler.getInstance(activity).getUser();
+        white_color = getResources().getColor(R.color.white);
+        dark_gray = getResources().getColor(R.color.tab_light_gray);
+        theme_blue = getResources().getColor(R.color.theme_blue);
+        orange = getResources().getColor(R.color.feed_question_right_color);
         BoolioServer.getInstance(context).getUserProfile(
                 userId == null ? BoolioUserHandler.getInstance(context).getUser().userId : userId,
                 new NetworkCallback<User>() {
@@ -155,8 +160,8 @@ public class ProfileFragment extends BoolioFragment {
         karmaCountIn = (TextView) rootView.findViewById(R.id.karma_count_in);  // duplicate
 
         viewPager = (ViewPager) rootView.findViewById(R.id.asked_answered_view_pager);
-        askedView = rootView.findViewById(R.id.profile_asked_view);
-        answerView = rootView.findViewById(R.id.profile_answered_view);
+        askedView = (TextView) rootView.findViewById(R.id.profile_asked_view);
+        answerView = (TextView) rootView.findViewById(R.id.profile_answered_view);
 
         setupPager();
         setupTabOnClick();
@@ -167,8 +172,6 @@ public class ProfileFragment extends BoolioFragment {
     }
 
     private void setupPager() {
-        askedView.setAlpha(1f);
-        answerView.setAlpha(0.25f);
         // profile
         askedAdapter = new BoolioAnswerAdapter(context);
         answeredAdapter = new BoolioAnswerAdapter(context);
@@ -186,11 +189,15 @@ public class ProfileFragment extends BoolioFragment {
             @Override
             public void onPageSelected(int position) {
                 if (position == 0) {
-                    askedView.setAlpha(1f);
-                    answerView.setAlpha(.25f);
+                    answerView.setBackgroundColor(dark_gray);
+                    askedView.setBackgroundColor(white_color);
+                    answerView.setTextColor(white_color);
+                    askedView.setTextColor(orange);
                 } else {
-                    askedView.setAlpha(.25f);
-                    answerView.setAlpha(1f);
+                    askedView.setBackgroundColor(dark_gray);
+                    answerView.setBackgroundColor(white_color);
+                    askedView.setTextColor(white_color);
+                    answerView.setTextColor(theme_blue);
                 }
             }
 
@@ -233,11 +240,10 @@ public class ProfileFragment extends BoolioFragment {
         karmaBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (karmaShow.getVisibility() == View.VISIBLE) {
-                    karmaShow.setVisibility(View.INVISIBLE);
-                } else {
-                    karmaShow.setVisibility(View.VISIBLE);
-                }
+                if (karmaShow.getVisibility() == View.GONE)
+                    AnimationHelper.getInstance(context).animateViewLeftIn(karmaShow);
+                else
+                    AnimationHelper.getInstance(context).animateViewRightOut(karmaShow);
             }
         });
     }

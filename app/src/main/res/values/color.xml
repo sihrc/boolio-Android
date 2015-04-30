@@ -4,6 +4,7 @@
     <color name="black">#FF000000</color>
     <color name="theme_blue">#39AEC2</color>
     <color name="theme_blue_pressed">#ff277da3</color>
+    <color name="dark_gray">#ff434343</color>
     <!-- Tutorial Fragments -->
 
     <!-- Buttons -->
@@ -20,6 +21,7 @@
     <color name="profile_text_white">#fff3f3f3</color>
     <color name="profile_text_big">#ffa7a7a7</color>
     <color name="profile_tab_color">#be40c9dd</color>
+    <color name="tab_light_gray">#b1838383</color>
 
     <!-- Progress Bar -->
     <color name="inactive_background">#55000000</color>
