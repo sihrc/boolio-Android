@@ -1,7 +1,9 @@
 package io.boolio.android.fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,6 +17,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.facebook.login.LoginManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +49,7 @@ public class ProfileFragment extends BoolioFragment {
 
     LinearLayout karmaBar;
     RelativeLayout karmaShow;
-    ImageView profileSetting;
+    View profileSetting;
 
     // List Fragment Pager
     ViewPager viewPager;
@@ -132,7 +137,7 @@ public class ProfileFragment extends BoolioFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        profileSetting = (ImageView) rootView.findViewById(R.id.profile_setting);
+        profileSetting = rootView.findViewById(R.id.profile_setting);
         profileUserImage = (BoolioProfileImage) rootView.findViewById(R.id.profile_user_image);
 
         karmaShow = (RelativeLayout) rootView.findViewById(R.id.karma_show);
@@ -156,6 +161,7 @@ public class ProfileFragment extends BoolioFragment {
         setupPager();
         setupTabOnClick();
         setupKarmaView();
+        setupLogout();
 
         return rootView;
     }
@@ -232,6 +238,32 @@ public class ProfileFragment extends BoolioFragment {
                 } else {
                     karmaShow.setVisibility(View.VISIBLE);
                 }
+            }
+        });
+    }
+
+    private void setupLogout() {
+        // Settings Button
+        profileSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(context)
+                        .setTitle(R.string.settings)
+                        .setItems(new CharSequence[]{"Logout", "Cancel"}, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                switch (which) {
+                                    case 0:
+                                        Toast.makeText(context, "Logged Out", Toast.LENGTH_SHORT).show();
+                                        LoginManager.getInstance().logOut();
+                                        dialog.dismiss();
+                                        break;
+                                    case 1:
+                                        dialog.dismiss();
+                                        break;
+                                }
+                            }
+                        }).show();
             }
         });
     }
