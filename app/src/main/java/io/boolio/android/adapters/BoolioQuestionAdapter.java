@@ -29,6 +29,7 @@ public class BoolioQuestionAdapter extends BoolioAdapter {
             public void onClick(View v) {
                 holder.leftAnswer.setEnabled(false);
                 BoolioServer.getInstance(context).postAnswer(question.questionId, "left", getNewNetworkCallback(holder, question));
+                holder.leftAnswer.setEnabled(true);
 
             }
         });
@@ -38,6 +39,7 @@ public class BoolioQuestionAdapter extends BoolioAdapter {
                 holder.rightAnswer.setEnabled(false);
                 BoolioServer.getInstance(context).postAnswer(question.questionId, "right",
                         getNewNetworkCallback(holder, question));
+                holder.rightAnswer.setEnabled(true);
             }
         });
     }
@@ -48,12 +50,12 @@ public class BoolioQuestionAdapter extends BoolioAdapter {
             public void handle(Question object) {
                 holder.leftAnswer.setText(String.valueOf(object.leftCount));
                 holder.rightAnswer.setText(String.valueOf(object.rightCount));
-                holder.view.startAnimation(getAnimation(question));
+                holder.view.startAnimation(getAnimation(holder, question));
             }
         };
     }
 
-    private Animation getAnimation(final Question question) {
+    private Animation getAnimation(final QuestionHolder holder, final Question question) {
         Animation animation = AnimationUtils.loadAnimation(context, R.anim.right_out);
         animation.setStartOffset(ANIMATION_DELAY);
         animation.setAnimationListener(new Animation.AnimationListener() {
