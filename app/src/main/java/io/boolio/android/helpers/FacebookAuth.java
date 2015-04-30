@@ -30,7 +30,9 @@ public abstract class FacebookAuth extends FragmentActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        shouldLoginAuth = false;
+
+        // if the requestCode is facebook then shouldLoginAuth is true
+        shouldLoginAuth = requestCode == FacebookSdk.getCallbackRequestCodeOffset();
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 

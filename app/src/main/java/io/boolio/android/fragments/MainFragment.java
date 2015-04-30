@@ -169,9 +169,12 @@ public class MainFragment extends BoolioFragment {
         if (visible) {
             AnimationHelper.getInstance(activity).animateViewBottomIn(navBar);
             AnimationHelper.getInstance(activity).animateViewBottomIn(navBarAdd);
+            Log.v("debugdebug", "boolean "+ visible + " state " + navBar.getVisibility());
         } else {
             AnimationHelper.getInstance(activity).animateViewBottomOut(navBar);
             AnimationHelper.getInstance(activity).animateViewBottomOut(navBarAdd);
+            Log.v("debugdebug", "boolean "+ visible + " state " + navBar.getVisibility());
+
         }
     }
 }

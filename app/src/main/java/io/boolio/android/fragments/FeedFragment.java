@@ -93,13 +93,13 @@ public class FeedFragment extends BoolioFragment {
         ScrollingListView listView = (ScrollingListView) rootView.findViewById(R.id.question_feed);
         questionAdapter = new BoolioQuestionAdapter(context);
         listView.setAdapter(questionAdapter);
-        listView.setScrollChangeListener(scrollListener);
-//        listView.setScrollChangeListener(new ScrollingListView.ScrollChangeListener() {
-//            @Override
-//            public void onScroll(boolean isScrollingUp) {
-//                ((MainFragment)getParentFragment()).showNavBar(isScrollingUp);
-//            }
-//        });
+//        listView.setScrollChangeListener(scrollListener);
+        listView.setScrollChangeListener(new ScrollingListView.ScrollChangeListener() {
+            @Override
+            public void onScroll(boolean isScrollingUp) {
+                ((MainFragment)getParentFragment()).showNavBar(isScrollingUp);
+            }
+        });
 
         BoolioUserHandler.getInstance(context).setUserCallback(new Runnable() {
             @Override
