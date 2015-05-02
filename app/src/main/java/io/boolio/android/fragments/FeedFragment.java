@@ -26,19 +26,24 @@ import io.boolio.android.network.BoolioServer;
  * Created by Chris on 4/16/15.
  */
 public class FeedFragment extends BoolioFragment {
+    final private static int REFRESH_DELAY = 500;
     static FeedFragment instance;
 
     QuestionsCallback callback = new QuestionsCallback() {
         @Override
         public void handleQuestions(final List<Question> questionList) {
-            questionAdapter.clear();
-            questionAdapter.addAll(questionList);
-            questionAdapter.notifyDataSetChanged();
-            pullToRefreshLayout.setRefreshing(false);
-            gifLoading.setVisibility(View.GONE);
-            if (questionAdapter.getCount() == 0) {
-                loadingMessage.setVisibility(View.VISIBLE);
-            }
+            pullToRefreshLayout.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    questionAdapter.clear();
+                    questionAdapter.addAll(questionList);
+                    questionAdapter.notifyDataSetChanged();
+                    pullToRefreshLayout.setRefreshing(false);
+                    gifLoading.setVisibility(View.GONE);
+                    if (questionAdapter.getCount() == 0)
+                        loadingMessage.setVisibility(View.VISIBLE);
+                }
+            }, REFRESH_DELAY);
         }
     };
 
@@ -94,7 +99,6 @@ public class FeedFragment extends BoolioFragment {
         ScrollingListView listView = (ScrollingListView) rootView.findViewById(R.id.question_feed);
         questionAdapter = new BoolioQuestionAdapter(context);
         listView.setAdapter(questionAdapter);
-//        listView.setScrollChangeListener(scrollListener);
         listView.setScrollChangeListener(new ScrollingListView.ScrollChangeListener() {
             @Override
             public void onScroll(boolean isScrollingUp) {
