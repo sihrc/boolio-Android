@@ -3,11 +3,13 @@ package io.boolio.android;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.widget.Toast;
 
 import com.facebook.Profile;
 
 import io.boolio.android.fragments.MainFragment;
 import io.boolio.android.fragments.tutorials.TutorialPagerFragment;
+import io.boolio.android.helpers.ApplicationCheckHelper;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.FacebookAuth;
 import io.boolio.android.models.User;
@@ -27,6 +29,10 @@ public class MainActivity extends FacebookAuth {
         setContentView(R.layout.activity_main);
 
         fragmentManager = getSupportFragmentManager();
+
+        if (!ApplicationCheckHelper.checkPlayServices(this)) {
+            Toast.makeText(this, getString(R.string.check_google_play_warning), Toast.LENGTH_LONG).show();
+        }
 
         // Get Screen Size
         Point size = new Point();
@@ -48,7 +54,7 @@ public class MainActivity extends FacebookAuth {
         User user = new User(profile.getId(), profile.getName());
         BoolioUserHandler.getInstance(this).setUser(user);
         BoolioServer.getInstance(this).getBoolioUserFromFacebook
-                (UserParser.getInstance().toJSON(user), userCallback);
+                (user, userCallback);
     }
 
     @Override

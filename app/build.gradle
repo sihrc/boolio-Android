@@ -52,4 +52,7 @@ dependencies {
     // Multipart
     compile 'org.apache.httpcomponents:httpcore:4.0-alpha6'
     compile "org.apache.httpcomponents:httpmime:4.2.3"
+
+    // Google Play Services for GCM
+    compile "com.google.android.gms:play-services:3.1.+"
 }

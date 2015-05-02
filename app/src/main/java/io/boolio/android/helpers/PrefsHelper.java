@@ -29,6 +29,7 @@ public class PrefsHelper {
     public String getString(String key) {
         return prefs.getString(key, "");
     }
+    public int getInt(String key) {return prefs.getInt(key, 0);}
 
     /**
      * Setters *
@@ -39,5 +40,9 @@ public class PrefsHelper {
             return;
         }
         prefs.edit().putString(key, value).apply();
+    }
+
+    public void saveInt(String key, int value) {
+        prefs.edit().putInt(key, value).apply();
     }
 }

@@ -28,6 +28,7 @@ public class UserParser extends Parser<User> {
             User user = new User(getString("name"), getString("profilePic"));
             user.userId = getString("_id");
             user.name = getString("name");
+            user.gcmId = getString("gcm");
             user.profilePic = getString("profilePic");
             user.questionsAsked = stringArray.toArray(getJSONArray("questionsAsked"));
             user.questionsAnswered = stringArray.toArray(getJSONArray("questionsAnswered"));
@@ -49,6 +50,7 @@ public class UserParser extends Parser<User> {
             put(jUser, "oauthId", object.oauthId);
             put(jUser, "name", object.name);
             put(jUser, "asked", object.questionsAsked);
+            put(jUser, "gcm", object.gcmId);
             put(jUser, "answered", object.questionsAnswered);
             put(jUser, "skipped", object.questionsSkipped);
         } catch (JSONException e) {

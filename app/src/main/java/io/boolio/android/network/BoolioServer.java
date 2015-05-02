@@ -79,9 +79,9 @@ public class BoolioServer {
      * GET *
      */
 
-    public void getBoolioUserFromFacebook(JSONObject jsonObject, final NetworkCallback<User> callback) {
+    public void getBoolioUserFromFacebook(User user, final NetworkCallback<User> callback) {
         JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, API.FACEBOOK_USER_ENDPOINT,
-                jsonObject, new Response.Listener<JSONObject>() {
+                UserParser.getInstance().toJSON(user), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 if (callback != null)
@@ -95,6 +95,27 @@ public class BoolioServer {
                 error.printStackTrace();
             }
         });
+
+        queue.add(req);
+    }
+
+    public void updateUserGCM(String userId, String gcmId) {
+        JSONObject jsonObject = new JSONObject();
+
+        try {
+            jsonObject.put("id", userId);
+            jsonObject.put("gcm", gcmId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, API.POST_USER_GCMID,
+                jsonObject, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                
+            }
+        }, errorListener);
 
         queue.add(req);
     }

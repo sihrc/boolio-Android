@@ -17,6 +17,7 @@ public class API {
     final static public String POST_UPDATE_QUESTION = BASE + "/questions/updateImage";
     final static public String POST_GET_QUESTIONS = BASE + "/questions/ids";
     final static public String POST_SEARCH = BASE + "/questions/search";
+    final static public String POST_USER_GCMID = "/users/gcm";
 
     static public String GET_USER_ENDPOINT(String id) {
         return BASE + "/users/" + id;

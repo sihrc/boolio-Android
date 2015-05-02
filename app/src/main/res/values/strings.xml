@@ -59,4 +59,7 @@
 
     <!--Categories Fragment-->
     <string name="categories_logo">Tags</string>
+
+    <!-- Warnings -->
+    <string name="check_google_play_warning">Please enable Google Play Services to receive notifications about questions!</string>
 </resources>
