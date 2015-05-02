@@ -116,7 +116,6 @@ public class MainFragment extends BoolioFragment {
                     fragmentList.get(position).refreshPage();
                     if (viewPager.getCurrentItem() == 2) {
                         showNavBar(true);
-                        navBarAdd.setVisibility(View.GONE);
                         navBarAddSend.setVisibility(View.VISIBLE);
                         navBarAddSend.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -126,7 +125,6 @@ public class MainFragment extends BoolioFragment {
                         });
 
                     } else{
-                        navBarAdd.setVisibility(View.VISIBLE);
                         navBarAddSend.setVisibility(View.GONE);
                     }
                 }
