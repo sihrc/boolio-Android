@@ -38,6 +38,7 @@
     <dimen name="question_image_padding">16dp</dimen>
     <dimen name="question_padding">16dp</dimen>
     <dimen name="question_text_size">20sp</dimen>
+    <dimen name="question_answer_padding">12dp</dimen>
 
     <!-- Feed Fragment -->
     <dimen name="question_user_profile_size">40dp</dimen>
