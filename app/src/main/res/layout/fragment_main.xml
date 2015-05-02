@@ -24,4 +24,17 @@
         android:background="@drawable/blue_border_button"
         android:contentDescription="@string/content_desc_nav_bar_button"
         android:src="@drawable/plus"/>
+
+    <ImageView
+        android:id="@+id/nav_bar_add_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="-8dp"
+        android:contentDescription="@string/content_desc_nav_bar_button"
+        android:background="@drawable/circle"
+        android:src="@drawable/airplane"/>
+
 </RelativeLayout>
