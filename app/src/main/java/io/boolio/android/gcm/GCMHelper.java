@@ -4,11 +4,13 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.io.IOException;
 
+import io.boolio.android.R;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.PrefsHelper;
 import io.boolio.android.models.User;
@@ -34,21 +36,21 @@ public class GCMHelper {
 
     public GCMHelper(Context context) {
         gcm = GoogleCloudMessaging.getInstance(context);
+        this.context = context;
     }
 
-    private String getRegistrationId(Context context) {
+    public String getRegistrationId() {
         String registrationId = PrefsHelper.getInstance(context).getString(PROPERTY_REG_ID);
 
         // Check if app was updated; if so, it must clear the registration ID
         // since the existing registration ID is not guaranteed to work with
         // the new app version.
-        int registeredVersion = PrefsHelper.getInstance(context).getInt(PROPERTY_REG_ID);
+        int registeredVersion = PrefsHelper.getInstance(context).getInt(PROPERTY_APP_VERSION);
         int currentVersion = getAppVersion(context);
         if (registeredVersion != currentVersion) {
-            getRegistrationId(context);
-            PrefsHelper.getInstance(context).saveInt(PROPERTY_REG_ID, currentVersion);
+            registerInBackground();
+            PrefsHelper.getInstance(context).saveInt(PROPERTY_APP_VERSION, currentVersion);
         }
-
         return registrationId;
     }
 
@@ -82,7 +84,7 @@ public class GCMHelper {
                         gcm = GoogleCloudMessaging.getInstance(context);
                     }
                     User user = BoolioUserHandler.getInstance(context).getUser();
-                    String regId = gcm.register(user.userId);
+                    String regId = gcm.register(context.getString(R.string.gcm_project_id));
 
                     // You should send the registration ID to your server over HTTP,
                     // so it can use GCM/HTTP or CCS to send messages to your app.
@@ -96,7 +98,7 @@ public class GCMHelper {
 
                     // Persist the registration ID - no need to register again.
                     PrefsHelper.getInstance(context).saveString(PROPERTY_REG_ID, regId);
-                    user.gcmId = getRegistrationId(context);
+                    user.gcmId = getRegistrationId();
                 } catch (IOException ex) {
                     // If there is an error, don't just keep trying to register.
                     // Require the user to click a button again, or perform

@@ -113,7 +113,6 @@ public class BoolioServer {
                 jsonObject, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                
             }
         }, errorListener);
 

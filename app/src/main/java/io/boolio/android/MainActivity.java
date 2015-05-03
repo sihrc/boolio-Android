@@ -1,14 +1,19 @@
 package io.boolio.android;
 
+import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.facebook.Profile;
 
+import io.boolio.android.fragments.FeedFragment;
 import io.boolio.android.fragments.MainFragment;
+import io.boolio.android.fragments.ProfileFragment;
 import io.boolio.android.fragments.tutorials.TutorialPagerFragment;
+import io.boolio.android.gcm.GCMHelper;
 import io.boolio.android.helpers.ApplicationCheckHelper;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.FacebookAuth;
@@ -47,7 +52,8 @@ public class MainActivity extends FacebookAuth {
             @Override
             public void handle(User object) {
                 BoolioUserHandler.getInstance(MainActivity.this).setUser(object);
-                fragmentManager.beginTransaction().replace(R.id.container, MainFragment.newInstance()).commit();
+                GCMHelper.getInstance(MainActivity.this).getRegistrationId();
+                fragmentManager.beginTransaction().replace(R.id.container, MainFragment.newInstance(parseIntent(getIntent()))).commit();
             }
         };
 
@@ -60,5 +66,23 @@ public class MainActivity extends FacebookAuth {
     @Override
     public void loggedOut() {
         fragmentManager.beginTransaction().replace(R.id.container, TutorialPagerFragment.newInstance()).commit();
+    }
+
+    /**
+     * Parses Intent and decides which fragment to show first
+     * @param intent - intent from the notification or other sources
+     * @return order of fragment
+     */
+    private int parseIntent(Intent intent) {
+        if (intent == null) {
+            return FeedFragment.ORDER;
+        }
+
+        switch (intent.getAction()) {
+            case "boolio-question":
+                return ProfileFragment.ORDER;
+            default:
+                return FeedFragment.ORDER;
+        }
     }
 }

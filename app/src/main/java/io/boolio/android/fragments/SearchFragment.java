@@ -126,7 +126,7 @@ public class SearchFragment extends BoolioFragment {
 //                @Override
 //                public void pullQuestions() {
 //                    // TODO
-//                    BoolioServer.getInstance(context).getUserAnswered(
+//                    BoolioServer.getInstance(activity).getUserAnswered(
 //                            null,
 //                            new QuestionsCallback() {
 //                                @Override
@@ -141,7 +141,7 @@ public class SearchFragment extends BoolioFragment {
 //                @Override
 //                public void pullQuestions() {
 //                    // TODO
-//                    BoolioServer.getInstance(context).getUserAsked(
+//                    BoolioServer.getInstance(activity).getUserAsked(
 //                            null,
 //                            new QuestionsCallback() {
 //                                @Override
