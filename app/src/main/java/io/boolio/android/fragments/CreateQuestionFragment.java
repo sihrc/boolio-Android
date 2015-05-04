@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,8 @@ import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.PictureHelper;
 import io.boolio.android.helpers.Utils;
 import io.boolio.android.models.Question;
-import io.boolio.android.network.BoolioServer;
+import io.boolio.android.network.ServerQuestion;
+import io.boolio.android.network.ServerUser;
 
 /**
  * Created by james on 4/17/15.
@@ -107,7 +107,7 @@ public class CreateQuestionFragment extends BoolioFragment {
         // Upload Image to Server
         progress.setVisibility(View.VISIBLE);
 
-        BoolioServer.getInstance(activity).postQuestion(question, imageSaved, new Runnable() {
+        ServerQuestion.getInstance(activity).postQuestion(question, imageSaved, new Runnable() {
             @Override
             public void run() {
                 progress.setVisibility(View.GONE);

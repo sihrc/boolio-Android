@@ -15,7 +15,7 @@ import io.boolio.android.animation.TextAnimation;
 import io.boolio.android.custom.BoolioProfileImage;
 import io.boolio.android.helpers.Utils;
 import io.boolio.android.models.Question;
-import io.boolio.android.network.BoolioServer;
+import io.boolio.android.network.ServerUser;
 
 /**
  * Created by james on 4/24/15.
@@ -78,8 +78,8 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
 
         fillContent(holder, question);
 
-        holder.questionImage.setImageUrl(question.image, BoolioServer.getInstance(context).getImageLoader());
-        holder.creatorImage.setImageUrl(question.creatorImage, BoolioServer.getInstance(context).getImageLoader());
+        holder.questionImage.setImageUrl(question.image, ServerUser.getInstance(context).getImageLoader());
+        holder.creatorImage.setImageUrl(question.creatorImage, ServerUser.getInstance(context).getImageLoader());
 
     }
 
