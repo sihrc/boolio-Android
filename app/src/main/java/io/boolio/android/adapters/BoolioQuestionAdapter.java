@@ -1,15 +1,13 @@
 package io.boolio.android.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
 import io.boolio.android.R;
-import io.boolio.android.animation.AnimationHelper;
 import io.boolio.android.models.Question;
-import io.boolio.android.network.BoolioServer;
+import io.boolio.android.network.ServerQuestion;
 import io.boolio.android.network.NetworkCallback;
 
 /**
@@ -28,7 +26,7 @@ public class BoolioQuestionAdapter extends BoolioAdapter {
             @Override
             public void onClick(View v) {
                 holder.leftAnswer.setEnabled(false);
-                BoolioServer.getInstance(context).postAnswer(question.questionId, "left", getNewNetworkCallback(holder, question));
+                ServerQuestion.getInstance(context).postAnswer(question.questionId, "left", getNewNetworkCallback(holder, question));
                 holder.leftAnswer.setEnabled(true);
 
             }
@@ -37,7 +35,7 @@ public class BoolioQuestionAdapter extends BoolioAdapter {
             @Override
             public void onClick(View v) {
                 holder.rightAnswer.setEnabled(false);
-                BoolioServer.getInstance(context).postAnswer(question.questionId, "right",
+                ServerQuestion.getInstance(context).postAnswer(question.questionId, "right",
                         getNewNetworkCallback(holder, question));
                 holder.rightAnswer.setEnabled(true);
             }
@@ -50,12 +48,12 @@ public class BoolioQuestionAdapter extends BoolioAdapter {
             public void handle(Question object) {
                 holder.leftAnswer.setText(String.valueOf(object.leftCount));
                 holder.rightAnswer.setText(String.valueOf(object.rightCount));
-                holder.view.startAnimation(getAnimation(holder, question));
+                holder.view.startAnimation(getAnimation(question));
             }
         };
     }
 
-    private Animation getAnimation(final QuestionHolder holder, final Question question) {
+    private Animation getAnimation(final Question question) {
         Animation animation = AnimationUtils.loadAnimation(context, R.anim.right_out);
         animation.setStartOffset(ANIMATION_DELAY);
         animation.setAnimationListener(new Animation.AnimationListener() {

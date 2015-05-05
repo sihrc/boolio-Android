@@ -11,7 +11,7 @@ import io.boolio.android.fragments.tutorials.TutorialPagerFragment;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.FacebookAuth;
 import io.boolio.android.models.User;
-import io.boolio.android.network.BoolioServer;
+import io.boolio.android.network.ServerUser;
 import io.boolio.android.network.NetworkCallback;
 import io.boolio.android.network.parser.UserParser;
 
@@ -47,8 +47,8 @@ public class MainActivity extends FacebookAuth {
 
         User user = new User(profile.getId(), profile.getName());
         BoolioUserHandler.getInstance(this).setUser(user);
-        BoolioServer.getInstance(this).getBoolioUserFromFacebook
-                (UserParser.getInstance().toJSON(user), userCallback);
+        ServerUser.getInstance(this).getBoolioUserFromFacebook
+                (user, userCallback);
     }
 
     @Override

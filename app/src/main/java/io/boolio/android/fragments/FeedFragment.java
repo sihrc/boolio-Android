@@ -3,11 +3,9 @@ package io.boolio.android.fragments;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +18,8 @@ import io.boolio.android.custom.PullToRefreshView;
 import io.boolio.android.custom.ScrollingListView;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.models.Question;
-import io.boolio.android.network.BoolioServer;
+import io.boolio.android.network.ServerFeed;
+import io.boolio.android.network.ServerUser;
 
 /**
  * Created by Chris on 4/16/15.
@@ -115,6 +114,6 @@ public class FeedFragment extends BoolioFragment {
 
     private void pullQuestions() {
         loadingMessage.setVisibility(View.GONE);
-        BoolioServer.getInstance(context).getQuestionFeed(prevSeenQuestions, callback);
+        ServerFeed.getInstance(context).getQuestionFeed(prevSeenQuestions, callback);
     }
 }
