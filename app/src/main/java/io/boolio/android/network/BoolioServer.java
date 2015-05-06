@@ -35,8 +35,8 @@ public class BoolioServer {
         }
     };
 
-
     public BoolioServer(Context context) {
+        this.context = context;
         this.queue = Volley.newRequestQueue(context);
         this.imageLoader = new ImageLoader(queue, new ImageLoader.ImageCache() {
             LruCache<String, Bitmap> cache = new LruCache<>(40);
@@ -53,10 +53,6 @@ public class BoolioServer {
 
         // Forget Signing
         NukeSSLCerts.nuke();
-    }
-
-    public RequestQueue getQueue() {
-        return queue;
     }
 
     public ImageLoader getImageLoader() {

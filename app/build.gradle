@@ -41,8 +41,8 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.0.0'
-    // Facebook SDK
-    compile 'com.facebook.android:facebook-android-sdk:4.0.0'
+    /// Facebook SDK
+    compile 'com.facebook.android:facebook-android-sdk:4.1.0'
     // Network Handling
     compile 'com.mcxiaoke.volley:library:1.0.15'
     // Progress Bar
@@ -52,7 +52,8 @@ dependencies {
     // Multipart
     compile 'org.apache.httpcomponents:httpcore:4.0-alpha6'
     compile "org.apache.httpcomponents:httpmime:4.2.3"
-
+    // Async GridView
+    compile 'org.lucasr.smoothie:smoothie:0.1.0'
     // Google Play Services for GCM
     compile "com.google.android.gms:play-services:3.1.+"
 }

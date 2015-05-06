@@ -61,7 +61,9 @@
     <dimen name="profile_asked_answered_padding">12sp</dimen>
 
     <!-- Search Fragment -->
-
     <dimen name="search_padding">16dp</dimen>
+    <dimen name="gallery_image_height">60dp</dimen>
+    <dimen name="grid_spacing">3dp</dimen>
+
 
 </resources>

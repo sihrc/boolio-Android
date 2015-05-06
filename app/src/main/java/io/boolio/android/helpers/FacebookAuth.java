@@ -38,7 +38,6 @@ public abstract class FacebookAuth extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(this);
         profileTracker = new ProfileTracker() {
             @Override
@@ -79,6 +78,7 @@ public abstract class FacebookAuth extends FragmentActivity {
                         loggedOut();
                     }
                 });
+        super.onCreate(savedInstanceState);
     }
 
     @Override

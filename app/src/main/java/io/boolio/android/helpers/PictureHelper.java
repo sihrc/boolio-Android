@@ -30,8 +30,11 @@ public class PictureHelper {
 
     Uri savedUri;
 
+    public PictureHelper(Context context) {
+        this.context = context;
+    }
+
     public void dispatchTakePictureIntent(Activity activity, Fragment fragment) {
-        context = activity;
         savedUri = Uri.fromFile(Utils.getTempFile(activity));
 
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -44,7 +47,6 @@ public class PictureHelper {
     }
 
     public void dispatchChoosePictureIntent(Activity activity, Fragment fragment) {
-        context = activity;
         Intent loadPictureIntent = new Intent();
         loadPictureIntent.setType("image/*");
         loadPictureIntent.setAction(Intent.ACTION_GET_CONTENT);
@@ -53,6 +55,18 @@ public class PictureHelper {
         if (loadPictureIntent.resolveActivity(activity.getPackageManager()) != null) {
             fragment.startActivityForResult(loadPictureIntent, REQUEST_PICK_PHOTO);
         }
+    }
+
+    public void dispatchCropPictureIntent(Fragment fragment , View view, Uri inputUri) {
+        Uri croppedUri = Uri.fromFile(new File(context.getFilesDir() + String.valueOf(System.currentTimeMillis()) + ".png"));
+        Crop crop = new Crop(inputUri).output(croppedUri);
+        if (view.getWidth() != 0)
+            crop.withAspect(view.getWidth(), view.getHeight());
+        Intent cropIntent = (Intent) Utils.callPrivateMethod(crop, "getIntent", Context.class, context);
+        fragment.startActivityForResult(cropIntent, Crop.REQUEST_CROP);
+
+        savedUri = croppedUri;
+
     }
 
     public boolean onActivityResult(Fragment fragment, int requestCode, int resultCode, Intent data, final View view, final BitmapCallback callback) {
@@ -67,14 +81,7 @@ public class PictureHelper {
                 savedUri = data.getData();
             }
 
-            Uri croppedUri = Uri.fromFile(new File(context.getFilesDir() + String.valueOf(System.currentTimeMillis()) + ".png"));
-            Crop crop = new Crop(savedUri).output(croppedUri);
-            if (view.getWidth() != 0)
-                crop.withAspect(view.getWidth(), view.getHeight());
-            Intent cropIntent = (Intent) Utils.callPrivateMethod(crop, "getIntent", Context.class, context);
-            fragment.startActivityForResult(cropIntent, Crop.REQUEST_CROP);
-
-            savedUri = croppedUri;
+            dispatchCropPictureIntent(fragment, view, Uri.fromFile(new File(context.getFilesDir() + String.valueOf(System.currentTimeMillis()) + ".png")));
             return true;
         }
 
@@ -103,8 +110,8 @@ public class PictureHelper {
         return false;
     }
 
-    public static interface BitmapCallback {
-        public void onBitmap(Bitmap bitmap);
+    public interface BitmapCallback {
+        void onBitmap(Bitmap bitmap);
     }
 
     public static boolean isRequest(int code) {

@@ -29,4 +29,8 @@ public class Debugger {
             Log.d("BoolioDebug", tag.getSimpleName() + ":\n" + msg);
         }
     }
+
+    public static void i(String msg) {
+        Log.i("DebugDebug", msg);
+    }
 }
