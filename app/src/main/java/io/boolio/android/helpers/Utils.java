@@ -192,6 +192,12 @@ public class Utils {
         }
     };
 
+    public static void hideKeyboard(Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(
+                Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
     public static abstract class ArrayToStringBuilder<T> {
         public String build(Collection<T> objects) {
             if (objects == null) {

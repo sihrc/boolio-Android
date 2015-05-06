@@ -21,6 +21,7 @@ import io.boolio.android.adapters.BoolioQuestionAdapter;
 import io.boolio.android.callbacks.QuestionsCallback;
 import io.boolio.android.custom.BoolioSearchView;
 import io.boolio.android.custom.ScrollingListView;
+import io.boolio.android.helpers.Utils;
 import io.boolio.android.models.Question;
 import io.boolio.android.network.ServerFeed;
 
@@ -83,6 +84,8 @@ public class SearchFragment extends BoolioFragment {
                     isEmpty = true;
                     return false;
                 }
+                searchBar.clearFocus();
+                Utils.hideKeyboard(activity, searchBar);
                 isEmpty = false;
                 searchServer(query);
                 return false;
