@@ -75,6 +75,7 @@
             android:textSize="@dimen/question_text_size"/>
 
         <LinearLayout
+            android:id="@+id/answer_bar"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/question_text"
@@ -94,5 +95,40 @@
                 android:layout_weight="1"/>
 
         </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/answer_bar"
+            android:layout_alignTop="@id/answer_bar"
+            android:orientation="horizontal">
+
+            <View
+                android:id="@+id/answer_anchor"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_centerInParent="true"/>
+
+            <TextView
+                android:id="@+id/highlighted_left"
+                style="@style/answer_style"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_toLeftOf="@id/answer_anchor"
+                android:background="@color/feed_question_left"
+                android:textColor="@android:color/white"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/highlighted_right"
+                style="@style/answer_style"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@id/answer_anchor"
+                android:background="@color/feed_question_right"
+                android:textColor="@android:color/white"
+                android:visibility="gone"/>
+
+        </RelativeLayout>
     </RelativeLayout>
 </RelativeLayout>

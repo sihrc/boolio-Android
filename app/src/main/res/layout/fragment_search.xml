@@ -35,7 +35,7 @@
             android:gravity="center"
             android:padding="@dimen/profile_asked_answered_padding"
             android:text="@string/search_questions_tab_text"
-            android:textColor="@color/feed_question_left_color" />
+            android:textColor="@color/feed_question_right" />
 
         <TextView
             android:id="@+id/search_friends_tab"
@@ -45,7 +45,7 @@
             android:gravity="center"
             android:padding="@dimen/profile_asked_answered_padding"
             android:text="@string/search_friends_tab_text"
-            android:textColor="@color/feed_question_left_color" />
+            android:textColor="@color/feed_question_right" />
 
         <TextView
             android:id="@+id/search_categories_tab"
@@ -55,7 +55,7 @@
             android:gravity="center"
             android:padding="@dimen/profile_asked_answered_padding"
             android:text="@string/search_categories_tab_text"
-            android:textColor="@color/feed_question_left_color" />
+            android:textColor="@color/feed_question_right" />
 
     </LinearLayout>
 
