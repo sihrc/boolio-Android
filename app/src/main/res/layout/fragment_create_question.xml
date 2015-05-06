@@ -36,7 +36,7 @@
             android:text="@string/place_image"
             android:textSize="@dimen/general_large_text"/>
 
-        <io.boolio.android.custom.BoolioNetworkImageView
+        <ImageView
             android:id="@+id/create_question_image"
             android:layout_width="match_parent"
             android:layout_height="@dimen/question_image_height"
@@ -52,21 +52,12 @@
             android:gravity="center"
             android:hint="@string/create_question_text_hint"/>
 
-        <EditText
-            android:id="@+id/create_question_tag"
-            style="@style/input_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/create_question_text"
-            android:layout_marginBottom="@dimen/general_padding"
-            android:gravity="center"
-            android:hint="@string/create_question_tags_hint"/>
 
         <LinearLayout
             android:id="@+id/create_question_buttons"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/create_question_tag"
+            android:layout_below="@id/create_question_text"
             android:layout_marginBottom="@dimen/general_padding"
             android:orientation="horizontal">
 
@@ -81,8 +72,8 @@
                 android:gravity="center"
                 android:hint="@string/create_question_answer_left_hint"
                 android:imeOptions="actionNext"
-                android:textColor="@color/feed_question_left_color"
-                android:textColorHint="@color/feed_question_left_color"/>
+                android:textColor="@color/feed_question_right"
+                android:textColorHint="@color/feed_question_right"/>
 
             <EditText
                 android:id="@+id/create_question_right_answer"
@@ -95,21 +86,10 @@
                 android:gravity="center"
                 android:hint="@string/create_question_answer_right_hint"
                 android:imeOptions="actionDone"
-                android:textColor="@color/feed_question_right_color"
-                android:textColorHint="@color/feed_question_right_color"/>
+                android:textColor="@color/feed_question_left"
+                android:textColorHint="@color/feed_question_left"/>
         </LinearLayout>
 
-        <Button
-            android:id="@+id/create_question_submit"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/create_question_buttons"
-            android:layout_alignRight="@id/create_question_buttons"
-            android:layout_below="@+id/create_question_buttons"
-            android:layout_marginBottom="40dp"
-            android:background="@drawable/left_answer_button"
-            android:gravity="center"
-            android:text="@string/create_question_submit"/>
 
         <fr.castorflex.android.circularprogressbar.CircularProgressBar
             android:id="@+id/progress_bar_saving"

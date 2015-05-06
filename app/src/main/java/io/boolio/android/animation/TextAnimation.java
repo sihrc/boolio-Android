@@ -28,7 +28,6 @@ public class TextAnimation {
     }
 
     public TextSwitcher FadeTextSwitcher(TextSwitcher textSwitcher, int resource) {
-
         return getTextSwitcher(textSwitcher, R.anim.fade_in, R.anim.fade_out, resource);
     }
 

@@ -13,9 +13,11 @@ import com.android.volley.toolbox.NetworkImageView;
 import io.boolio.android.R;
 import io.boolio.android.animation.TextAnimation;
 import io.boolio.android.custom.BoolioProfileImage;
+import io.boolio.android.helpers.Dialogs;
 import io.boolio.android.helpers.Utils;
 import io.boolio.android.models.Question;
-import io.boolio.android.network.BoolioServer;
+import io.boolio.android.network.ServerQuestion;
+import io.boolio.android.network.ServerUser;
 
 /**
  * Created by james on 4/24/15.
@@ -28,6 +30,12 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
         super(context, R.layout.item_question);
         resource = R.layout.item_question;
         this.context = context;
+    }
+
+    public Question remove(int position) {
+        Question question = getItem(position);
+        remove(question);
+        return question;
     }
 
     @Override
@@ -43,8 +51,11 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
             holder.question = (TextView) view.findViewById(R.id.question_text);
             holder.leftAnswer = (TextSwitcher) view.findViewById(R.id.question_left_answer);
             holder.rightAnswer = (TextSwitcher) view.findViewById(R.id.question_right_answer);
+            holder.highLeft = (TextView) view.findViewById(R.id.highlighted_left);
+            holder.highRight = (TextView) view.findViewById(R.id.highlighted_right);
             holder.creator = (TextView) view.findViewById(R.id.question_creator);
             holder.date = (TextView) view.findViewById(R.id.question_date);
+            holder.report = view.findViewById(R.id.report_button);
 
             TextAnimation.getInstance(context).FadeTextSwitcher(holder.leftAnswer, R.layout.text_answer_left);
             TextAnimation.getInstance(context).FadeTextSwitcher(holder.rightAnswer, R.layout.text_answer_right);
@@ -76,18 +87,31 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
             holder.questionImage.setVisibility(View.VISIBLE);
         }
 
+        holder.report.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Dialogs.messageDialog(context, R.string.report_title, R.string.report_message, new Runnable() {
+                    @Override
+                    public void run() {
+                        ServerQuestion.getInstance(context).reportQuestion(question.questionId);
+                        remove(question);
+                        notifyDataSetChanged();
+                    }
+                });
+            }
+        });
+
         fillContent(holder, question);
 
-        holder.questionImage.setImageUrl(question.image, BoolioServer.getInstance(context).getImageLoader());
-        holder.creatorImage.setImageUrl(question.creatorImage, BoolioServer.getInstance(context).getImageLoader());
-
+        holder.questionImage.setImageUrl(question.image, ServerUser.getInstance(context).getImageLoader());
+        holder.creatorImage.setImageUrl(question.creatorImage, ServerUser.getInstance(context).getImageLoader());
     }
 
     public abstract void fillContent(QuestionHolder holder, Question question);
 
     public class QuestionHolder {
-        View view;
-        TextView question, creator, date;
+        View view, report;
+        TextView question, creator, date, highLeft, highRight;
         TextSwitcher leftAnswer, rightAnswer;
         BoolioProfileImage creatorImage;
         NetworkImageView questionImage;

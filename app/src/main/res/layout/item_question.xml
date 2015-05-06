@@ -29,7 +29,7 @@
                 android:layout_marginRight="@dimen/question_text_image_padding"
                 android:contentDescription="@string/question_creator_image_description"
                 android:scaleType="fitCenter"
-                android:src="@drawable/bear" />
+                android:src="@drawable/bear"/>
 
             <TextView
                 android:id="@+id/question_creator"
@@ -38,7 +38,7 @@
                 android:layout_marginLeft="@dimen/question_text_margin"
                 android:layout_toEndOf="@id/question_creator_picture"
                 android:layout_toRightOf="@id/question_creator_picture"
-                android:textSize="@dimen/question_creator_text_size" />
+                android:textSize="@dimen/question_creator_text_size"/>
 
             <TextView
                 android:id="@+id/question_date"
@@ -46,7 +46,15 @@
                 android:layout_height="fill_parent"
                 android:layout_alignLeft="@id/question_creator"
                 android:layout_below="@id/question_creator"
-                android:textSize="@dimen/question_creator_sub_size" />
+                android:textSize="@dimen/question_creator_sub_size"/>
+
+            <ImageView
+                android:id="@+id/report_button"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/report"/>
         </RelativeLayout>
 
         <com.android.volley.toolbox.NetworkImageView
@@ -55,7 +63,7 @@
             android:layout_height="@dimen/question_image_height"
             android:layout_below="@id/question_profile_pane"
             android:contentDescription="@string/question_image_description"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"/>
 
         <TextView
             android:id="@+id/question_text"
@@ -64,9 +72,10 @@
             android:layout_below="@id/question_image"
             android:gravity="center"
             android:padding="@dimen/question_padding"
-            android:textSize="@dimen/question_text_size" />
+            android:textSize="@dimen/question_text_size"/>
 
         <LinearLayout
+            android:id="@+id/answer_bar"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/question_text"
@@ -75,18 +84,51 @@
             <TextSwitcher
                 android:id="@+id/question_left_answer"
                 android:layout_width="0dp"
-
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"/>
 
 
             <TextSwitcher
                 android:id="@+id/question_right_answer"
                 android:layout_width="0dp"
-
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"/>
 
         </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/answer_bar"
+            android:layout_alignTop="@id/answer_bar"
+            android:orientation="horizontal">
+
+            <View
+                android:id="@+id/answer_anchor"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_centerInParent="true"/>
+
+            <TextView
+                android:id="@+id/highlighted_left"
+                style="@style/answer_style"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_toLeftOf="@id/answer_anchor"
+                android:background="@color/feed_question_left"
+                android:textColor="@android:color/white"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/highlighted_right"
+                style="@style/answer_style"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@id/answer_anchor"
+                android:background="@color/feed_question_right"
+                android:textColor="@android:color/white"
+                android:visibility="gone"/>
+
+        </RelativeLayout>
     </RelativeLayout>
 </RelativeLayout>

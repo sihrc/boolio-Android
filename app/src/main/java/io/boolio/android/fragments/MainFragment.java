@@ -30,7 +30,7 @@ public class MainFragment extends BoolioFragment {
 
     // Nav-bar views
     LinearLayout navBar;
-    View curNavButton, navBarAdd;
+    View curNavButton, navBarAdd, navBarAddSend;
     ViewPager viewPager;
 
     List<BoolioFragment> fragmentList;
@@ -41,8 +41,18 @@ public class MainFragment extends BoolioFragment {
         }
     };
 
+    public static MainFragment newInstance(int startFrag) {
+        MainFragment fragment = new MainFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putInt("start", startFrag);
+
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
     public static MainFragment newInstance() {
-        return new MainFragment();
+        return newInstance(FeedFragment.ORDER);
     }
 
     @Override
@@ -59,6 +69,7 @@ public class MainFragment extends BoolioFragment {
 
         navBar = (LinearLayout) rootView.findViewById(R.id.nav_bar);
         navBarAdd = rootView.findViewById(R.id.nav_bar_add);
+        navBarAddSend = rootView.findViewById(R.id.nav_bar_add_send);
 
         viewPager = (ViewPager) rootView.findViewById(R.id.main_view_pager);
 
@@ -115,6 +126,16 @@ public class MainFragment extends BoolioFragment {
                     fragmentList.get(position).refreshPage();
                     if (viewPager.getCurrentItem() == 2) {
                         showNavBar(true);
+                        navBarAddSend.setVisibility(View.VISIBLE);
+                        navBarAddSend.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                ((CreateQuestionFragment)fragmentList.get(2)).submitOnClickSetup();
+                            }
+                        });
+
+                    } else{
+                        navBarAddSend.setVisibility(View.GONE);
                     }
                 }
             }
@@ -135,6 +156,8 @@ public class MainFragment extends BoolioFragment {
                 return fragmentList.size();
             }
         });
+
+        viewPager.setCurrentItem(getArguments().getInt("start"));
     }
 
 

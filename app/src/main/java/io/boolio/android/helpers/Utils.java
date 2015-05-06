@@ -6,9 +6,12 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Base64;
 import android.util.Log;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -25,7 +28,6 @@ import java.util.List;
  * Created by Chris on 4/17/15.
  */
 public class Utils {
-
     public static String formatTimeDifferences(String value) {
         long diff = (System.currentTimeMillis() - Long.parseLong(value)) / 1000;
         StringBuilder buf = new StringBuilder();
@@ -65,16 +67,6 @@ public class Utils {
         return new File(tempFile, System.currentTimeMillis() + ".jpg");
     }
 
-    public static List<String> parseStringArray(String input) {
-        List<String> result = new ArrayList<>();
-        if (input.isEmpty())
-            return result;
-
-        Collections.addAll(result, input.replace(" ", "").split(","));
-
-        return result;
-    }
-
     /**
      * ACCESS PRIVATE METHOD *
      */
@@ -109,6 +101,35 @@ public class Utils {
         bmOptions.inJustDecodeBounds = false;
         bmOptions.inSampleSize = scaleFactor;
         return BitmapFactory.decodeStream(streamFromUri(context, uri), null, bmOptions);
+    }
+
+    public static void saveBitmapToUri(final Context context, final Bitmap bitmap, final Runnable asyncRunning, final BoolioCallback<Uri> callback) {
+        new AsyncTask<Void, Void, Void>() {
+            Uri uri;
+
+            @Override
+            protected void onPreExecute() {
+                if (asyncRunning != null)
+                    asyncRunning.run();
+                uri = Uri.fromFile(getTempFile(context));
+            }
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 90, context.getContentResolver().openOutputStream(uri));
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                callback.handle(uri);
+            }
+        }.execute();
     }
 
     private static java.io.InputStream streamFromUri(Context context, Uri uri) {
@@ -170,6 +191,12 @@ public class Utils {
             return object;
         }
     };
+
+    public static void hideKeyboard(Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(
+                Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
 
     public static abstract class ArrayToStringBuilder<T> {
         public String build(Collection<T> objects) {
