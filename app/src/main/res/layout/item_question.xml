@@ -47,6 +47,14 @@
                 android:layout_alignLeft="@id/question_creator"
                 android:layout_below="@id/question_creator"
                 android:textSize="@dimen/question_creator_sub_size"/>
+
+            <ImageView
+                android:id="@+id/report_button"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/report"/>
         </RelativeLayout>
 
         <com.android.volley.toolbox.NetworkImageView

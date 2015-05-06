@@ -14,6 +14,7 @@ import java.util.Collection;
 
 import io.boolio.android.callbacks.QuestionsCallback;
 import io.boolio.android.helpers.BoolioUserHandler;
+import io.boolio.android.helpers.Debugger;
 import io.boolio.android.helpers.Utils;
 import io.boolio.android.models.Question;
 import io.boolio.android.network.parser.JSONArrayParser;
@@ -57,28 +58,6 @@ public class ServerQuestion extends BoolioServer {
         });
     }
 
-    public void postQuestion(Question question, final Bitmap bm, final Runnable runnable) {
-        makeRequest(Request.Method.POST, API.POST_QUESTION,
-                QuestionParser.getInstance().toJSON(question), new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Question returned = QuestionParser.getInstance().parse(response);
-                        if (bm == null) {
-                            if (runnable != null)
-                                runnable.run();
-                            return;
-                        }
-                        uploadImage(returned.questionId, bm, new NetworkCallback<Question>() {
-                            @Override
-                            public void handle(Question object) {
-                                if (runnable != null)
-                                    runnable.run();
-                            }
-                        });
-                    }
-                });
-    }
-
     /**
      * POSTS *
      */
@@ -106,6 +85,28 @@ public class ServerQuestion extends BoolioServer {
         );
     }
 
+    public void postQuestion(Question question, final Bitmap bm, final Runnable runnable) {
+        makeRequest(Request.Method.POST, API.POST_QUESTION,
+                QuestionParser.getInstance().toJSON(question), new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Question returned = QuestionParser.getInstance().parse(response);
+                        if (bm == null) {
+                            if (runnable != null)
+                                runnable.run();
+                            return;
+                        }
+                        uploadImage(returned.questionId, bm, new NetworkCallback<Question>() {
+                            @Override
+                            public void handle(Question object) {
+                                if (runnable != null)
+                                    runnable.run();
+                            }
+                        });
+                    }
+                });
+    }
+
 
     public void postAnswer(final String questionId, final String direction, final NetworkCallback<Question> questionNetworkCallback) {
         makeRequest(Request.Method.POST, API.POST_ANSWER,
@@ -124,6 +125,22 @@ public class ServerQuestion extends BoolioServer {
                     public void onResponse(JSONObject response) {
                         if (questionNetworkCallback != null)
                             questionNetworkCallback.handle(QuestionParser.getInstance().parse(response));
+                    }
+                });
+    }
+
+    public void reportQuestion(final String id) {
+        makeRequest(Request.Method.POST, API.REPORT_QUESTION,
+                new JSONObject() {{
+                    try {
+                        put("id", id);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }}, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Debugger.log(BoolioServer.class, "Reported Question: " + id);
                     }
                 });
     }
