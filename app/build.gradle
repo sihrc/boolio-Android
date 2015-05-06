@@ -43,7 +43,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.0.0'
     /// Facebook SDK
     compile 'com.facebook.android:facebook-android-sdk:4.1.0'
-        // Network Handling
+    // Network Handling
     compile 'com.mcxiaoke.volley:library:1.0.15'
     // Progress Bar
     compile 'com.github.castorflex.smoothprogressbar:library-circular:1.0.0'
@@ -54,4 +54,6 @@ dependencies {
     compile "org.apache.httpcomponents:httpmime:4.2.3"
     // Async GridView
     compile 'org.lucasr.smoothie:smoothie:0.1.0'
+    // Google Play Services for GCM
+    compile "com.google.android.gms:play-services:3.1.+"
 }

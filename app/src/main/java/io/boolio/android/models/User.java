@@ -7,7 +7,7 @@ import java.util.List;
  */
 public class User {
 
-    public String name, userId, profilePic, oauthId;
+    public String name, userId, profilePic, oauthId, gcmId;
     public List<String> questionsAsked, questionsAnswered, questionsSkipped;
 
     public User(String oauthId, String name) {

@@ -26,6 +26,8 @@ public class BoolioFragment extends Fragment {
 
     }
     public void hideKeyBoard(View view) {
+        if (activity == null)
+            return;
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }

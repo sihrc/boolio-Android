@@ -7,6 +7,11 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
+    <!-- GCM -->
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+    <uses-permission android:name="io.boolio.android.permission.C2D_MESSAGE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -37,6 +42,17 @@
                 "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+
+        <!-- GCM -->
+        <receiver
+            android:name=".gcm.GCMReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+                <category android:name="com.example.gcm"/>
+            </intent-filter>
+        </receiver>
+        <service android:name=".gcm.GCMService"/>
 
     </application>
 

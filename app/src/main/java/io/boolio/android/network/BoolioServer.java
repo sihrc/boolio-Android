@@ -40,7 +40,6 @@ public class BoolioServer {
         this.queue = Volley.newRequestQueue(context);
         this.imageLoader = new ImageLoader(queue, new ImageLoader.ImageCache() {
             LruCache<String, Bitmap> cache = new LruCache<>(40);
-
             @Override
             public Bitmap getBitmap(String url) {
                 return cache.get(url);

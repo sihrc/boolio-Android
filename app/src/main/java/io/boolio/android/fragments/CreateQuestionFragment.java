@@ -23,7 +23,6 @@ import io.boolio.android.fragments.search.SearchImageFragment;
 import io.boolio.android.helpers.BoolioCallback;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.PictureHelper;
-import io.boolio.android.helpers.Utils;
 import io.boolio.android.models.Question;
 import io.boolio.android.network.ServerQuestion;
 
@@ -85,15 +84,7 @@ public class CreateQuestionFragment extends BoolioFragment {
         questionText = (EditText) rootView.findViewById(R.id.create_question_text);
         left = (EditText) rootView.findViewById(R.id.create_question_left_answer);
         right = (EditText) rootView.findViewById(R.id.create_question_right_answer);
-        tags = (EditText) rootView.findViewById(R.id.create_question_tag);
         progress = rootView.findViewById(R.id.progress_bar_saving);
-
-        rootView.findViewById(R.id.create_question_submit).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                submitOnClickSetup();
-            }
-        });
 
         networkImageView = (ImageView) rootView.findViewById(R.id.create_question_image);
         setupImageView();
@@ -101,7 +92,7 @@ public class CreateQuestionFragment extends BoolioFragment {
         return rootView;
     }
 
-    private void submitOnClickSetup() {
+    public void submitOnClickSetup() {
         if (questionText.getText().length() == 0 && imageSaved == null) {
             Toast.makeText(activity, "Please enter a question or choose an image", Toast.LENGTH_SHORT).show();
             return;
@@ -114,7 +105,6 @@ public class CreateQuestionFragment extends BoolioFragment {
         question.creatorName = BoolioUserHandler.getInstance(activity).getUser().name;
         question.creatorImage = BoolioUserHandler.getInstance(activity).getUser().profilePic;
         question.creatorId = BoolioUserHandler.getInstance(activity).getUser().userId;
-        question.tags = Utils.parseStringArray(tags.getText().toString());
 
 
         // Upload Image to Server
@@ -177,6 +167,5 @@ public class CreateQuestionFragment extends BoolioFragment {
         questionText.setText("");
         left.setText("");
         right.setText("");
-        tags.setText("");
     }
 }

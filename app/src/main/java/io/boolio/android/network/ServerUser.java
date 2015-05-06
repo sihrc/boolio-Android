@@ -4,7 +4,9 @@ import android.content.Context;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.toolbox.JsonObjectRequest;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import io.boolio.android.models.User;
@@ -53,5 +55,28 @@ public class ServerUser extends BoolioServer {
                         callback.handle(UserParser.getInstance().parse(response));
                     }
                 });
+    }
+
+    /**
+     * POST
+     */
+    public void updateUserGCM(String userId, String gcmId) {
+        JSONObject jsonObject = new JSONObject();
+
+        try {
+            jsonObject.put("id", userId);
+            jsonObject.put("gcm", gcmId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, API.POST_USER_GCMID,
+                jsonObject, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+            }
+        }, errorListener);
+
+        queue.add(req);
     }
 }

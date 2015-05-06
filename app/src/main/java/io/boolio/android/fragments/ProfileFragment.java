@@ -28,6 +28,7 @@ import io.boolio.android.animation.AnimationHelper;
 import io.boolio.android.callbacks.QuestionsCallback;
 import io.boolio.android.custom.BoolioProfileImage;
 import io.boolio.android.custom.ScrollingListView;
+import io.boolio.android.gcm.GCMService;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.models.Question;
 import io.boolio.android.models.User;
@@ -39,7 +40,8 @@ import io.boolio.android.network.NetworkCallback;
  * Created by Chris on 4/17/15.
  */
 public class ProfileFragment extends BoolioFragment {
-    Context context;
+    public final static int ORDER = 1;
+
     String userId;
     User user;
 
@@ -90,14 +92,13 @@ public class ProfileFragment extends BoolioFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        context = activity;
         user = BoolioUserHandler.getInstance(activity).getUser();
         white_color = getResources().getColor(R.color.white);
         dark_gray = getResources().getColor(R.color.tab_light_gray);
         theme_blue = getResources().getColor(R.color.theme_blue);
         orange = getResources().getColor(R.color.feed_question_right_color);
-        ServerUser.getInstance(context).getUserProfile(
-                userId == null ? BoolioUserHandler.getInstance(context).getUser().userId : userId,
+        ServerUser.getInstance(activity).getUserProfile(
+                userId == null ? BoolioUserHandler.getInstance(activity).getUser().userId : userId,
                 new NetworkCallback<User>() {
                     @Override
                     public void handle(User user) {
@@ -109,15 +110,15 @@ public class ProfileFragment extends BoolioFragment {
 
     @Override
     public void refreshPage() {
-        ServerUser.getInstance(context).getUserProfile(
-                userId == null ? BoolioUserHandler.getInstance(context).getUser().userId : userId,
+        ServerUser.getInstance(activity).getUserProfile(
+                userId == null ? BoolioUserHandler.getInstance(activity).getUser().userId : userId,
                 new NetworkCallback<User>() {
                     @Override
                     public void handle(User user) {
                         ProfileFragment.this.user = user;
                         updateViews();
-                        ServerQuestion.getInstance(context).getQuestions(user.questionsAnswered, answeredCallback);
-                        ServerQuestion.getInstance(context).getQuestions(user.questionsAsked, askedCallback);
+                        ServerQuestion.getInstance(activity).getQuestions(user.questionsAnswered, answeredCallback);
+                        ServerQuestion.getInstance(activity).getQuestions(user.questionsAsked, askedCallback);
                     }
                 });
         hideKeyBoard(profileUsername);
@@ -129,7 +130,7 @@ public class ProfileFragment extends BoolioFragment {
     public void updateViews() {
         if (user == null)
             return;
-        profileUserImage.setImageUrl(user.profilePic, ServerUser.getInstance(context).getImageLoader());
+        profileUserImage.setImageUrl(user.profilePic, ServerUser.getInstance(activity).getImageLoader());
         askedCount.setText(String.valueOf(user.questionsAsked.size()));
         answeredCount.setText(String.valueOf(user.questionsAnswered.size()));
         karmaCount.setText(String.valueOf(user.questionsAnswered.size() + user.questionsAsked.size())); //FIXME IMPLEMENT ON BACKEND
@@ -174,8 +175,8 @@ public class ProfileFragment extends BoolioFragment {
 
     private void setupPager() {
         // profile
-        askedAdapter = new BoolioAnswerAdapter(context);
-        answeredAdapter = new BoolioAnswerAdapter(context);
+        askedAdapter = new BoolioAnswerAdapter(activity);
+        answeredAdapter = new BoolioAnswerAdapter(activity);
         fragmentList = new ArrayList<BoolioListFragment>() {{
             add(BoolioListFragment.newInstance(askedAdapter, scrollChangeListener));
             add(BoolioListFragment.newInstance(answeredAdapter, scrollChangeListener));
@@ -234,7 +235,6 @@ public class ProfileFragment extends BoolioFragment {
                 viewPager.setCurrentItem(1);
             }
         });
-
     }
 
     private void setupKarmaView() {
@@ -242,9 +242,9 @@ public class ProfileFragment extends BoolioFragment {
             @Override
             public void onClick(View v) {
                 if (karmaShow.getVisibility() == View.GONE)
-                    AnimationHelper.getInstance(context).animateViewLeftIn(karmaShow);
+                    AnimationHelper.getInstance(activity).animateViewLeftIn(karmaShow);
                 else
-                    AnimationHelper.getInstance(context).animateViewRightOut(karmaShow);
+                    AnimationHelper.getInstance(activity).animateViewRightOut(karmaShow);
             }
         });
     }
@@ -254,14 +254,14 @@ public class ProfileFragment extends BoolioFragment {
         profileSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AlertDialog.Builder(context)
+                new AlertDialog.Builder(activity)
                         .setTitle(R.string.settings)
                         .setItems(new CharSequence[]{"Logout", "Cancel"}, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 switch (which) {
                                     case 0:
-                                        Toast.makeText(context, "Logged Out", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(activity, "Logged Out", Toast.LENGTH_SHORT).show();
                                         LoginManager.getInstance().logOut();
                                         dialog.dismiss();
                                         break;
@@ -273,5 +273,11 @@ public class ProfileFragment extends BoolioFragment {
                         }).show();
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        GCMService.clearAll(activity);
     }
 }
