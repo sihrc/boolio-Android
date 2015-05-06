@@ -32,7 +32,8 @@ import io.boolio.android.gcm.GCMService;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.models.Question;
 import io.boolio.android.models.User;
-import io.boolio.android.network.BoolioServer;
+import io.boolio.android.network.ServerQuestion;
+import io.boolio.android.network.ServerUser;
 import io.boolio.android.network.NetworkCallback;
 
 /**
@@ -96,8 +97,8 @@ public class ProfileFragment extends BoolioFragment {
         dark_gray = getResources().getColor(R.color.tab_light_gray);
         theme_blue = getResources().getColor(R.color.theme_blue);
         orange = getResources().getColor(R.color.feed_question_right_color);
-        BoolioServer.getInstance(this.activity).getUserProfile(
-                userId == null ? BoolioUserHandler.getInstance(this.activity).getUser().userId : userId,
+        ServerUser.getInstance(activity).getUserProfile(
+                userId == null ? BoolioUserHandler.getInstance(activity).getUser().userId : userId,
                 new NetworkCallback<User>() {
                     @Override
                     public void handle(User user) {
@@ -109,15 +110,15 @@ public class ProfileFragment extends BoolioFragment {
 
     @Override
     public void refreshPage() {
-        BoolioServer.getInstance(activity).getUserProfile(
+        ServerUser.getInstance(activity).getUserProfile(
                 userId == null ? BoolioUserHandler.getInstance(activity).getUser().userId : userId,
                 new NetworkCallback<User>() {
                     @Override
                     public void handle(User user) {
                         ProfileFragment.this.user = user;
                         updateViews();
-                        BoolioServer.getInstance(activity).getQuestions(user.questionsAnswered, answeredCallback);
-                        BoolioServer.getInstance(activity).getQuestions(user.questionsAsked, askedCallback);
+                        ServerQuestion.getInstance(activity).getQuestions(user.questionsAnswered, answeredCallback);
+                        ServerQuestion.getInstance(activity).getQuestions(user.questionsAsked, askedCallback);
                     }
                 });
         hideKeyBoard(profileUsername);
@@ -129,7 +130,7 @@ public class ProfileFragment extends BoolioFragment {
     public void updateViews() {
         if (user == null)
             return;
-        profileUserImage.setImageUrl(user.profilePic, BoolioServer.getInstance(activity).getImageLoader());
+        profileUserImage.setImageUrl(user.profilePic, ServerUser.getInstance(activity).getImageLoader());
         askedCount.setText(String.valueOf(user.questionsAsked.size()));
         answeredCount.setText(String.valueOf(user.questionsAnswered.size()));
         karmaCount.setText(String.valueOf(user.questionsAnswered.size() + user.questionsAsked.size())); //FIXME IMPLEMENT ON BACKEND

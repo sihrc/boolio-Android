@@ -9,12 +9,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.SearchView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -25,7 +23,7 @@ import io.boolio.android.adapters.BoolioQuestionAdapter;
 import io.boolio.android.callbacks.QuestionsCallback;
 import io.boolio.android.custom.ScrollingListView;
 import io.boolio.android.models.Question;
-import io.boolio.android.network.BoolioServer;
+import io.boolio.android.network.ServerFeed;
 
 /**
  * Created by james on 4/21/15.
@@ -105,7 +103,7 @@ public class SearchFragment extends BoolioFragment {
     }
 
     private void searchServer(String query) {
-        BoolioServer.getInstance(context).searchQuestion(
+        ServerFeed.getInstance(context).searchQuestion(
                 query, questionsCallback);
     }
 
@@ -121,36 +119,6 @@ public class SearchFragment extends BoolioFragment {
                 add(BoolioListFragment.newInstance(questionsTabAdapter, null));
                 add(ComingSoonFragment.newInstance("Search for friends coming soon!"));
                 add(ComingSoonFragment.newInstance("Search for tags coming soon!"));
-//            TODO
-//              add(BoolioListFragment.getInstance(friendsTabAdapter, new QuestionsPullInterface() {
-//                @Override
-//                public void pullQuestions() {
-//                    // TODO
-//                    BoolioServer.getInstance(activity).getUserAnswered(
-//                            null,
-//                            new QuestionsCallback() {
-//                                @Override
-//                                public void handleQuestions(List<Question> questionList) {
-//
-//                                }
-//                            }
-//                    );
-//                }
-//            }, runnable));
-//            add(BoolioListFragment.newInstance(catergoriesTabAdapter, new QuestionsPullInterface() {
-//                @Override
-//                public void pullQuestions() {
-//                    // TODO
-//                    BoolioServer.getInstance(activity).getUserAsked(
-//                            null,
-//                            new QuestionsCallback() {
-//                                @Override
-//                                public void handleQuestions(List<Question> questionList) {
-//                                }
-//                            }
-//                    );
-//                }
-//            }, runnable));
             }
         };
 
@@ -167,12 +135,10 @@ public class SearchFragment extends BoolioFragment {
                     friendsTab.setAlpha(.25f);
                     categoriesTab.setAlpha(.25f);
                 } else if (position == 1) {
-                    searchBar.setVisibility(View.GONE);
                     questionsTab.setAlpha(.25f);
                     friendsTab.setAlpha(1f);
                     categoriesTab.setAlpha(.25f);
                 } else {
-                    searchBar.setVisibility(View.GONE);
                     questionsTab.setAlpha(.25f);
                     friendsTab.setAlpha(.25f);
                     categoriesTab.setAlpha(1f);

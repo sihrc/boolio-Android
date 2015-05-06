@@ -20,6 +20,8 @@ import io.boolio.android.R;
 import io.boolio.android.callbacks.QuestionsCallback;
 import io.boolio.android.models.Question;
 import io.boolio.android.network.BoolioServer;
+import io.boolio.android.network.ServerFeed;
+import io.boolio.android.network.ServerQuestion;
 
 /**
  * Created by Chris on 5/2/15.
@@ -83,7 +85,7 @@ public class GCMService extends IntentService {
                 intent.setAction("new-feed");
                 contentIntent = PendingIntent.getActivity(this, GCM + FEED_UPDATE_ID,
                         intent, 0);
-                BoolioServer.getInstance(this).getQuestionFeed(new ArrayList<String>(0), new QuestionsCallback() {
+                ServerFeed.getInstance(this).getQuestionFeed(new ArrayList<String>(0), new QuestionsCallback() {
                     @Override
                     public void handleQuestions(List<Question> questionList) {
                         buildFeedUpdate(mNotificationManager, contentIntent, questionList.size());

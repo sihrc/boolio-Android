@@ -30,7 +30,7 @@ public class MainFragment extends BoolioFragment {
 
     // Nav-bar views
     LinearLayout navBar;
-    View curNavButton, navBarAdd;
+    View curNavButton, navBarAdd, navBarAddSend;
     ViewPager viewPager;
 
     List<BoolioFragment> fragmentList;
@@ -69,6 +69,7 @@ public class MainFragment extends BoolioFragment {
 
         navBar = (LinearLayout) rootView.findViewById(R.id.nav_bar);
         navBarAdd = rootView.findViewById(R.id.nav_bar_add);
+        navBarAddSend = rootView.findViewById(R.id.nav_bar_add_send);
 
         viewPager = (ViewPager) rootView.findViewById(R.id.main_view_pager);
 
@@ -125,6 +126,16 @@ public class MainFragment extends BoolioFragment {
                     fragmentList.get(position).refreshPage();
                     if (viewPager.getCurrentItem() == 2) {
                         showNavBar(true);
+                        navBarAddSend.setVisibility(View.VISIBLE);
+                        navBarAddSend.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                ((CreateQuestionFragment)fragmentList.get(2)).submitOnClickSetup();
+                            }
+                        });
+
+                    } else{
+                        navBarAddSend.setVisibility(View.GONE);
                     }
                 }
             }

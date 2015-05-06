@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +17,9 @@ import io.boolio.android.R;
 import io.boolio.android.custom.BoolioNetworkImageView;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.PictureHelper;
-import io.boolio.android.helpers.Utils;
 import io.boolio.android.models.Question;
-import io.boolio.android.network.BoolioServer;
+import io.boolio.android.network.ServerQuestion;
+import io.boolio.android.network.ServerUser;
 
 /**
  * Created by james on 4/17/15.
@@ -72,15 +71,7 @@ public class CreateQuestionFragment extends BoolioFragment {
         questionText = (EditText) rootView.findViewById(R.id.create_question_text);
         left = (EditText) rootView.findViewById(R.id.create_question_left_answer);
         right = (EditText) rootView.findViewById(R.id.create_question_right_answer);
-        tags = (EditText) rootView.findViewById(R.id.create_question_tag);
         progress = rootView.findViewById(R.id.progress_bar_saving);
-
-        rootView.findViewById(R.id.create_question_submit).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                submitOnClickSetup();
-            }
-        });
 
         networkImageView = (BoolioNetworkImageView) rootView.findViewById(R.id.create_question_image);
         setupImageView();
@@ -88,7 +79,7 @@ public class CreateQuestionFragment extends BoolioFragment {
         return rootView;
     }
 
-    private void submitOnClickSetup() {
+    public void submitOnClickSetup() {
         if (questionText.getText().length() == 0 && imageSaved == null) {
             Toast.makeText(activity, "Please enter a question or choose an image", Toast.LENGTH_SHORT).show();
             return;
@@ -101,13 +92,12 @@ public class CreateQuestionFragment extends BoolioFragment {
         question.creatorName = BoolioUserHandler.getInstance(activity).getUser().name;
         question.creatorImage = BoolioUserHandler.getInstance(activity).getUser().profilePic;
         question.creatorId = BoolioUserHandler.getInstance(activity).getUser().userId;
-        question.tags = Utils.parseStringArray(tags.getText().toString());
 
 
         // Upload Image to Server
         progress.setVisibility(View.VISIBLE);
 
-        BoolioServer.getInstance(activity).postQuestion(question, imageSaved, new Runnable() {
+        ServerQuestion.getInstance(activity).postQuestion(question, imageSaved, new Runnable() {
             @Override
             public void run() {
                 progress.setVisibility(View.GONE);
@@ -159,6 +149,5 @@ public class CreateQuestionFragment extends BoolioFragment {
         questionText.setText("");
         left.setText("");
         right.setText("");
-        tags.setText("");
     }
 }

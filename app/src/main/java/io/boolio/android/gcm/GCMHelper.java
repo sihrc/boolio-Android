@@ -15,6 +15,7 @@ import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.PrefsHelper;
 import io.boolio.android.models.User;
 import io.boolio.android.network.BoolioServer;
+import io.boolio.android.network.ServerUser;
 
 /**
  * Created by Chris on 5/2/15.
@@ -90,7 +91,7 @@ public class GCMHelper {
                     // so it can use GCM/HTTP or CCS to send messages to your app.
                     // The request to your server should be authenticated if your app
                     // is using accounts.
-                    BoolioServer.getInstance(context).updateUserGCM(user.userId, regId);
+                    ServerUser.getInstance(context).updateUserGCM(user.userId, regId);
 
                     // For this demo: we don't need to send it because the device
                     // will send upstream messages to a server that echo back the

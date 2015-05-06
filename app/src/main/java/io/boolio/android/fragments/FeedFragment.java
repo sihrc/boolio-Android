@@ -19,27 +19,32 @@ import io.boolio.android.custom.ScrollingListView;
 import io.boolio.android.gcm.GCMService;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.models.Question;
-import io.boolio.android.network.BoolioServer;
+import io.boolio.android.network.ServerFeed;
 
 /**
  * Created by Chris on 4/16/15.
  */
 public class FeedFragment extends BoolioFragment {
-    public final static int ORDER = 0;
+    final public static int ORDER = 0;
+    final private static int REFRESH_DELAY = 500;
     static FeedFragment instance;
 
     QuestionsCallback callback = new QuestionsCallback() {
         @Override
         public void handleQuestions(final List<Question> questionList) {
-            questionAdapter.clear();
-            questionAdapter.addAll(questionList);
-            questionAdapter.notifyDataSetChanged();
-            pullToRefreshLayout.setRefreshing(false);
-            gifLoading.setVisibility(View.GONE);
-            if (questionAdapter.getCount() == 0) {
-                loadingMessage.setVisibility(View.VISIBLE);
-            }
-            GCMService.clearFeedUpdate(activity);
+            pullToRefreshLayout.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    questionAdapter.clear();
+                    questionAdapter.addAll(questionList);
+                    questionAdapter.notifyDataSetChanged();
+                    pullToRefreshLayout.setRefreshing(false);
+                    gifLoading.setVisibility(View.GONE);
+                    if (questionAdapter.getCount() == 0)
+                        loadingMessage.setVisibility(View.VISIBLE);
+                    GCMService.clearFeedUpdate(activity);
+                }
+            }, REFRESH_DELAY);
         }
     };
 
@@ -112,6 +117,6 @@ public class FeedFragment extends BoolioFragment {
 
     private void pullQuestions() {
         loadingMessage.setVisibility(View.GONE);
-        BoolioServer.getInstance(activity).getQuestionFeed(prevSeenQuestions, callback);
+        ServerFeed.getInstance(activity).getQuestionFeed(prevSeenQuestions, callback);
     }
 }
