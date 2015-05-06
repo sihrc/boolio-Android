@@ -6,6 +6,11 @@
         <!-- Customize your theme here. -->
     </style>
 
+	<style name="elv_fade_animation">
+		<item name="@android:windowEnterAnimation">@anim/elv_popup_show</item>
+		<item name="@android:windowExitAnimation">@anim/elv_popup_hide</item>
+	</style>
+
     <style name="facebook_button" parent="@android:style/Widget.Button">
         <item name="android:background">@drawable/facebook_button</item>
         <item name="android:drawablePadding">@dimen/facebook_login_padding</item>

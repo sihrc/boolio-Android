@@ -14,12 +14,14 @@ import io.boolio.android.MainActivity;
 import io.boolio.android.R;
 import io.boolio.android.adapters.BoolioQuestionAdapter;
 import io.boolio.android.callbacks.QuestionsCallback;
+import io.boolio.android.custom.EnhancedListView;
 import io.boolio.android.custom.PullToRefreshView;
 import io.boolio.android.custom.ScrollingListView;
 import io.boolio.android.gcm.GCMService;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.models.Question;
 import io.boolio.android.network.ServerFeed;
+import io.boolio.android.network.ServerUser;
 
 /**
  * Created by Chris on 4/16/15.
@@ -96,13 +98,7 @@ public class FeedFragment extends BoolioFragment {
 
         ScrollingListView listView = (ScrollingListView) rootView.findViewById(R.id.question_feed);
         questionAdapter = new BoolioQuestionAdapter(activity);
-        listView.setAdapter(questionAdapter);
-        listView.setScrollChangeListener(new ScrollingListView.ScrollChangeListener() {
-            @Override
-            public void onScroll(boolean isScrollingUp) {
-                ((MainFragment) getParentFragment()).showNavBar(isScrollingUp);
-            }
-        });
+        setupListView(listView);
 
         BoolioUserHandler.getInstance(activity).setUserCallback(new Runnable() {
             @Override
@@ -118,5 +114,34 @@ public class FeedFragment extends BoolioFragment {
     private void pullQuestions() {
         loadingMessage.setVisibility(View.GONE);
         ServerFeed.getInstance(activity).getQuestionFeed(prevSeenQuestions, callback);
+    }
+
+    private void setupListView(final ScrollingListView scrollingListView) {
+        /** Scrolling List View With Dismiss and Undo **/
+        scrollingListView.setAdapter(questionAdapter);
+        scrollingListView.setDismissCallback(new EnhancedListView.OnDismissCallback() {
+            @Override
+            public EnhancedListView.Undoable onDismiss(EnhancedListView enhancedListView, final int i) {
+                final Question question = questionAdapter.remove(i);
+                questionAdapter.notifyDataSetChanged();
+                ServerUser.getInstance(activity).skipQuestion(question);
+                return new EnhancedListView.Undoable() {
+                    @Override
+                    public void undo() {
+                        questionAdapter.insert(question, i);
+                        questionAdapter.notifyDataSetChanged();
+                        ServerUser.getInstance(activity).unskipQuestion(question);
+                    }
+                };
+            }
+        });
+        scrollingListView.setUndoHideDelay(500);
+        scrollingListView.enableSwipeToDismiss();
+        scrollingListView.setScrollChangeListener(new ScrollingListView.ScrollChangeListener() {
+            @Override
+            public void onScroll(boolean isScrollingUp) {
+                ((MainFragment) getParentFragment()).showNavBar(isScrollingUp);
+            }
+        });
     }
 }

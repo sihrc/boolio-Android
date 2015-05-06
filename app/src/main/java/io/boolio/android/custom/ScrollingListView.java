@@ -3,12 +3,11 @@ package io.boolio.android.custom;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.AbsListView;
-import android.widget.ListView;
 
 /**
  * Created by Chris on 4/24/15.
  */
-public class ScrollingListView extends ListView {
+public class ScrollingListView extends EnhancedListView {
     ScrollChangeListener scrollChangeListener;
 
 
@@ -62,7 +61,7 @@ public class ScrollingListView extends ListView {
         this.scrollChangeListener = scrollChangeListener;
     }
 
-    public static interface ScrollChangeListener {
-        public void onScroll(boolean isScrollingUp);
+    public interface ScrollChangeListener {
+        void onScroll(boolean isScrollingUp);
     }
 }

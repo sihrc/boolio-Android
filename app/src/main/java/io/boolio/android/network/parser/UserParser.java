@@ -2,8 +2,11 @@ package io.boolio.android.network.parser;
 
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Collection;
 
 import io.boolio.android.models.User;
 
@@ -55,5 +58,14 @@ public class UserParser extends Parser<User> {
             e.printStackTrace();
         }
         return jUser;
+    }
+
+    @Override
+    public JSONArray toListIDs(Collection<User> objects) {
+        JSONArray array = new JSONArray();
+        for (User user : objects) {
+            array.put(user.userId);
+        }
+        return array;
     }
 }

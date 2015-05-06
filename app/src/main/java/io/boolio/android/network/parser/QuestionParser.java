@@ -6,6 +6,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Collection;
+
 import io.boolio.android.models.Question;
 
 /**
@@ -61,5 +63,14 @@ public class QuestionParser extends Parser<Question> {
             e.printStackTrace();
         }
         return jsonObject;
+    }
+
+    @Override
+    public JSONArray toListIDs(Collection<Question> objects) {
+        JSONArray array = new JSONArray();
+        for (Question question : objects) {
+            array.put(question.questionId);
+        }
+        return array;
     }
 }
