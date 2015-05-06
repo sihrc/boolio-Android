@@ -12,17 +12,10 @@
         android:background="@color/theme_blue"
         android:paddingLeft="@dimen/general_padding">
 
-        <EditText
+        <io.boolio.android.custom.BoolioSearchView
             android:id="@+id/search_bar"
-            style="@style/search_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="@string/search_bar_text"
-            android:inputType="textCapSentences"
-            android:singleLine="true"
-            android:background="@android:color/transparent"
-            android:textColor="@android:color/white"
-            android:textColorHint="@color/white" />
+            android:layout_height="match_parent"/>
 
     </FrameLayout>
 

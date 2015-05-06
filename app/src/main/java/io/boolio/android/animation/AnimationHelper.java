@@ -85,6 +85,4 @@ public class AnimationHelper {
     public void animateViewLeftOut(View view) {
         out(view, leftOut);
     }
-
-
 }

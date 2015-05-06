@@ -36,7 +36,7 @@
             android:text="@string/place_image"
             android:textSize="@dimen/general_large_text"/>
 
-        <io.boolio.android.custom.BoolioNetworkImageView
+        <ImageView
             android:id="@+id/create_question_image"
             android:layout_width="match_parent"
             android:layout_height="@dimen/question_image_height"
