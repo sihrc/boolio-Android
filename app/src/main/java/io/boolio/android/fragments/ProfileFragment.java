@@ -2,7 +2,6 @@ package io.boolio.android.fragments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -96,7 +95,7 @@ public class ProfileFragment extends BoolioFragment {
         white_color = getResources().getColor(R.color.white);
         dark_gray = getResources().getColor(R.color.tab_light_gray);
         theme_blue = getResources().getColor(R.color.theme_blue);
-        orange = getResources().getColor(R.color.feed_question_right_color);
+        orange = getResources().getColor(R.color.feed_question_left);
         ServerUser.getInstance(activity).getUserProfile(
                 userId == null ? BoolioUserHandler.getInstance(activity).getUser().userId : userId,
                 new NetworkCallback<User>() {

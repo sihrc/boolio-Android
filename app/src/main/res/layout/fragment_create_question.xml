@@ -72,8 +72,8 @@
                 android:gravity="center"
                 android:hint="@string/create_question_answer_left_hint"
                 android:imeOptions="actionNext"
-                android:textColor="@color/feed_question_left_color"
-                android:textColorHint="@color/feed_question_left_color"/>
+                android:textColor="@color/feed_question_right"
+                android:textColorHint="@color/feed_question_right"/>
 
             <EditText
                 android:id="@+id/create_question_right_answer"
@@ -86,8 +86,8 @@
                 android:gravity="center"
                 android:hint="@string/create_question_answer_right_hint"
                 android:imeOptions="actionDone"
-                android:textColor="@color/feed_question_right_color"
-                android:textColorHint="@color/feed_question_right_color"/>
+                android:textColor="@color/feed_question_left"
+                android:textColorHint="@color/feed_question_left"/>
         </LinearLayout>
 
 

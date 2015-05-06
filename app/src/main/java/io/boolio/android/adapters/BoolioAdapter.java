@@ -43,6 +43,8 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
             holder.question = (TextView) view.findViewById(R.id.question_text);
             holder.leftAnswer = (TextSwitcher) view.findViewById(R.id.question_left_answer);
             holder.rightAnswer = (TextSwitcher) view.findViewById(R.id.question_right_answer);
+            holder.highLeft = (TextView) view.findViewById(R.id.highlighted_left);
+            holder.highRight = (TextView) view.findViewById(R.id.highlighted_right);
             holder.creator = (TextView) view.findViewById(R.id.question_creator);
             holder.date = (TextView) view.findViewById(R.id.question_date);
 
@@ -87,7 +89,7 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
 
     public class QuestionHolder {
         View view;
-        TextView question, creator, date;
+        TextView question, creator, date, highLeft, highRight;
         TextSwitcher leftAnswer, rightAnswer;
         BoolioProfileImage creatorImage;
         NetworkImageView questionImage;
