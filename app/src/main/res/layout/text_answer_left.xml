@@ -4,7 +4,7 @@
           android:layout_height="wrap_content"
           android:background="@drawable/right_answer_button"
           android:gravity="center"
-          android:padding="@dimen/general_padding"
+          android:padding="@dimen/question_answer_padding"
           android:textColor="@color/feed_question_right_color"
           android:textSize="@dimen/button_text_size"
           android:textStyle="bold"/>
