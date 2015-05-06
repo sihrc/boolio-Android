@@ -4,6 +4,7 @@
 
     <!-- Facebook App -->
     <string name="facebook_app_id">952143318149883</string>
+    <string name="gcm_project_id">825321258464</string>
 
     <!-- Content Descriptions -->
     <string name="content_desc_tutorial_image">Fragment tutorial image</string>
@@ -59,4 +60,7 @@
 
     <!--Categories Fragment-->
     <string name="categories_logo">Tags</string>
+
+    <!-- Warnings -->
+    <string name="check_google_play_warning">Please enable Google Play Services to receive notifications about questions!</string>
 </resources>

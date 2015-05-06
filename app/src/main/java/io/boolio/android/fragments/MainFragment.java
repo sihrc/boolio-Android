@@ -41,8 +41,18 @@ public class MainFragment extends BoolioFragment {
         }
     };
 
+    public static MainFragment newInstance(int startFrag) {
+        MainFragment fragment = new MainFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putInt("start", startFrag);
+
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
     public static MainFragment newInstance() {
-        return new MainFragment();
+        return newInstance(FeedFragment.ORDER);
     }
 
     @Override
@@ -146,6 +156,8 @@ public class MainFragment extends BoolioFragment {
                 return fragmentList.size();
             }
         });
+
+        viewPager.setCurrentItem(getArguments().getInt("start"));
     }
 
 
