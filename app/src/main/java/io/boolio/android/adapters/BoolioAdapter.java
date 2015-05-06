@@ -32,6 +32,12 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
         this.context = context;
     }
 
+    public Question remove(int position) {
+        Question question = getItem(position);
+        remove(question);
+        return question;
+    }
+
     @Override
     public View getView(final int position, View view, ViewGroup parent) {
         QuestionHolder holder;

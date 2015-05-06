@@ -9,6 +9,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import io.boolio.android.helpers.BoolioUserHandler;
+import io.boolio.android.models.Question;
 import io.boolio.android.models.User;
 import io.boolio.android.network.parser.UserParser;
 
@@ -78,5 +80,36 @@ public class ServerUser extends BoolioServer {
         }, errorListener);
 
         queue.add(req);
+    }
+
+
+    public void skipQuestion(final Question question) {
+        makeRequest(Request.Method.POST, API.SKIP_QUESTION, new JSONObject() {{
+            try {
+                put("userId", BoolioUserHandler.getInstance(context).getUser().userId);
+                put("id", question.questionId);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }}, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+            }
+        });
+    }
+
+    public void unskipQuestion(final Question question) {
+        makeRequest(Request.Method.POST, API.UNSKIP_QUESTION, new JSONObject() {{
+            try {
+                put("userId", BoolioUserHandler.getInstance(context).getUser().userId);
+                put("id", question.questionId);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }}, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+            }
+        });
     }
 }

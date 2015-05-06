@@ -61,7 +61,7 @@ public class BoolioServer {
 
     // Make HTTP Request
     void makeRequest(int method, final String url, JSONObject jsonObject, final Response.Listener<JSONObject> listener) {
-        Debugger.log(BoolioServer.class, "Making request at " + url);
+        Debugger.log(BoolioServer.class, "Making request at " + url  + "\n with package:\n" + jsonObject.toString());
         queue.add(new JsonObjectRequest(
                 method, url, jsonObject, new Response.Listener<JSONObject>() {
             @Override

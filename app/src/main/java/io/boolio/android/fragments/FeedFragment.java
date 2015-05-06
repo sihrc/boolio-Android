@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.timroes.android.listview.EnhancedListView;
 import io.boolio.android.MainActivity;
 import io.boolio.android.R;
 import io.boolio.android.adapters.BoolioQuestionAdapter;
@@ -20,6 +21,7 @@ import io.boolio.android.gcm.GCMService;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.models.Question;
 import io.boolio.android.network.ServerFeed;
+import io.boolio.android.network.ServerUser;
 
 /**
  * Created by Chris on 4/16/15.
@@ -28,6 +30,7 @@ public class FeedFragment extends BoolioFragment {
     final public static int ORDER = 0;
     final private static int REFRESH_DELAY = 500;
     static FeedFragment instance;
+    List<Question> questionsSkipped;
 
     QuestionsCallback callback = new QuestionsCallback() {
         @Override
@@ -58,6 +61,7 @@ public class FeedFragment extends BoolioFragment {
     public static FeedFragment getInstance(ScrollingListView.ScrollChangeListener scrollListener) {
         instance = new FeedFragment();
         instance.scrollListener = scrollListener;
+        instance.questionsSkipped = new ArrayList<>();
         return instance;
     }
 
@@ -96,13 +100,7 @@ public class FeedFragment extends BoolioFragment {
 
         ScrollingListView listView = (ScrollingListView) rootView.findViewById(R.id.question_feed);
         questionAdapter = new BoolioQuestionAdapter(activity);
-        listView.setAdapter(questionAdapter);
-        listView.setScrollChangeListener(new ScrollingListView.ScrollChangeListener() {
-            @Override
-            public void onScroll(boolean isScrollingUp) {
-                ((MainFragment) getParentFragment()).showNavBar(isScrollingUp);
-            }
-        });
+        setupListView(listView);
 
         BoolioUserHandler.getInstance(activity).setUserCallback(new Runnable() {
             @Override
@@ -118,5 +116,34 @@ public class FeedFragment extends BoolioFragment {
     private void pullQuestions() {
         loadingMessage.setVisibility(View.GONE);
         ServerFeed.getInstance(activity).getQuestionFeed(prevSeenQuestions, callback);
+    }
+
+    private void setupListView(final ScrollingListView scrollingListView) {
+        /** Scrolling List View With Dismiss and Undo **/
+        scrollingListView.setAdapter(questionAdapter);
+        scrollingListView.setDismissCallback(new EnhancedListView.OnDismissCallback() {
+            @Override
+            public EnhancedListView.Undoable onDismiss(EnhancedListView enhancedListView, final int i) {
+                final Question question = questionAdapter.remove(i);
+                questionAdapter.notifyDataSetChanged();
+                ServerUser.getInstance(activity).skipQuestion(question);
+                return new EnhancedListView.Undoable() {
+                    @Override
+                    public void undo() {
+                        questionAdapter.insert(question, i);
+                        questionAdapter.notifyDataSetChanged();
+                        ServerUser.getInstance(activity).unskipQuestion(question);
+                    }
+                };
+            }
+        });
+        scrollingListView.setUndoHideDelay(500);
+        scrollingListView.enableSwipeToDismiss();
+        scrollingListView.setScrollChangeListener(new ScrollingListView.ScrollChangeListener() {
+            @Override
+            public void onScroll(boolean isScrollingUp) {
+                ((MainFragment) getParentFragment()).showNavBar(isScrollingUp);
+            }
+        });
     }
 }

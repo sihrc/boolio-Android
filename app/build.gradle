@@ -57,5 +57,7 @@ dependencies {
     // Google Play Services for GCM
     compile 'com.google.android.gms:play-services-gcm:7.3.0'
     compile 'com.google.android.gms:play-services-analytics:7.3.0'
+    // SwipeListView
+    compile 'de.timroes.android:EnhancedListView:0.3.4'
 
 }

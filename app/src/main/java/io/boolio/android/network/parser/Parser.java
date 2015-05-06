@@ -6,6 +6,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Collection;
+
 /**
  * Created by Chris on 4/16/15.
  */
@@ -59,4 +61,5 @@ public abstract class Parser<T> {
     }
 
     public abstract JSONObject toJSON(T object);
+    public abstract JSONArray toListIDs(Collection<T> objects);
 }

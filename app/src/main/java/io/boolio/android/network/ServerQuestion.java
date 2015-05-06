@@ -7,10 +7,12 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Collection;
+import java.util.List;
 
 import io.boolio.android.callbacks.QuestionsCallback;
 import io.boolio.android.helpers.BoolioUserHandler;
