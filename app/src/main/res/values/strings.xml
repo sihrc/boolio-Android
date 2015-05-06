@@ -1,9 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <resources>
     <!-- General -->
     <string name="app_name">Boolio</string>
 
     <!-- Facebook App -->
     <string name="facebook_app_id">952143318149883</string>
+    <string name="gcm_project_id">825321258464</string>
+
+    <!-- Google Android API Key -->
+    <string name="google_api_key">AIzaSyDYYgGwy7mEProLithc-fx9aLLfwb2UBY0</string>
+    <string name="google_cx_key">007715071266837083845:nqg2-xtnsga</string>
 
     <!-- Content Descriptions -->
     <string name="content_desc_tutorial_image">Fragment tutorial image</string>
@@ -59,4 +65,17 @@
 
     <!--Categories Fragment-->
     <string name="categories_logo">Tags</string>
+
+    <!-- Warnings -->
+    <string name="check_google_play_warning">Please enable Google Play Services to receive notifications about questions!</string>
+    <string name="report_title">Report</string>
+    <string name="report_message">You are about to mark this question as inappropriate.</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- ScrollListView-->
+    <string name="elv_undo">Undo</string>
+    <string name="elv_undo_all">Undo All</string>
+    <string name="elv_item_deleted">Item deleted</string>
+    <string name="elv_n_items_deleted">%1$s items deleted</string>
 </resources>

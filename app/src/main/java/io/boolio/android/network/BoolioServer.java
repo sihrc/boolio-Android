@@ -35,12 +35,11 @@ public class BoolioServer {
         }
     };
 
-
     public BoolioServer(Context context) {
+        this.context = context;
         this.queue = Volley.newRequestQueue(context);
         this.imageLoader = new ImageLoader(queue, new ImageLoader.ImageCache() {
             LruCache<String, Bitmap> cache = new LruCache<>(40);
-
             @Override
             public Bitmap getBitmap(String url) {
                 return cache.get(url);
@@ -56,17 +55,13 @@ public class BoolioServer {
         NukeSSLCerts.nuke();
     }
 
-    public RequestQueue getQueue() {
-        return queue;
-    }
-
     public ImageLoader getImageLoader() {
         return imageLoader;
     }
 
     // Make HTTP Request
     void makeRequest(int method, final String url, JSONObject jsonObject, final Response.Listener<JSONObject> listener) {
-        Debugger.log(BoolioServer.class, "Making request at " + url);
+        Debugger.log(BoolioServer.class, "Making request at " + url  + "\n with package:\n" + jsonObject.toString());
         queue.add(new JsonObjectRequest(
                 method, url, jsonObject, new Response.Listener<JSONObject>() {
             @Override

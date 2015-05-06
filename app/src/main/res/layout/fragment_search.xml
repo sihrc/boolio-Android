@@ -12,17 +12,10 @@
         android:background="@color/theme_blue"
         android:paddingLeft="@dimen/general_padding">
 
-        <EditText
+        <io.boolio.android.custom.BoolioSearchView
             android:id="@+id/search_bar"
-            style="@style/search_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="@string/search_bar_text"
-            android:inputType="textCapSentences"
-            android:singleLine="true"
-            android:background="@android:color/transparent"
-            android:textColor="@android:color/white"
-            android:textColorHint="@color/white" />
+            android:layout_height="match_parent"/>
 
     </FrameLayout>
 
@@ -42,7 +35,7 @@
             android:gravity="center"
             android:padding="@dimen/profile_asked_answered_padding"
             android:text="@string/search_questions_tab_text"
-            android:textColor="@color/feed_question_left_color" />
+            android:textColor="@color/feed_question_right" />
 
         <TextView
             android:id="@+id/search_friends_tab"
@@ -52,7 +45,7 @@
             android:gravity="center"
             android:padding="@dimen/profile_asked_answered_padding"
             android:text="@string/search_friends_tab_text"
-            android:textColor="@color/feed_question_left_color" />
+            android:textColor="@color/feed_question_right" />
 
         <TextView
             android:id="@+id/search_categories_tab"
@@ -62,7 +55,7 @@
             android:gravity="center"
             android:padding="@dimen/profile_asked_answered_padding"
             android:text="@string/search_categories_tab_text"
-            android:textColor="@color/feed_question_left_color" />
+            android:textColor="@color/feed_question_right" />
 
     </LinearLayout>
 

@@ -7,12 +7,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -21,7 +19,9 @@ import java.util.List;
 import io.boolio.android.R;
 import io.boolio.android.adapters.BoolioQuestionAdapter;
 import io.boolio.android.callbacks.QuestionsCallback;
+import io.boolio.android.custom.BoolioSearchView;
 import io.boolio.android.custom.ScrollingListView;
+import io.boolio.android.helpers.Utils;
 import io.boolio.android.models.Question;
 import io.boolio.android.network.ServerFeed;
 
@@ -32,7 +32,7 @@ public class SearchFragment extends BoolioFragment {
     static SearchFragment instance;
     Context context;
 
-    EditText searchBar;
+    BoolioSearchView searchBar;
     ViewPager viewPager;
     TextView questionsTab, friendsTab, categoriesTab;
     boolean isEmpty;
@@ -69,31 +69,32 @@ public class SearchFragment extends BoolioFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_search, container, false);
 
-        searchBar = (EditText) rootView.findViewById(R.id.search_bar);
+        searchBar = (BoolioSearchView) rootView.findViewById(R.id.search_bar);
         viewPager = (ViewPager) rootView.findViewById(R.id.search_view_pager);
         questionsTab = (TextView) rootView.findViewById(R.id.search_questions_tab);
         friendsTab = (TextView) rootView.findViewById(R.id.search_friends_tab);
         categoriesTab = (TextView) rootView.findViewById(R.id.search_categories_tab);
 
-        searchBar.setCompoundDrawablesWithIntrinsicBounds(R.drawable.search, 0, 0, 0);
-        searchBar.addTextChangedListener(new TextWatcher() {
+        searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (viewPager.getCurrentItem() != 0 || s.length() == 0) {
+            public boolean onQueryTextSubmit(String query) {
+                if (viewPager.getCurrentItem() != 0 || query.isEmpty()) {
                     questionsTabAdapter.clear();
                     questionsTabAdapter.notifyDataSetChanged();
                     isEmpty = true;
-                    return;
+                    return false;
                 }
+                searchBar.clearFocus();
+                Utils.hideKeyboard(activity, searchBar);
                 isEmpty = false;
-                searchServer(s.toString());
+                searchServer(query);
+                return false;
             }
 
             @Override
-            public void afterTextChanged(Editable s) {}
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
         });
 
         setupPager();
@@ -135,12 +136,10 @@ public class SearchFragment extends BoolioFragment {
                     friendsTab.setAlpha(.25f);
                     categoriesTab.setAlpha(.25f);
                 } else if (position == 1) {
-                    searchBar.setVisibility(View.GONE);
                     questionsTab.setAlpha(.25f);
                     friendsTab.setAlpha(1f);
                     categoriesTab.setAlpha(.25f);
                 } else {
-                    searchBar.setVisibility(View.GONE);
                     questionsTab.setAlpha(.25f);
                     friendsTab.setAlpha(.25f);
                     categoriesTab.setAlpha(1f);

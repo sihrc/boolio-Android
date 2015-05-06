@@ -38,6 +38,7 @@
     <dimen name="question_image_padding">16dp</dimen>
     <dimen name="question_padding">16dp</dimen>
     <dimen name="question_text_size">20sp</dimen>
+    <dimen name="question_answer_padding">12dp</dimen>
 
     <!-- Feed Fragment -->
     <dimen name="question_user_profile_size">40dp</dimen>
@@ -60,7 +61,12 @@
     <dimen name="profile_asked_answered_padding">12sp</dimen>
 
     <!-- Search Fragment -->
-
     <dimen name="search_padding">16dp</dimen>
+    <dimen name="gallery_image_height">60dp</dimen>
+    <dimen name="grid_spacing">3dp</dimen>
 
+	<!-- The bottom offset the undo popup should have -->
+	<dimen name="elv_undo_bottom_offset">15dp</dimen>
+	<!-- The touch slop you need to cause a swipe instead of a scroll -->
+	<dimen name="elv_touch_slop">32dp</dimen>
 </resources>

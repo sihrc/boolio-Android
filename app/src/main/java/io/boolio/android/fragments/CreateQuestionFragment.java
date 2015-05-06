@@ -1,26 +1,30 @@
 package io.boolio.android.fragments;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import io.boolio.android.R;
 import io.boolio.android.custom.BoolioNetworkImageView;
+import io.boolio.android.fragments.search.SearchImageFragment;
+import io.boolio.android.helpers.BoolioCallback;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.PictureHelper;
-import io.boolio.android.helpers.Utils;
 import io.boolio.android.models.Question;
 import io.boolio.android.network.ServerQuestion;
-import io.boolio.android.network.ServerUser;
 
 /**
  * Created by james on 4/17/15.
@@ -30,7 +34,7 @@ public class CreateQuestionFragment extends BoolioFragment {
     EditText right;
     EditText tags;
     View progress;
-    BoolioNetworkImageView networkImageView;
+    ImageView networkImageView;
     PictureHelper helper;
     Runnable runnable;
     Bitmap imageSaved;
@@ -40,8 +44,13 @@ public class CreateQuestionFragment extends BoolioFragment {
     public static CreateQuestionFragment newInstance(Runnable runnable) {
         CreateQuestionFragment fragment = new CreateQuestionFragment();
         fragment.runnable = runnable;
-        fragment.helper = new PictureHelper();
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        helper = new PictureHelper(activity);
     }
 
     @Override
@@ -49,7 +58,7 @@ public class CreateQuestionFragment extends BoolioFragment {
         helper.onActivityResult(this.getParentFragment(), requestCode, resultCode, data, networkImageView, new PictureHelper.BitmapCallback() {
             @Override
             public void onBitmap(Bitmap bitmap) {
-                networkImageView.setLocalImageBitmap(bitmap);
+                networkImageView.setImageBitmap(bitmap);
                 if (imageType.equals("string")) {
                     imageSaved = bitmap;
                 } else {
@@ -68,27 +77,22 @@ public class CreateQuestionFragment extends BoolioFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_create_question, container, false);
 
+        // Hide Keyboard
+        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
         // Find Views and Buttons
         questionText = (EditText) rootView.findViewById(R.id.create_question_text);
         left = (EditText) rootView.findViewById(R.id.create_question_left_answer);
         right = (EditText) rootView.findViewById(R.id.create_question_right_answer);
-        tags = (EditText) rootView.findViewById(R.id.create_question_tag);
         progress = rootView.findViewById(R.id.progress_bar_saving);
 
-        rootView.findViewById(R.id.create_question_submit).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                submitOnClickSetup();
-            }
-        });
-
-        networkImageView = (BoolioNetworkImageView) rootView.findViewById(R.id.create_question_image);
+        networkImageView = (ImageView) rootView.findViewById(R.id.create_question_image);
         setupImageView();
 
         return rootView;
     }
 
-    private void submitOnClickSetup() {
+    public void submitOnClickSetup() {
         if (questionText.getText().length() == 0 && imageSaved == null) {
             Toast.makeText(activity, "Please enter a question or choose an image", Toast.LENGTH_SHORT).show();
             return;
@@ -101,7 +105,6 @@ public class CreateQuestionFragment extends BoolioFragment {
         question.creatorName = BoolioUserHandler.getInstance(activity).getUser().name;
         question.creatorImage = BoolioUserHandler.getInstance(activity).getUser().profilePic;
         question.creatorId = BoolioUserHandler.getInstance(activity).getUser().userId;
-        question.tags = Utils.parseStringArray(tags.getText().toString());
 
 
         // Upload Image to Server
@@ -134,8 +137,13 @@ public class CreateQuestionFragment extends BoolioFragment {
                                 helper.dispatchTakePictureIntent(activity, CreateQuestionFragment.this.getParentFragment());
                                 break;
                             case 2: // Search
-                                imageType = "url";
-                                Toast.makeText(activity, "Sorry, this isn't implemented yet!", Toast.LENGTH_LONG).show();
+                                imageType = "string";
+                                SearchImageFragment.newInstance(new BoolioCallback<Uri>() {
+                                    @Override
+                                    public void handle(Uri object) {
+                                        helper.dispatchCropPictureIntent(CreateQuestionFragment.this.getParentFragment(), networkImageView, object);
+                                    }
+                                }).show(getChildFragmentManager(), "Search");
                                 break;
                             case 3:
                             default:
@@ -154,11 +162,10 @@ public class CreateQuestionFragment extends BoolioFragment {
     }
 
     private void reset() {
-        networkImageView.setLocalImageBitmap(null);
+        networkImageView.setImageBitmap(null);
         imageSaved = null;
         questionText.setText("");
         left.setText("");
         right.setText("");
-        tags.setText("");
     }
 }
