@@ -135,12 +135,10 @@ public class SearchFragment extends BoolioFragment {
                     friendsTab.setAlpha(.25f);
                     categoriesTab.setAlpha(.25f);
                 } else if (position == 1) {
-                    searchBar.setVisibility(View.GONE);
                     questionsTab.setAlpha(.25f);
                     friendsTab.setAlpha(1f);
                     categoriesTab.setAlpha(.25f);
                 } else {
-                    searchBar.setVisibility(View.GONE);
                     questionsTab.setAlpha(.25f);
                     friendsTab.setAlpha(.25f);
                     categoriesTab.setAlpha(1f);
