@@ -67,16 +67,6 @@ public class Utils {
         return new File(tempFile, System.currentTimeMillis() + ".jpg");
     }
 
-    public static List<String> parseStringArray(String input) {
-        List<String> result = new ArrayList<>();
-        if (input.isEmpty())
-            return result;
-
-        Collections.addAll(result, input.replace(" ", "").split(","));
-
-        return result;
-    }
-
     /**
      * ACCESS PRIVATE METHOD *
      */

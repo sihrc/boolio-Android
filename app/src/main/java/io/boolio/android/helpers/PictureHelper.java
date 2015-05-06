@@ -65,7 +65,7 @@ public class PictureHelper {
         Intent cropIntent = (Intent) Utils.callPrivateMethod(crop, "getIntent", Context.class, context);
         fragment.startActivityForResult(cropIntent, Crop.REQUEST_CROP);
 
-        savedUri = croppedUri;
+        savedUri = inputUri;
 
     }
 
@@ -81,7 +81,7 @@ public class PictureHelper {
                 savedUri = data.getData();
             }
 
-            dispatchCropPictureIntent(fragment, view, Uri.fromFile(new File(context.getFilesDir() + String.valueOf(System.currentTimeMillis()) + ".png")));
+            dispatchCropPictureIntent(fragment, view, savedUri);
             return true;
         }
 
