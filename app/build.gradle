@@ -55,5 +55,7 @@ dependencies {
     // Async GridView
     compile 'org.lucasr.smoothie:smoothie:0.1.0'
     // Google Play Services for GCM
-    compile "com.google.android.gms:play-services:3.1.+"
+    compile 'com.google.android.gms:play-services-gcm:7.3.0'
+    compile 'com.google.android.gms:play-services-analytics:7.3.0'
+
 }
