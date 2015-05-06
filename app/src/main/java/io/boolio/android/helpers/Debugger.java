@@ -21,7 +21,7 @@ public class Debugger {
 
     // Enable Debugging
     public static Map<Class, Boolean> tags = new HashMap<Class, Boolean>() {{
-        put(BoolioServer.class, false);
+        put(BoolioServer.class, true);
     }};
 
     public static void log(Class tag, String msg) {

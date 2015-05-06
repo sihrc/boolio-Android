@@ -67,4 +67,8 @@
 
     <!-- Warnings -->
     <string name="check_google_play_warning">Please enable Google Play Services to receive notifications about questions!</string>
+    <string name="report_title">Report</string>
+    <string name="report_message">You are about to mark this question as inappropriate.</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 </resources>

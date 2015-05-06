@@ -13,8 +13,10 @@ import com.android.volley.toolbox.NetworkImageView;
 import io.boolio.android.R;
 import io.boolio.android.animation.TextAnimation;
 import io.boolio.android.custom.BoolioProfileImage;
+import io.boolio.android.helpers.Dialogs;
 import io.boolio.android.helpers.Utils;
 import io.boolio.android.models.Question;
+import io.boolio.android.network.ServerQuestion;
 import io.boolio.android.network.ServerUser;
 
 /**
@@ -45,6 +47,7 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
             holder.rightAnswer = (TextSwitcher) view.findViewById(R.id.question_right_answer);
             holder.creator = (TextView) view.findViewById(R.id.question_creator);
             holder.date = (TextView) view.findViewById(R.id.question_date);
+            holder.report = view.findViewById(R.id.report_button);
 
             TextAnimation.getInstance(context).FadeTextSwitcher(holder.leftAnswer, R.layout.text_answer_left);
             TextAnimation.getInstance(context).FadeTextSwitcher(holder.rightAnswer, R.layout.text_answer_right);
@@ -76,17 +79,30 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
             holder.questionImage.setVisibility(View.VISIBLE);
         }
 
+        holder.report.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Dialogs.messageDialog(context, R.string.report_title, R.string.report_message, new Runnable() {
+                    @Override
+                    public void run() {
+                        ServerQuestion.getInstance(context).reportQuestion(question.questionId);
+                        remove(question);
+                        notifyDataSetChanged();
+                    }
+                });
+            }
+        });
+
         fillContent(holder, question);
 
         holder.questionImage.setImageUrl(question.image, ServerUser.getInstance(context).getImageLoader());
         holder.creatorImage.setImageUrl(question.creatorImage, ServerUser.getInstance(context).getImageLoader());
-
     }
 
     public abstract void fillContent(QuestionHolder holder, Question question);
 
     public class QuestionHolder {
-        View view;
+        View view, report;
         TextView question, creator, date;
         TextSwitcher leftAnswer, rightAnswer;
         BoolioProfileImage creatorImage;
