@@ -10,11 +10,11 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.timroes.android.listview.EnhancedListView;
 import io.boolio.android.MainActivity;
 import io.boolio.android.R;
 import io.boolio.android.adapters.BoolioQuestionAdapter;
 import io.boolio.android.callbacks.QuestionsCallback;
+import io.boolio.android.custom.EnhancedListView;
 import io.boolio.android.custom.PullToRefreshView;
 import io.boolio.android.custom.ScrollingListView;
 import io.boolio.android.gcm.GCMService;
@@ -30,7 +30,6 @@ public class FeedFragment extends BoolioFragment {
     final public static int ORDER = 0;
     final private static int REFRESH_DELAY = 500;
     static FeedFragment instance;
-    List<Question> questionsSkipped;
 
     QuestionsCallback callback = new QuestionsCallback() {
         @Override
@@ -61,7 +60,6 @@ public class FeedFragment extends BoolioFragment {
     public static FeedFragment getInstance(ScrollingListView.ScrollChangeListener scrollListener) {
         instance = new FeedFragment();
         instance.scrollListener = scrollListener;
-        instance.questionsSkipped = new ArrayList<>();
         return instance;
     }
 

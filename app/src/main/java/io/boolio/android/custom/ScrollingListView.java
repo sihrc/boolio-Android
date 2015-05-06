@@ -2,13 +2,7 @@ package io.boolio.android.custom;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.AbsListView;
-import android.widget.ListView;
-
-import java.lang.reflect.Field;
-
-import de.timroes.android.listview.EnhancedListView;
 
 /**
  * Created by Chris on 4/24/15.

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <resources>
     <!-- General -->
     <string name="app_name">Boolio</string>
@@ -71,4 +72,10 @@
     <string name="report_message">You are about to mark this question as inappropriate.</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+
+    <!-- ScrollListView-->
+    <string name="elv_undo">Undo</string>
+    <string name="elv_undo_all">Undo All</string>
+    <string name="elv_item_deleted">Item deleted</string>
+    <string name="elv_n_items_deleted">%1$s items deleted</string>
 </resources>
