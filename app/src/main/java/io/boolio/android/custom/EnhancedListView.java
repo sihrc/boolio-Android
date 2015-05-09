@@ -313,7 +313,7 @@ public class EnhancedListView extends ListView {
     private OnShouldSwipeCallback mShouldSwipeCallback;
     private UndoStyle mUndoStyle = UndoStyle.SINGLE_POPUP;
     private boolean mTouchBeforeAutoHide = true;
-    private SwipeDirection mSwipeDirection = SwipeDirection.BOTH;
+    private SwipeDirection mSwipeDirection = SwipeDirection.END;
     private int mUndoHideDelay = 5000;
     private int mSwipingLayout;
 
