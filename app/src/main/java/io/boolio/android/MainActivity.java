@@ -48,6 +48,7 @@ public class MainActivity extends FacebookAuth {
 
     @Override
     public void loggedIn(Profile profile) {
+        Log.i("DebugDebug", "here");
         NetworkCallback<User> userCallback = new NetworkCallback<User>() {
             @Override
             public void handle(User object) {

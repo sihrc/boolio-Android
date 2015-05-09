@@ -33,21 +33,6 @@ public class LoginFragment extends BoolioFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_login, container, false);
-
-        // Facebook Login
-        setupFacebookLogin(rootView);
-        return rootView;
-    }
-
-    private void setupFacebookLogin(View rootView) {
-        // Facebook packaged Login Button for Login Functionality
-        final LoginButton fbButton = (LoginButton) rootView.findViewById(R.id.login_button);
-        fbButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LoginManager.getInstance().logInWithReadPermissions(LoginFragment.this, Arrays.asList("public_profile", "user_friends"));
-            }
-        });
+        return inflater.inflate(R.layout.fragment_login, container, false);
     }
 }
