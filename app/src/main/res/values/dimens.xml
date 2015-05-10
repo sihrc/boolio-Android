@@ -39,6 +39,8 @@
     <dimen name="question_padding">16dp</dimen>
     <dimen name="question_text_size">20sp</dimen>
     <dimen name="question_answer_padding">12dp</dimen>
+    <dimen name="addbutton_padding">3dp</dimen>
+    <dimen name="addbutton_size">86dp</dimen>
 
     <!-- Feed Fragment -->
     <dimen name="question_user_profile_size">40dp</dimen>
@@ -46,6 +48,7 @@
     <dimen name="question_text_image_padding">6dp</dimen>
     <dimen name="progress_size">200dp</dimen>
     <dimen name="progress_small_size">80dp</dimen>
+    <dimen name="report_button_size">12dp</dimen>
 
     <!-- Profile Fragment -->
     <dimen name="profile_large_size">20sp</dimen>

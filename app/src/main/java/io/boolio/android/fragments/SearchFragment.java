@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -78,29 +79,34 @@ public class SearchFragment extends BoolioFragment {
         searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if (viewPager.getCurrentItem() != 0 || query.isEmpty()) {
-                    questionsTabAdapter.clear();
-                    questionsTabAdapter.notifyDataSetChanged();
-                    isEmpty = true;
-                    return false;
-                }
                 searchBar.clearFocus();
                 Utils.hideKeyboard(activity, searchBar);
-                isEmpty = false;
-                searchServer(query);
-                return false;
+                return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                return false;
+                return search(newText);
             }
         });
 
         setupPager();
         setupTabOnClick();
 
+        searchBar.clearFocus();
         return rootView;
+    }
+
+    private boolean search(String query) {
+        if (viewPager.getCurrentItem() != 0 || query.isEmpty()) {
+            questionsTabAdapter.clear();
+            questionsTabAdapter.notifyDataSetChanged();
+            isEmpty = true;
+            return false;
+        }
+        isEmpty = false;
+        searchServer(query);
+        return true;
     }
 
     private void searchServer(String query) {

@@ -57,7 +57,7 @@ import io.boolio.android.R;
  * @author Tim Roes <mail@timroes.de>
  */
 public class EnhancedListView extends ListView {
-
+    final static int X_THRESHOLD = 10;
     /**
      * Defines the style in which <i>undos</i> should be displayed and handled in the list.
      * to change the default behavior from {@link #SINGLE_POPUP}.
@@ -313,7 +313,7 @@ public class EnhancedListView extends ListView {
     private OnShouldSwipeCallback mShouldSwipeCallback;
     private UndoStyle mUndoStyle = UndoStyle.SINGLE_POPUP;
     private boolean mTouchBeforeAutoHide = true;
-    private SwipeDirection mSwipeDirection = SwipeDirection.BOTH;
+    private SwipeDirection mSwipeDirection = SwipeDirection.END;
     private int mUndoHideDelay = 5000;
     private int mSwipingLayout;
 
@@ -909,7 +909,9 @@ public class EnhancedListView extends ListView {
      * @return Whether the delta of a swipe is in the right direction.
      */
     private boolean isSwipeDirectionValid(float deltaX) {
-
+        if (Math.abs(deltaX) < X_THRESHOLD ) {
+            return false;
+        }
         int rtlSign = 1;
         // On API level 17 and above, check if we are in a Right-To-Left layout
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {

@@ -15,8 +15,8 @@ public class BoolioAnswerAdapter extends BoolioAdapter {
 
     public BoolioAnswerAdapter(Context context) {
         super(context);
-        this.rightColor = context.getResources().getColor(R.color.feed_question_left);
-        this.leftColor = context.getResources().getColor(R.color.feed_question_right);
+        this.rightColor = context.getResources().getColor(R.color.darker_blue);
+        this.leftColor = context.getResources().getColor(R.color.darker_blue);
         this.white = context.getResources().getColor(android.R.color.transparent);
     }
 

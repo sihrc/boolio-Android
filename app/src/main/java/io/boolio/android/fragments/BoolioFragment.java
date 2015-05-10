@@ -22,13 +22,12 @@ public class BoolioFragment extends Fragment {
         this.activity = (MainActivity) activity;
     }
 
-    public void refreshPage() {
+    @Override
+    public void onResume() {
+        super.onResume();
+        clearFocus();
+    }
 
-    }
-    public void hideKeyBoard(View view) {
-        if (activity == null)
-            return;
-        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
+    public void refreshPage() {}
+    public void clearFocus() {}
 }

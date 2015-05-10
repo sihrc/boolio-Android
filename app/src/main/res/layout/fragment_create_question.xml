@@ -2,6 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:descendantFocusability="beforeDescendants"
+                android:focusableInTouchMode="true"
                 android:background="#fcfcfc">
 
     <RelativeLayout
@@ -28,27 +30,33 @@
         android:layout_below="@id/header_bar"
         android:padding="@dimen/general_padding">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/question_image_height"
-            android:background="@android:color/transparent"
-            android:gravity="center"
-            android:text="@string/place_image"
-            android:textSize="@dimen/general_large_text"/>
+        <RelativeLayout
+            android:id="@+id/create_image_space"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/create_question_image"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/question_image_height"
+                android:background="@drawable/dotted_border"
+                android:scaleType="centerCrop"/>
 
-        <ImageView
-            android:id="@+id/create_question_image"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/question_image_height"
-            android:scaleType="centerCrop"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/insert_picture"
+                android:layout_centerInParent="true"
+                android:scaleType="centerCrop"/>
+        </RelativeLayout>
 
         <EditText
             android:id="@+id/create_question_text"
             style="@style/input_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/create_question_image"
+            android:layout_below="@id/create_image_space"
             android:layout_marginBottom="@dimen/general_padding"
+            android:layout_marginTop="@dimen/general_padding"
             android:gravity="center"
             android:hint="@string/create_question_text_hint"/>
 
@@ -72,8 +80,8 @@
                 android:gravity="center"
                 android:hint="@string/create_question_answer_left_hint"
                 android:imeOptions="actionNext"
-                android:textColor="@color/feed_question_right"
-                android:textColorHint="@color/feed_question_right"/>
+                android:textColor="@color/darker_blue"
+                android:textColorHint="@color/darker_blue"/>
 
             <EditText
                 android:id="@+id/create_question_right_answer"
@@ -86,8 +94,8 @@
                 android:gravity="center"
                 android:hint="@string/create_question_answer_right_hint"
                 android:imeOptions="actionDone"
-                android:textColor="@color/feed_question_left"
-                android:textColorHint="@color/feed_question_left"/>
+                android:textColor="@color/darker_blue"
+                android:textColorHint="@color/darker_blue"/>
         </LinearLayout>
 
 

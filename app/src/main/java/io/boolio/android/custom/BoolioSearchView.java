@@ -44,8 +44,8 @@ public class BoolioSearchView extends SearchView {
                 null);
         TextView textView = (TextView) findViewById(id);
         textView.setSingleLine();
-        textView.setTextColor(context.getResources().getColor(R.color.white));
-        textView.setHintTextColor(context.getResources().getColor(R.color.white));
+        textView.setTextColor(context.getResources().getColor(R.color.text_white));
+        textView.setHintTextColor(context.getResources().getColor(R.color.text_white));
 
         /** Other Attributes **/
         setQueryHint(context.getString(R.string.search_bar_text));
