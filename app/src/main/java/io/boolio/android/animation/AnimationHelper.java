@@ -13,7 +13,7 @@ import io.boolio.android.R;
 public class AnimationHelper {
     static AnimationHelper instance;
 
-    public Animation bottomOut, bottomIn, topOut, topIn, rightIn, rightOut, leftIn, leftOut;
+    public Animation bottomOut, bottomIn, topOut, topIn, rightIn, rightOut, leftIn, leftOut, fadeIn, fadeOut;
 
     Context context;
 
@@ -31,6 +31,8 @@ public class AnimationHelper {
         rightOut = AnimationUtils.loadAnimation(context, R.anim.right_out);
         leftIn = AnimationUtils.loadAnimation(context, R.anim.left_in);
         leftOut = AnimationUtils.loadAnimation(context, R.anim.left_out);
+        fadeIn = AnimationUtils.loadAnimation(context, R.anim.fade_in);
+        fadeOut = AnimationUtils.loadAnimation(context, R.anim.fade_out);
     }
 
     public static AnimationHelper getInstance(Context context) {
@@ -84,5 +86,13 @@ public class AnimationHelper {
 
     public void animateViewLeftOut(View view) {
         out(view, leftOut);
+    }
+
+    public void animateViewFadeIn(View view) {
+        in(view, fadeIn);
+    }
+
+    public void animateViewFadeOut(View view) {
+        out(view, fadeOut);
     }
 }
