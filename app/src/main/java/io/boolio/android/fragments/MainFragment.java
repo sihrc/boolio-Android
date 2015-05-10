@@ -3,12 +3,10 @@ package io.boolio.android.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,13 +38,6 @@ public class MainFragment extends BoolioFragment {
     ViewPager viewPager;
 
     List<BoolioFragment> fragmentList;
-    ScrollingListView.ScrollChangeListener changeListener = new ScrollingListView.ScrollChangeListener() {
-        @Override
-        public void onScroll(boolean isScrollingUp) {
-            showNavBar(isScrollingUp);
-        }
-    };
-
     public static MainFragment newInstance(int startFrag) {
         MainFragment fragment = new MainFragment();
 
@@ -113,15 +104,15 @@ public class MainFragment extends BoolioFragment {
 
     private void setupViewPager() {
         fragmentList = new ArrayList<BoolioFragment>() {{
-            add(FeedFragment.getInstance(changeListener));
-            add(ProfileFragment.newInstance(BoolioUserHandler.getInstance(activity).getUser().userId, changeListener));
+            add(FeedFragment.getInstance());
+            add(ProfileFragment.newInstance(BoolioUserHandler.getInstance(activity).getUser().userId));
             add(CreateQuestionFragment.newInstance(new Runnable() {
                 @Override
                 public void run() {
                     navBar.getChildAt(0).callOnClick();
                 }
             }));
-            add(SearchFragment.getInstance(changeListener));
+            add(SearchFragment.getInstance());
             add(FriendsFragment.getInstance());
         }};
 
@@ -142,7 +133,7 @@ public class MainFragment extends BoolioFragment {
                         navBarAddSend.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                ((CreateQuestionFragment)fragmentList.get(2)).submitOnClickSetup();
+                                ((CreateQuestionFragment) fragmentList.get(2)).submitOnClickSetup();
                             }
                         });
 

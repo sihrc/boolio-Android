@@ -13,6 +13,7 @@ import java.util.List;
 import io.boolio.android.MainActivity;
 import io.boolio.android.R;
 import io.boolio.android.adapters.BoolioQuestionAdapter;
+import io.boolio.android.animation.AnimationHelper;
 import io.boolio.android.callbacks.QuestionsCallback;
 import io.boolio.android.custom.EnhancedListView;
 import io.boolio.android.custom.PullToRefreshView;
@@ -42,8 +43,7 @@ public class FeedFragment extends BoolioFragment {
                     questionAdapter.notifyDataSetChanged();
                     pullToRefreshLayout.setRefreshing(false);
                     gifLoading.setVisibility(View.GONE);
-                    if (questionAdapter.getCount() == 0)
-                        loadingMessage.setVisibility(View.VISIBLE);
+                    emptyBear.setVisibility(questionAdapter.getCount() == 0 ? View.VISIBLE : View.GONE);
                     GCMService.clearFeedUpdate(activity);
                 }
             }, REFRESH_DELAY);
@@ -53,13 +53,11 @@ public class FeedFragment extends BoolioFragment {
     PullToRefreshView pullToRefreshLayout;
     BoolioQuestionAdapter questionAdapter;
     List<String> prevSeenQuestions;
-    View gifLoading, loadingMessage;
+    View gifLoading, emptyBear;
     View headerBar;
-    ScrollingListView.ScrollChangeListener scrollListener;
 
-    public static FeedFragment getInstance(ScrollingListView.ScrollChangeListener scrollListener) {
+    public static FeedFragment getInstance() {
         instance = new FeedFragment();
-        instance.scrollListener = scrollListener;
         return instance;
     }
 
@@ -83,7 +81,7 @@ public class FeedFragment extends BoolioFragment {
         View rootView = inflater.inflate(R.layout.fragment_feed, container, false);
 
         gifLoading = rootView.findViewById(R.id.gif_loading);
-        loadingMessage = rootView.findViewById(R.id.empty_list_message);
+        emptyBear = rootView.findViewById(R.id.empty_list_message);
         headerBar = rootView.findViewById(R.id.header_bar);
 
         pullToRefreshLayout = (PullToRefreshView) rootView.findViewById(R.id.ptr_layout);
@@ -111,12 +109,18 @@ public class FeedFragment extends BoolioFragment {
     }
 
     private void pullQuestions() {
-        loadingMessage.setVisibility(View.GONE);
+        emptyBear.setVisibility(View.GONE);
         ServerFeed.getInstance(activity).getQuestionFeed(prevSeenQuestions, callback);
     }
 
     private void setupListView(final ScrollingListView scrollingListView) {
         /** Scrolling List View With Dismiss and Undo **/
+        questionAdapter.setOnEmpty(new Runnable() {
+            @Override
+            public void run() {
+                AnimationHelper.getInstance(activity).animateViewFadeIn(emptyBear);
+            }
+        });
         scrollingListView.setAdapter(questionAdapter);
         scrollingListView.setDismissCallback(new EnhancedListView.OnDismissCallback() {
             @Override

@@ -2,9 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="#fcfcfc"
                 android:descendantFocusability="beforeDescendants"
-                android:focusableInTouchMode="true"
-                android:background="#fcfcfc">
+                android:focusableInTouchMode="true">
 
     <RelativeLayout
         android:id="@+id/header_bar"
@@ -34,18 +34,19 @@
             android:id="@+id/create_image_space"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/insert_picture"/>
+
             <ImageView
                 android:id="@+id/create_question_image"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/question_image_height"
                 android:background="@drawable/dotted_border"
-                android:scaleType="centerCrop"/>
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/insert_picture"
-                android:layout_centerInParent="true"
                 android:scaleType="centerCrop"/>
         </RelativeLayout>
 

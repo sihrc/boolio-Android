@@ -58,7 +58,6 @@ public class ProfileFragment extends BoolioFragment {
     TextView answerView, askedView;
     BoolioAnswerAdapter askedAdapter, answeredAdapter;
     List<BoolioListFragment> fragmentList;
-    ScrollingListView.ScrollChangeListener scrollChangeListener;
 
     int white_color, dark_gray, theme_blue;
 
@@ -80,12 +79,9 @@ public class ProfileFragment extends BoolioFragment {
         }
     };
 
-    public static ProfileFragment newInstance(String userId, ScrollingListView.ScrollChangeListener scrollChangeListener) {
+    public static ProfileFragment newInstance(String userId) {
         ProfileFragment fragment = new ProfileFragment();
-
         fragment.userId = userId;
-        fragment.scrollChangeListener = scrollChangeListener;
-
         return fragment;
     }
 
@@ -176,8 +172,18 @@ public class ProfileFragment extends BoolioFragment {
         askedAdapter = new BoolioAnswerAdapter(activity);
         answeredAdapter = new BoolioAnswerAdapter(activity);
         fragmentList = new ArrayList<BoolioListFragment>() {{
-            add(BoolioListFragment.newInstance(askedAdapter, scrollChangeListener));
-            add(BoolioListFragment.newInstance(answeredAdapter, scrollChangeListener));
+            add(BoolioListFragment.newInstance(askedAdapter, new ScrollingListView.ScrollChangeListener() {
+                @Override
+                public void onScroll(boolean isScrollingUp) {
+                    ((MainFragment) getParentFragment()).showNavBar(isScrollingUp);
+                }
+            }));
+            add(BoolioListFragment.newInstance(answeredAdapter, new ScrollingListView.ScrollChangeListener() {
+                @Override
+                public void onScroll(boolean isScrollingUp) {
+                    ((MainFragment) getParentFragment()).showNavBar(isScrollingUp);
+                }
+            }));
         }};
 
 
