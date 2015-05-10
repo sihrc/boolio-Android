@@ -12,17 +12,16 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import io.boolio.android.R;
-import io.boolio.android.custom.BoolioNetworkImageView;
 import io.boolio.android.fragments.search.SearchImageFragment;
 import io.boolio.android.helpers.BoolioCallback;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.PictureHelper;
+import io.boolio.android.helpers.Utils;
 import io.boolio.android.models.Question;
 import io.boolio.android.network.ServerQuestion;
 
@@ -32,14 +31,14 @@ import io.boolio.android.network.ServerQuestion;
 public class CreateQuestionFragment extends BoolioFragment {
     EditText left;
     EditText right;
-    EditText tags;
+    EditText questionText;
+
     View progress;
     ImageView networkImageView;
     PictureHelper helper;
     Runnable runnable;
     Bitmap imageSaved;
     String imageType = "";
-    private EditText questionText;
 
     public static CreateQuestionFragment newInstance(Runnable runnable) {
         CreateQuestionFragment fragment = new CreateQuestionFragment();
@@ -76,9 +75,6 @@ public class CreateQuestionFragment extends BoolioFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_create_question, container, false);
-
-        // Hide Keyboard
-        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         // Find Views and Buttons
         questionText = (EditText) rootView.findViewById(R.id.create_question_text);

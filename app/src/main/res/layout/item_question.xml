@@ -51,9 +51,8 @@
             <ImageView
                 android:id="@+id/report_button"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/report_button_size"
+                android:layout_height="@dimen/report_button_size"
                 android:background="@drawable/report"/>
         </RelativeLayout>
 

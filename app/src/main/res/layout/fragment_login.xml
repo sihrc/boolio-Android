@@ -17,8 +17,7 @@
     <com.facebook.login.widget.LoginButton
         android:id="@+id/login_button"
         android:layout_width="wrap_content"
-        android:paddingLeft="@dimen/general_padding"
-        android:paddingRight="@dimen/general_padding"
+        android:padding="@dimen/general_padding"
         android:layout_height="@dimen/login_facebook_height"
         android:layout_gravity="center_horizontal"/>
 </LinearLayout>

@@ -29,6 +29,7 @@ import io.boolio.android.custom.BoolioProfileImage;
 import io.boolio.android.custom.ScrollingListView;
 import io.boolio.android.gcm.GCMService;
 import io.boolio.android.helpers.BoolioUserHandler;
+import io.boolio.android.helpers.PrefsHelper;
 import io.boolio.android.models.Question;
 import io.boolio.android.models.User;
 import io.boolio.android.network.ServerQuestion;
@@ -97,7 +98,7 @@ public class ProfileFragment extends BoolioFragment {
         theme_blue = getResources().getColor(R.color.theme_blue);
         orange = getResources().getColor(R.color.feed_question_left);
         ServerUser.getInstance(activity).getUserProfile(
-                userId == null ? BoolioUserHandler.getInstance(activity).getUser().userId : userId,
+                userId == null ? PrefsHelper.getInstance(activity).getString("userId") : userId,
                 new NetworkCallback<User>() {
                     @Override
                     public void handle(User user) {
@@ -120,7 +121,6 @@ public class ProfileFragment extends BoolioFragment {
                         ServerQuestion.getInstance(activity).getQuestions(user.questionsAsked, askedCallback);
                     }
                 });
-        hideKeyBoard(profileUsername);
     }
 
     /**
