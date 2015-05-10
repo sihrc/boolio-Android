@@ -55,11 +55,9 @@ public class FeedFragment extends BoolioFragment {
     List<String> prevSeenQuestions;
     View gifLoading, emptyBear;
     View headerBar;
-    ScrollingListView.ScrollChangeListener scrollListener;
 
-    public static FeedFragment getInstance(ScrollingListView.ScrollChangeListener scrollListener) {
+    public static FeedFragment getInstance() {
         instance = new FeedFragment();
-        instance.scrollListener = scrollListener;
         return instance;
     }
 

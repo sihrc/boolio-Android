@@ -39,7 +39,6 @@ public class SearchFragment extends BoolioFragment {
     boolean isEmpty;
 
     List<BoolioListFragment> fragmentList;
-    ScrollingListView.ScrollChangeListener scrollChangeListener;
 
     BoolioQuestionAdapter questionsTabAdapter, friendsTabAdapter, categoriesTabAdapter;
     QuestionsCallback questionsCallback = new QuestionsCallback() {
@@ -52,10 +51,9 @@ public class SearchFragment extends BoolioFragment {
         }
     };
 
-    public static SearchFragment getInstance(ScrollingListView.ScrollChangeListener scrollChangeListener) {
+    public static SearchFragment getInstance() {
         if (instance == null) {
             instance = new SearchFragment();
-            instance.scrollChangeListener = scrollChangeListener;
         }
         return instance;
     }
@@ -123,7 +121,12 @@ public class SearchFragment extends BoolioFragment {
         categoriesTabAdapter = new BoolioQuestionAdapter(context);
         fragmentList = new ArrayList<BoolioListFragment>() {
             {
-                add(BoolioListFragment.newInstance(questionsTabAdapter, null));
+                add(BoolioListFragment.newInstance(questionsTabAdapter, new ScrollingListView.ScrollChangeListener() {
+                    @Override
+                    public void onScroll(boolean isScrollingUp) {
+                        ((MainFragment) getParentFragment()).showNavBar(isScrollingUp);
+                    }
+                }));
                 add(ComingSoonFragment.newInstance("Search for friends coming soon!"));
                 add(ComingSoonFragment.newInstance("Search for tags coming soon!"));
             }
