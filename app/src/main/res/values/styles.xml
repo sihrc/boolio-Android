@@ -108,4 +108,10 @@
         <item name="android:textSize">@dimen/button_text_size</item>
         <item name="android:textStyle">bold</item>
     </style>
+
+    <style name="view_pager_title" parent="@android:style/Widget.TextView">
+        <item name="android:gravity">center</item>
+        <item name="android:padding">@dimen/profile_asked_answered_padding</item>
+        <item name="android:textColor">@color/feed_question_right</item>
+    </style>
 </resources>

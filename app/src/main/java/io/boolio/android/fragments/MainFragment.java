@@ -110,7 +110,7 @@ public class MainFragment extends BoolioFragment {
                 }
             }));
             add(SearchFragment.getInstance(changeListener));
-            add(CategoriesFragment.getInstance());
+            add(FriendsFragment.getInstance());
         }};
 
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {

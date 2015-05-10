@@ -54,7 +54,7 @@ public class MainActivity extends FacebookAuth {
             public void handle(User object) {
                 BoolioUserHandler.getInstance(MainActivity.this).setUser(object);
                 GCMHelper.getInstance(MainActivity.this).getRegistrationId();
-                fragmentManager.beginTransaction().replace(R.id.container, MainFragment.newInstance(parseIntent(getIntent()))).commit();
+                fragmentManager.beginTransaction().replace(R.id.container, MainFragment.newInstance(parseIntent(getIntent()))).commitAllowingStateLoss();
                 PrefsHelper.getInstance(MainActivity.this).saveString("userId", object.userId);
             }
         };
