@@ -26,6 +26,7 @@ import io.boolio.android.animation.AnimationHelper;
 import io.boolio.android.custom.ScrollingListView;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.PictureHelper;
+import io.boolio.android.helpers.Utils;
 
 /**
  * Created by Chris on 4/28/15.
@@ -149,6 +150,8 @@ public class MainFragment extends BoolioFragment {
                         navBarAddSend.setVisibility(View.GONE);
                     }
                 }
+                Utils.hideKeyboard(activity);
+
             }
 
             @Override
