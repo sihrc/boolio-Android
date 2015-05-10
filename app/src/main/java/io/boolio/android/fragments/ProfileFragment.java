@@ -29,6 +29,7 @@ import io.boolio.android.custom.BoolioProfileImage;
 import io.boolio.android.custom.ScrollingListView;
 import io.boolio.android.gcm.GCMService;
 import io.boolio.android.helpers.BoolioUserHandler;
+import io.boolio.android.helpers.PrefsHelper;
 import io.boolio.android.models.Question;
 import io.boolio.android.models.User;
 import io.boolio.android.network.ServerQuestion;
@@ -59,7 +60,7 @@ public class ProfileFragment extends BoolioFragment {
     List<BoolioListFragment> fragmentList;
     ScrollingListView.ScrollChangeListener scrollChangeListener;
 
-    int white_color, dark_gray, theme_blue, orange;
+    int white_color, dark_gray, theme_blue;
 
     // Question Request Callbacks
     QuestionsCallback askedCallback = new QuestionsCallback() {
@@ -94,10 +95,9 @@ public class ProfileFragment extends BoolioFragment {
         user = BoolioUserHandler.getInstance(activity).getUser();
         white_color = getResources().getColor(R.color.white);
         dark_gray = getResources().getColor(R.color.tab_light_gray);
-        theme_blue = getResources().getColor(R.color.theme_blue);
-        orange = getResources().getColor(R.color.feed_question_left);
+        theme_blue = getResources().getColor(R.color.darker_blue);
         ServerUser.getInstance(activity).getUserProfile(
-                userId == null ? BoolioUserHandler.getInstance(activity).getUser().userId : userId,
+                userId == null ? PrefsHelper.getInstance(activity).getString("userId") : userId,
                 new NetworkCallback<User>() {
                     @Override
                     public void handle(User user) {
@@ -120,7 +120,6 @@ public class ProfileFragment extends BoolioFragment {
                         ServerQuestion.getInstance(activity).getQuestions(user.questionsAsked, askedCallback);
                     }
                 });
-        hideKeyBoard(profileUsername);
     }
 
     /**
@@ -193,7 +192,7 @@ public class ProfileFragment extends BoolioFragment {
                     answerView.setBackgroundColor(dark_gray);
                     askedView.setBackgroundColor(white_color);
                     answerView.setTextColor(white_color);
-                    askedView.setTextColor(orange);
+                    askedView.setTextColor(theme_blue);
                 } else {
                     askedView.setBackgroundColor(dark_gray);
                     answerView.setBackgroundColor(white_color);

@@ -66,7 +66,6 @@ public class BoolioListFragment extends BoolioFragment {
         });
         listView.setAdapter(questionAdapter);
         listView.setScrollChangeListener(scrollChangeListener);
-        hideKeyBoard(listView);
 
         return rootView;
     }

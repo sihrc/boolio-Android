@@ -39,7 +39,6 @@
     </style>
 
     <style name="profile_large_text" parent="@android:style/Widget.TextView">
-        <item name="android:textColor">@color/profile_text_color</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:textSize">@dimen/profile_large_size</item>
     </style>
@@ -53,7 +52,7 @@
     </style>
 
     <style name="profile_big_text_in" parent="@android:style/Widget.TextView">
-        <item name="android:textColor">@color/profile_text_white</item>
+        <item name="android:textColor">@color/text_white</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">@dimen/profile_large_size</item>
@@ -61,13 +60,12 @@
 
 
     <style name="profile_medium_text" parent="@android:style/Widget.TextView">
-        <item name="android:textColor">@color/profile_text_color</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">@dimen/profile_medium_size</item>
     </style>
 
     <style name="profile_medium_text_in" parent="@android:style/Widget.TextView">
-        <item name="android:textColor">@color/profile_text_white</item>
+        <item name="android:textColor">@color/text_white</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">@dimen/profile_medium_size</item>
     </style>
@@ -75,7 +73,6 @@
     <style name="profile_small_text" parent="@android:style/Widget.TextView">
         <item name="android:textSize">@dimen/profile_small_size</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/profile_text_color</item>
         <item name="android:alpha">.5</item>
     </style>
 
@@ -98,8 +95,8 @@
         <item name="android:inputType">textCapSentences</item>
         <item name="android:padding">10dp</item>
         <item name="android:singleLine">true</item>
-        <item name="android:textColor">@color/feed_question_left</item>
-        <item name="android:textColorHint">@color/feed_question_left</item>
+        <item name="android:textColor">@color/darker_blue</item>
+        <item name="android:textColorHint">@color/darker_blue</item>
     </style>
 
     <style name="answer_style" parent="@android:style/Widget.TextView">
@@ -112,6 +109,6 @@
     <style name="view_pager_title" parent="@android:style/Widget.TextView">
         <item name="android:gravity">center</item>
         <item name="android:padding">@dimen/profile_asked_answered_padding</item>
-        <item name="android:textColor">@color/feed_question_right</item>
+        <item name="android:textColor">@color/darker_blue</item>
     </style>
 </resources>

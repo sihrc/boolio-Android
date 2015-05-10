@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -92,6 +93,7 @@ public class SearchFragment extends BoolioFragment {
         setupPager();
         setupTabOnClick();
 
+        searchBar.clearFocus();
         return rootView;
     }
 

@@ -61,6 +61,7 @@ public abstract class ContactsAdapter extends ArrayAdapter<Contact> {
     @Override
     public void notifyDataSetChanged() {
         Collections.sort(contacts, comparator);
+        super.notifyDataSetChanged();
     }
 
     private void loadContacts() {
