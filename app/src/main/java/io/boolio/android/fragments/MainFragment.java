@@ -1,14 +1,19 @@
 package io.boolio.android.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 
 import com.soundcloud.android.crop.Crop;
@@ -21,12 +26,13 @@ import io.boolio.android.animation.AnimationHelper;
 import io.boolio.android.custom.ScrollingListView;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.PictureHelper;
+import io.boolio.android.helpers.Utils;
 
 /**
  * Created by Chris on 4/28/15.
  */
 public class MainFragment extends BoolioFragment {
-    final static float selectedAlpha = .5f;
+    final static float selectedAlpha = .75f;
 
     // Nav-bar views
     LinearLayout navBar;
@@ -71,7 +77,13 @@ public class MainFragment extends BoolioFragment {
         navBarAdd = rootView.findViewById(R.id.nav_bar_add);
         navBarAddSend = rootView.findViewById(R.id.nav_bar_add_send);
 
+        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+
         viewPager = (ViewPager) rootView.findViewById(R.id.main_view_pager);
+
+        ((InputMethodManager)activity.getSystemService(Context.INPUT_METHOD_SERVICE))
+                .hideSoftInputFromWindow(viewPager.getWindowToken(), 0);
 
         setupNavigationBar();
         setupViewPager();
@@ -95,7 +107,7 @@ public class MainFragment extends BoolioFragment {
         feedButton.setOnClickListener(getNavClickListener(0, null));
         navBar.findViewById(R.id.nav_bar_profile).setOnClickListener(getNavClickListener(1, null));
         navBar.findViewById(R.id.nav_bar_search).setOnClickListener(getNavClickListener(3, null));
-        navBar.findViewById(R.id.nav_bar_category).setOnClickListener(getNavClickListener(4, null));
+        navBar.findViewById(R.id.nav_bar_friends).setOnClickListener(getNavClickListener(4, null));
 
     }
 
@@ -110,7 +122,7 @@ public class MainFragment extends BoolioFragment {
                 }
             }));
             add(SearchFragment.getInstance(changeListener));
-            add(CategoriesFragment.getInstance());
+            add(FriendsFragment.getInstance());
         }};
 
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -134,10 +146,12 @@ public class MainFragment extends BoolioFragment {
                             }
                         });
 
-                    } else{
+                    } else {
                         navBarAddSend.setVisibility(View.GONE);
                     }
                 }
+                Utils.hideKeyboard(activity);
+
             }
 
             @Override

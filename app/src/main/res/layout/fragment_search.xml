@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
     android:id="@+id/search_rellayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -10,7 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/header_height"
         android:background="@color/theme_blue"
-        android:paddingLeft="@dimen/general_padding">
+        android:paddingLeft="@dimen/general_padding"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true">
 
         <io.boolio.android.custom.BoolioSearchView
             android:id="@+id/search_bar"
@@ -29,33 +32,27 @@
 
         <TextView
             android:id="@+id/search_questions_tab"
+            style="@style/view_pager_title"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
-            android:padding="@dimen/profile_asked_answered_padding"
-            android:text="@string/search_questions_tab_text"
-            android:textColor="@color/feed_question_right" />
+            android:text="@string/search_questions_tab_text"/>
 
         <TextView
             android:id="@+id/search_friends_tab"
+            style="@style/view_pager_title"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
-            android:padding="@dimen/profile_asked_answered_padding"
-            android:text="@string/search_friends_tab_text"
-            android:textColor="@color/feed_question_right" />
+            android:text="@string/search_friends_tab_text"/>
 
         <TextView
             android:id="@+id/search_categories_tab"
+            style="@style/view_pager_title"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
-            android:padding="@dimen/profile_asked_answered_padding"
-            android:text="@string/search_categories_tab_text"
-            android:textColor="@color/feed_question_right" />
+            android:text="@string/search_categories_tab_text"/>
 
     </LinearLayout>
 
@@ -63,7 +60,7 @@
         android:id="@+id/search_view_pager"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@id/search_tab_layout" />
+        android:layout_below="@id/search_tab_layout"/>
 
 
 </RelativeLayout>

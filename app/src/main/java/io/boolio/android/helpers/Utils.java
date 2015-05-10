@@ -1,5 +1,6 @@
 package io.boolio.android.helpers;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -192,8 +193,15 @@ public class Utils {
         }
     };
 
-    public static void hideKeyboard(Context context, View view) {
-        InputMethodManager imm = (InputMethodManager) context.getSystemService(
+    public static void hideKeyboard(Activity activity) {
+        View view = activity.getCurrentFocus();
+        hideKeyboard(activity, view);
+    }
+
+    public static void hideKeyboard(Activity activity, View view) {
+        if (view == null)
+            return;
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(
                 Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }

@@ -76,7 +76,6 @@ public class FeedFragment extends BoolioFragment {
         if (questionAdapter.getCount() == 0) {
             gifLoading.setVisibility(View.VISIBLE);
         }
-        hideKeyBoard(headerBar);
     }
 
     @Override
