@@ -17,6 +17,7 @@ import io.boolio.android.gcm.GCMHelper;
 import io.boolio.android.helpers.ApplicationCheckHelper;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.FacebookAuth;
+import io.boolio.android.helpers.PrefsHelper;
 import io.boolio.android.models.User;
 import io.boolio.android.network.ServerUser;
 import io.boolio.android.network.NetworkCallback;
@@ -48,13 +49,13 @@ public class MainActivity extends FacebookAuth {
 
     @Override
     public void loggedIn(Profile profile) {
-        Log.i("DebugDebug", "here");
         NetworkCallback<User> userCallback = new NetworkCallback<User>() {
             @Override
             public void handle(User object) {
                 BoolioUserHandler.getInstance(MainActivity.this).setUser(object);
                 GCMHelper.getInstance(MainActivity.this).getRegistrationId();
                 fragmentManager.beginTransaction().replace(R.id.container, MainFragment.newInstance(parseIntent(getIntent()))).commit();
+                PrefsHelper.getInstance(MainActivity.this).saveString("userId", object.userId);
             }
         };
 
