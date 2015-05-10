@@ -78,22 +78,14 @@ public class SearchFragment extends BoolioFragment {
         searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if (viewPager.getCurrentItem() != 0 || query.isEmpty()) {
-                    questionsTabAdapter.clear();
-                    questionsTabAdapter.notifyDataSetChanged();
-                    isEmpty = true;
-                    return false;
-                }
                 searchBar.clearFocus();
                 Utils.hideKeyboard(activity, searchBar);
-                isEmpty = false;
-                searchServer(query);
-                return false;
+                return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                return false;
+                return search(newText);
             }
         });
 
@@ -101,6 +93,18 @@ public class SearchFragment extends BoolioFragment {
         setupTabOnClick();
 
         return rootView;
+    }
+
+    private boolean search(String query) {
+        if (viewPager.getCurrentItem() != 0 || query.isEmpty()) {
+            questionsTabAdapter.clear();
+            questionsTabAdapter.notifyDataSetChanged();
+            isEmpty = true;
+            return false;
+        }
+        isEmpty = false;
+        searchServer(query);
+        return true;
     }
 
     private void searchServer(String query) {
