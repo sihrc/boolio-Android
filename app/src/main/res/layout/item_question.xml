@@ -53,6 +53,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_width="@dimen/report_button_size"
                 android:layout_height="@dimen/report_button_size"
+                android:padding="@dimen/report_button_padding"
                 android:background="@drawable/report"/>
         </RelativeLayout>
 

@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.facebook.login.LoginManager;
 import com.facebook.login.widget.LoginButton;
@@ -33,6 +34,22 @@ public class LoginFragment extends BoolioFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_login, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_login, container, false);
+
+        Button loginButton = (Button) rootView.findViewById(R.id.login_button);
+
+        final LoginButton fbButton = (LoginButton) rootView.findViewById(R.id.fb_login);
+        fbButton.invalidate();
+        loginButton.setCompoundDrawablesWithIntrinsicBounds(
+                fbButton.getCompoundDrawables()[0], null, null, null);
+        loginButton.invalidate();
+
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fbButton.performClick();
+            }
+        });
+        return rootView;
     }
 }

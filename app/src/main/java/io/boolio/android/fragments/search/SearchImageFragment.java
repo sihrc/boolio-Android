@@ -38,7 +38,7 @@ import io.boolio.android.network.ServerGoogle;
  */
 public class SearchImageFragment extends DialogFragment {
     BoolioCallback<Uri> callback;
-    Context context;
+    Activity activity;
     GalleryAdapter galleryAdapter;
 
     // Image Loading
@@ -61,8 +61,8 @@ public class SearchImageFragment extends DialogFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        this.context = activity;
-        this.imageLoader = ServerGoogle.getInstance(context).getImageLoader();
+        this.activity = activity;
+        this.imageLoader = ServerGoogle.getInstance(activity).getImageLoader();
     }
 
     @Nullable
@@ -76,7 +76,7 @@ public class SearchImageFragment extends DialogFragment {
             public boolean onQueryTextSubmit(String query) {
                 galleryAdapter.clear();
                 progress.setVisibility(View.VISIBLE);
-                ServerGoogle.getInstance(context).getImages(query, new NetworkCallback<List<SearchImage>>() {
+                ServerGoogle.getInstance(activity).getImages(query, new NetworkCallback<List<SearchImage>>() {
                     @Override
                     public void handle(List<SearchImage> object) {
                         if (galleryAdapter != null) {
@@ -87,6 +87,8 @@ public class SearchImageFragment extends DialogFragment {
                         progress.setVisibility(View.GONE);
                     }
                 });
+                searchView.clearFocus();
+                Utils.hideKeyboard(activity, searchView);
                 return false;
             }
 
@@ -97,7 +99,7 @@ public class SearchImageFragment extends DialogFragment {
         });
 
         // Setup GridView
-        galleryAdapter = new GalleryAdapter(context);
+        galleryAdapter = new GalleryAdapter(activity);
         AsyncGridView asyncGridView = (AsyncGridView) rootView.findViewById(R.id.search_grid_view);
         asyncGridView.setAdapter(galleryAdapter);
         asyncGridView.setNumColumns(3);
@@ -112,14 +114,14 @@ public class SearchImageFragment extends DialogFragment {
     }
 
     private void showImagePreviewDialog(final Bitmap currBitmap) {
-        ImageView preview = new ImageView(context);
+        ImageView preview = new ImageView(activity);
         preview.setImageBitmap(currBitmap);
-        new AlertDialog.Builder(context)
+        new AlertDialog.Builder(activity)
                 .setView(preview)
                 .setPositiveButton("CROP", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Utils.saveBitmapToUri(context, currBitmap, new Runnable() {
+                        Utils.saveBitmapToUri(activity, currBitmap, new Runnable() {
                             @Override
                             public void run() {
                                 progress.setVisibility(View.VISIBLE);
@@ -153,7 +155,7 @@ public class SearchImageFragment extends DialogFragment {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, "Sorry, this image is unavailable", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "Sorry, this image is unavailable", Toast.LENGTH_SHORT).show();
             }
         }, MainActivity.SCREEN_WIDTH, MainActivity.SCREEN_WIDTH);
     }

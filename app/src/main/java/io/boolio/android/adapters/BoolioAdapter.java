@@ -26,6 +26,8 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
     Context context;
     int resource;
 
+    Runnable onEmpty;
+
     public BoolioAdapter(Context context) {
         super(context, R.layout.item_question);
         resource = R.layout.item_question;
@@ -115,5 +117,17 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
         TextSwitcher leftAnswer, rightAnswer;
         BoolioProfileImage creatorImage;
         NetworkImageView questionImage;
+    }
+
+    public void setOnEmpty(Runnable onEmpty) {
+        this.onEmpty = onEmpty;
+    }
+
+    @Override
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
+        if (getCount() == 0 && onEmpty != null) {
+            onEmpty.run();
+        }
     }
 }
