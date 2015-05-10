@@ -1,21 +1,17 @@
 package io.boolio.android.fragments;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
+import android.widget.ListAdapter;
 
 import io.boolio.android.MainActivity;
 import io.boolio.android.R;
-import io.boolio.android.adapters.BoolioAdapter;
-import io.boolio.android.callbacks.QuestionsPullInterface;
 import io.boolio.android.custom.ScrollingListView;
 
 /**
@@ -23,12 +19,12 @@ import io.boolio.android.custom.ScrollingListView;
  */
 public class BoolioListFragment extends BoolioFragment {
     MainActivity context;
-    BoolioAdapter questionAdapter;
+    ListAdapter questionAdapter;
     ScrollingListView listView;
     ScrollingListView.ScrollChangeListener scrollChangeListener;
     Runnable callback;
 
-    public static BoolioListFragment newInstance(BoolioAdapter questionAdapter,
+    public static BoolioListFragment newInstance(ListAdapter questionAdapter,
                                                  ScrollingListView.ScrollChangeListener scrollChangeListener) {
         BoolioListFragment fragment = new BoolioListFragment();
         fragment.questionAdapter = questionAdapter;

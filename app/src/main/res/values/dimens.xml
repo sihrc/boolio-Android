@@ -69,4 +69,5 @@
 	<dimen name="elv_undo_bottom_offset">15dp</dimen>
 	<!-- The touch slop you need to cause a swipe instead of a scroll -->
 	<dimen name="elv_touch_slop">32dp</dimen>
+    <dimen name="addbutton_padding">3dp</dimen>
 </resources>
