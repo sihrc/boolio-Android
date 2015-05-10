@@ -17,9 +17,8 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:text="@string/friends_title"
-            android:textColor="@color/white"
-            android:textSize="@dimen/profile_large_size"
-            android:textStyle="bold"/>
+            android:textColor="@color/text_white"
+            android:textSize="@dimen/profile_large_size"/>
     </FrameLayout>
 
     <!-- View Tabs -->

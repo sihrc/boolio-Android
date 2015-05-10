@@ -53,7 +53,7 @@
     </style>
 
     <style name="profile_big_text_in" parent="@android:style/Widget.TextView">
-        <item name="android:textColor">@color/profile_text_white</item>
+        <item name="android:textColor">@color/text_white</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">@dimen/profile_large_size</item>
@@ -67,7 +67,7 @@
     </style>
 
     <style name="profile_medium_text_in" parent="@android:style/Widget.TextView">
-        <item name="android:textColor">@color/profile_text_white</item>
+        <item name="android:textColor">@color/text_white</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">@dimen/profile_medium_size</item>
     </style>
