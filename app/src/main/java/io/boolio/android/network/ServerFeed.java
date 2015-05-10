@@ -13,6 +13,7 @@ import java.util.List;
 
 import io.boolio.android.callbacks.QuestionsCallback;
 import io.boolio.android.helpers.BoolioUserHandler;
+import io.boolio.android.helpers.PrefsHelper;
 import io.boolio.android.models.Question;
 import io.boolio.android.network.parser.JSONArrayParser;
 import io.boolio.android.network.parser.QuestionParser;
@@ -39,7 +40,7 @@ public class ServerFeed extends BoolioServer {
         makeRequest(Request.Method.POST, API.FEED_ENDPOINT, new JSONObject() {{
                     try {
                         put("prevSeenQuestions", new JSONArray(prevSeenQuestions));
-                        put("id", BoolioUserHandler.getInstance(context).getUser().userId);
+                        put("id", PrefsHelper.getInstance(context).getString("userId"));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
