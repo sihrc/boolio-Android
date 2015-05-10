@@ -117,7 +117,7 @@
             android:padding="@dimen/profile_asked_answered_padding"
             android:text="@string/profile_asked_view_text"
             android:background="@color/white"
-            android:textColor="@color/feed_question_left"/>
+            android:textColor="@color/darker_blue"/>
         <View
             android:layout_width="1dp"
             android:layout_height="match_parent"

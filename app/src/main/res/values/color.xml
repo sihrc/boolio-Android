@@ -11,13 +11,11 @@
 
     <!-- Feed Fragment -->
     <color name="feed_list_divider_color">#e5e5e5</color>
-    <color name="feed_question_right">#4ca8f3</color>
-    <color name="feed_question_left">@color/feed_question_right</color>
+    <color name="darker_blue">#51A7D5</color>
     <color name="question_card_background">#fcfcfc</color>
 
     <!-- Profile Fragment -->
     <color name="profile_cover_background">#66d8e0e8</color>
-    <color name="profile_text_color">#d5425ad2</color>
     <color name="text_white">#ffffffff</color>
     <color name="profile_text_big">#ffa7a7a7</color>
     <color name="profile_tab_color">#be40c9dd</color>

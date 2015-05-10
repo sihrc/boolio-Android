@@ -60,7 +60,7 @@ public class ProfileFragment extends BoolioFragment {
     List<BoolioListFragment> fragmentList;
     ScrollingListView.ScrollChangeListener scrollChangeListener;
 
-    int white_color, dark_gray, theme_blue, orange;
+    int white_color, dark_gray, theme_blue;
 
     // Question Request Callbacks
     QuestionsCallback askedCallback = new QuestionsCallback() {
@@ -95,8 +95,7 @@ public class ProfileFragment extends BoolioFragment {
         user = BoolioUserHandler.getInstance(activity).getUser();
         white_color = getResources().getColor(R.color.white);
         dark_gray = getResources().getColor(R.color.tab_light_gray);
-        theme_blue = getResources().getColor(R.color.theme_blue);
-        orange = getResources().getColor(R.color.feed_question_left);
+        theme_blue = getResources().getColor(R.color.darker_blue);
         ServerUser.getInstance(activity).getUserProfile(
                 userId == null ? PrefsHelper.getInstance(activity).getString("userId") : userId,
                 new NetworkCallback<User>() {
@@ -193,7 +192,7 @@ public class ProfileFragment extends BoolioFragment {
                     answerView.setBackgroundColor(dark_gray);
                     askedView.setBackgroundColor(white_color);
                     answerView.setTextColor(white_color);
-                    askedView.setTextColor(orange);
+                    askedView.setTextColor(theme_blue);
                 } else {
                     askedView.setBackgroundColor(dark_gray);
                     answerView.setBackgroundColor(white_color);
