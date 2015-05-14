@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.util.LruCache;
+import android.view.View;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -14,6 +15,7 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
 
+import io.boolio.android.callbacks.QuestionsCallback;
 import io.boolio.android.helpers.Debugger;
 
 /**
@@ -40,6 +42,7 @@ public class BoolioServer {
         this.queue = Volley.newRequestQueue(context);
         this.imageLoader = new ImageLoader(queue, new ImageLoader.ImageCache() {
             LruCache<String, Bitmap> cache = new LruCache<>(40);
+
             @Override
             public Bitmap getBitmap(String url) {
                 return cache.get(url);
@@ -53,6 +56,24 @@ public class BoolioServer {
 
         // Forget Signing
         NukeSSLCerts.nuke();
+    }
+
+    public void setImageLoadingListener(String url, final View view){
+        imageLoader.get(url, new ImageLoader.ImageListener() {
+            @Override
+            public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                if (response != null && response.getBitmap() != null) {
+                    view.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if (error.networkResponse != null && error.networkResponse.data != null)
+                    Log.e("Volley Error", new String(error.networkResponse.data));
+                error.printStackTrace();
+            }
+        });
     }
 
     public ImageLoader getImageLoader() {

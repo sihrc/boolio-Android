@@ -65,6 +65,7 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
             //Image Views
             holder.creatorImage = (BoolioProfileImage) view.findViewById(R.id.question_creator_picture);
             holder.questionImage = (NetworkImageView) view.findViewById(R.id.question_image);
+            holder.gifLoading = view.findViewById(R.id.question_gif_loading);
 
             view.setTag(holder);
         } else {
@@ -83,12 +84,6 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
         holder.creator.setText(question.creatorName);
         holder.date.setText(Utils.formatTimeDifferences(question.dateCreated) + " ago");
 
-        if (question.image.equals("")) {
-            holder.questionImage.setVisibility(View.GONE);
-        } else {
-            holder.questionImage.setVisibility(View.VISIBLE);
-        }
-
         holder.report.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,14 +100,24 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
 
         fillContent(holder, question);
 
-        holder.questionImage.setImageUrl(question.image, ServerUser.getInstance(context).getImageLoader());
+
+        if (question.image.equals("")) {
+            holder.questionImage.setVisibility(View.GONE);
+            holder.gifLoading.setVisibility(View.GONE);
+        } else {
+            holder.questionImage.setVisibility(View.VISIBLE);
+            holder.gifLoading.setVisibility(View.VISIBLE);
+            holder.questionImage.setImageUrl(question.image, ServerUser.getInstance(context).getImageLoader());
+            ServerUser.getInstance(context).setImageLoadingListener(question.image, holder.gifLoading);
+        }
+
         holder.creatorImage.setImageUrl(question.creatorImage, ServerUser.getInstance(context).getImageLoader());
     }
 
     public abstract void fillContent(QuestionHolder holder, Question question);
 
     public class QuestionHolder {
-        View view, report;
+        View view, report, gifLoading;
         TextView question, creator, date, highLeft, highRight;
         TextSwitcher leftAnswer, rightAnswer;
         BoolioProfileImage creatorImage;
