@@ -13,6 +13,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import io.boolio.android.R;
 import io.boolio.android.animation.TextAnimation;
 import io.boolio.android.custom.BoolioProfileImage;
+import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.Dialogs;
 import io.boolio.android.helpers.Utils;
 import io.boolio.android.models.Question;
@@ -58,6 +59,7 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
             holder.creator = (TextView) view.findViewById(R.id.question_creator);
             holder.date = (TextView) view.findViewById(R.id.question_date);
             holder.report = view.findViewById(R.id.report_button);
+            holder.delete = view.findViewById(R.id.delete_button);
 
             TextAnimation.getInstance(context).FadeTextSwitcher(holder.leftAnswer, R.layout.text_answer_left);
             TextAnimation.getInstance(context).FadeTextSwitcher(holder.rightAnswer, R.layout.text_answer_right);
@@ -83,6 +85,14 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
         holder.creator.setText(question.creatorName);
         holder.date.setText(Utils.formatTimeDifferences(question.dateCreated) + " ago");
 
+        if (question.creatorId.equals(BoolioUserHandler.getInstance(context).getUser().userId)){
+            holder.delete.setVisibility(View.VISIBLE);
+            holder.report.setVisibility(View.GONE);
+        } else {
+            holder.delete.setVisibility(View.GONE);
+            holder.report.setVisibility(View.VISIBLE);
+        }
+
         if (question.image.equals("")) {
             holder.questionImage.setVisibility(View.GONE);
         } else {
@@ -103,6 +113,20 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
             }
         });
 
+        holder.delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Dialogs.messageDialog(context, R.string.delete_title, R.string.delete_message, new Runnable() {
+                    @Override
+                    public void run() {
+                        ServerQuestion.getInstance(context).deleteQuestion(question.questionId);
+                        remove(question);
+                        notifyDataSetChanged();
+                    }
+                });
+            }
+        });
+
         fillContent(holder, question);
 
         holder.questionImage.setImageUrl(question.image, ServerUser.getInstance(context).getImageLoader());
@@ -112,7 +136,7 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
     public abstract void fillContent(QuestionHolder holder, Question question);
 
     public class QuestionHolder {
-        View view, report;
+        View view, report, delete;
         TextView question, creator, date, highLeft, highRight;
         TextSwitcher leftAnswer, rightAnswer;
         BoolioProfileImage creatorImage;
