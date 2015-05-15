@@ -192,7 +192,7 @@ public class MainFragment extends BoolioFragment {
     }
 
     public void showNavBar(boolean visible) {
-        if (navBar == null)
+        if (navBar == null && activity != null)
             return;
         if (visible) {
             AnimationHelper.getInstance(activity).animateViewBottomIn(navBar);
