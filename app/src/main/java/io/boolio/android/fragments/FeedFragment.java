@@ -119,6 +119,7 @@ public class FeedFragment extends BoolioFragment {
             @Override
             public void run() {
                 AnimationHelper.getInstance(activity).animateViewFadeIn(emptyBear);
+                ((MainFragment) getParentFragment()).showNavBar(true);
             }
         });
         scrollingListView.setAdapter(questionAdapter);
