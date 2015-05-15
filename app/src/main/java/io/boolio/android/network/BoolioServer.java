@@ -58,12 +58,12 @@ public class BoolioServer {
         NukeSSLCerts.nuke();
     }
 
-    public void setImageLoadingListener(String url, final View view){
+    public void getNetworkImage(String url, final NetworkCallback<Bitmap> callback){
         imageLoader.get(url, new ImageLoader.ImageListener() {
             @Override
             public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                if (response != null && response.getBitmap() != null) {
-                    view.setVisibility(View.GONE);
+                if (callback != null && response != null && response.getBitmap() != null) {
+                    callback.handle(response.getBitmap());
                 }
             }
 

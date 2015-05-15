@@ -1,6 +1,7 @@
 package io.boolio.android.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +13,14 @@ import com.android.volley.toolbox.NetworkImageView;
 
 import io.boolio.android.R;
 import io.boolio.android.animation.TextAnimation;
+import io.boolio.android.custom.BoolioNetworkImageView;
 import io.boolio.android.custom.BoolioProfileImage;
 import io.boolio.android.helpers.Dialogs;
 import io.boolio.android.helpers.Utils;
 import io.boolio.android.models.Question;
+import io.boolio.android.network.BoolioServer;
+import io.boolio.android.network.NetworkCallback;
+import io.boolio.android.network.ServerFeed;
 import io.boolio.android.network.ServerQuestion;
 import io.boolio.android.network.ServerUser;
 
@@ -42,7 +47,7 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
 
     @Override
     public View getView(final int position, View view, ViewGroup parent) {
-        QuestionHolder holder;
+        final QuestionHolder holder;
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             holder = new QuestionHolder();
@@ -64,8 +69,7 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
 
             //Image Views
             holder.creatorImage = (BoolioProfileImage) view.findViewById(R.id.question_creator_picture);
-            holder.questionImage = (NetworkImageView) view.findViewById(R.id.question_image);
-            holder.gifLoading = view.findViewById(R.id.question_gif_loading);
+            holder.questionImage = (BoolioNetworkImageView) view.findViewById(R.id.question_image);
 
             view.setTag(holder);
         } else {
@@ -100,15 +104,13 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
 
         fillContent(holder, question);
 
+        holder.questionImage.setDefaultImageResId(R.drawable.default_image);
 
         if (question.image.equals("")) {
             holder.questionImage.setVisibility(View.GONE);
-            holder.gifLoading.setVisibility(View.GONE);
         } else {
             holder.questionImage.setVisibility(View.VISIBLE);
-            holder.gifLoading.setVisibility(View.VISIBLE);
-            holder.questionImage.setImageUrl(question.image, ServerUser.getInstance(context).getImageLoader());
-            ServerUser.getInstance(context).setImageLoadingListener(question.image, holder.gifLoading);
+            holder.questionImage.setImageUrl(question.image, ServerFeed.getInstance(context).getImageLoader());
         }
 
         holder.creatorImage.setImageUrl(question.creatorImage, ServerUser.getInstance(context).getImageLoader());
@@ -117,11 +119,11 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
     public abstract void fillContent(QuestionHolder holder, Question question);
 
     public class QuestionHolder {
-        View view, report, gifLoading;
+        View view, report;
         TextView question, creator, date, highLeft, highRight;
         TextSwitcher leftAnswer, rightAnswer;
         BoolioProfileImage creatorImage;
-        NetworkImageView questionImage;
+        BoolioNetworkImageView questionImage;
     }
 
     public void setOnEmpty(Runnable onEmpty) {
