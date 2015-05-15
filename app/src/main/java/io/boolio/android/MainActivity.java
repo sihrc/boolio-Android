@@ -2,12 +2,17 @@ package io.boolio.android;
 
 import android.content.Intent;
 import android.graphics.Point;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.facebook.Profile;
+import com.gc.android.market.api.MarketSession;
+import com.gc.android.market.api.model.Market;
 
 import io.boolio.android.fragments.FeedFragment;
 import io.boolio.android.fragments.MainFragment;
@@ -16,9 +21,11 @@ import io.boolio.android.fragments.tutorials.TutorialPagerFragment;
 import io.boolio.android.gcm.GCMHelper;
 import io.boolio.android.helpers.ApplicationCheckHelper;
 import io.boolio.android.helpers.BoolioUserHandler;
+import io.boolio.android.helpers.Dialogs;
 import io.boolio.android.helpers.FacebookAuth;
 import io.boolio.android.helpers.PrefsHelper;
 import io.boolio.android.models.User;
+import io.boolio.android.network.ServerQuestion;
 import io.boolio.android.network.ServerUser;
 import io.boolio.android.network.NetworkCallback;
 import io.boolio.android.network.parser.UserParser;
@@ -26,6 +33,7 @@ import io.boolio.android.network.parser.UserParser;
 
 public class MainActivity extends FacebookAuth {
     public static int SCREEN_WIDTH, SCREEN_HEIGHT;
+    int versionCode;
 
     FragmentManager fragmentManager;
 
@@ -39,6 +47,42 @@ public class MainActivity extends FacebookAuth {
         if (!ApplicationCheckHelper.checkPlayServices(this)) {
             Toast.makeText(this, getString(R.string.check_google_play_warning), Toast.LENGTH_LONG).show();
         }
+
+
+        if (BuildConfig.VERSION_CODE != 3) {
+            Dialogs.messageDialog(this, R.string.update_title, R.string.update_message, new Runnable() {
+                @Override
+                public void run() {
+                    final String appPackageName = getPackageName();
+                    try {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                    } catch (android.content.ActivityNotFoundException anfe) {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                    }
+                }
+            });
+        }
+
+//        MarketSession session = new MarketSession();
+//        String AndroidId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+//        session.login("teamboolio@gmail.com","booliocoolioOLIN");
+//        session.getContext().setAndroidId("dead000beef");
+//        String query = "pname:io.boolio.android";
+//        Market.AppsRequest appsRequest = Market.AppsRequest.newBuilder()
+//                .setQuery(query)
+//                .setStartIndex(0).setEntriesCount(10)
+//                .setWithExtendedInfo(true)
+//                .build();
+//
+//        session.append(appsRequest, new MarketSession.Callback<Market.AppsResponse>() {
+//            @Override
+//            public void onResult(Market.ResponseContext context, Market.AppsResponse response) {
+//                Log.v("debugdebug", "versioncode" + response.getApp(0).getVersionCode());
+//                versionCode = response.getApp(0).getVersionCode();
+//
+//            }
+//        });
+//        session.flush();
 
         // Get Screen Size
         Point size = new Point();

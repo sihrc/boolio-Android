@@ -71,6 +71,10 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
 
+    <!-- Update App -->
+    <string name="update_title">Update</string>
+    <string name="update_message">New version of boolio is available. Would you like to update boolio?</string>
+
     <!-- ScrollListView-->
     <string name="elv_undo">Undo</string>
     <string name="elv_undo_all">Undo All</string>
