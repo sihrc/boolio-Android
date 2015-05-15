@@ -15,7 +15,7 @@ import com.android.volley.toolbox.NetworkImageView;
 /**
  * Created by Chris on 4/17/15.
  */
-public class BoolioProfileImage extends NetworkImageView {
+public class BoolioProfileImage extends BoolioNetworkImageView {
     public BoolioProfileImage(Context context) {
         super(context);
     }
