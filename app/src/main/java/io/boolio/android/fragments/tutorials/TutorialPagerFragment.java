@@ -19,7 +19,6 @@ import android.widget.LinearLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.boolio.android.MainActivity;
 import io.boolio.android.R;
 import io.boolio.android.fragments.BoolioFragment;
 import io.boolio.android.fragments.LoginFragment;
@@ -39,7 +38,7 @@ public class TutorialPagerFragment extends BoolioFragment {
         TutorialPagerFragment tutorialPagerFragment = new TutorialPagerFragment();
         tutorialPagerFragment.setTutorials(
                 // Tutorial I
-                R.drawable.heartbear_real, R.string.tutorial_1,
+                R.drawable.heartbear, R.string.tutorial_1,
 
                 // Tutorial II
                 R.drawable.map, R.string.tutorial_2,
