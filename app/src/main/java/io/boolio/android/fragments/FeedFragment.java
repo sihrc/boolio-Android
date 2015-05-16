@@ -85,7 +85,7 @@ public class FeedFragment extends BoolioFragment {
         headerBar = rootView.findViewById(R.id.header_bar);
 
         pullToRefreshLayout = (PullToRefreshView) rootView.findViewById(R.id.ptr_layout);
-        pullToRefreshLayout.setRefreshDrawables(R.drawable.sky, R.drawable.bear, R.drawable.sun);
+        pullToRefreshLayout.setRefreshDrawables(R.drawable.sky, R.drawable.bearssmall, R.drawable.sun);
         pullToRefreshLayout.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
             @Override
             public void onRefresh() {
