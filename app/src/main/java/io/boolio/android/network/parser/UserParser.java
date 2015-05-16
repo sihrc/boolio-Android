@@ -34,6 +34,7 @@ public class UserParser extends Parser<User> {
             user.questionsAsked = stringArray.toArray(getJSONArray("questionsAsked"));
             user.questionsAnswered = stringArray.toArray(getJSONArray("questionsAnswered"));
             user.questionsSkipped = stringArray.toArray(getJSONArray("questionsSkipped"));
+            user.version = getInt("version");
             return user;
         } catch (JSONException e) {
             Log.e("UserParser", e.getMessage());
