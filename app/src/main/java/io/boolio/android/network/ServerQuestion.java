@@ -147,13 +147,10 @@ public class ServerQuestion extends BoolioServer {
     }
 
     public void deleteQuestion(final String id) {
-        Log.v("debugdebug", "question " + id);
         makeRequest(Request.Method.POST, API.DELETE_QUESTION,
                 new JSONObject() {{
                     try {
                         put("questionId", id);
-                        Log.v("debugdebug", "question " + id);
-
                         put("creatorId",  BoolioUserHandler.getInstance(context).getUser().userId);
 
                     } catch (JSONException e) {
@@ -162,7 +159,6 @@ public class ServerQuestion extends BoolioServer {
                 }}, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.v("debugdebug", "what is it here?");
                         Debugger.log(BoolioServer.class, "Deleted Question: " + id);
                     }
                 });
