@@ -74,6 +74,7 @@ public class MainActivity extends FacebookAuth {
 
     /**
      * Parses Intent and decides which fragment to show first
+     *
      * @param intent - intent from the notification or other sources
      * @return order of fragment
      */
@@ -89,8 +90,9 @@ public class MainActivity extends FacebookAuth {
                 return FeedFragment.ORDER;
         }
     }
-    private void updateApp(){
-        Log.v("debugdebug", " "+ BoolioUserHandler.getInstance(MainActivity.this).getUser().version);
+
+    private void updateApp() {
+        Log.v("debugdebug", " " + BoolioUserHandler.getInstance(MainActivity.this).getUser().version);
         if (BuildConfig.VERSION_CODE != BoolioUserHandler.getInstance(MainActivity.this).getUser().version) {
             Dialogs.messageDialog(this, R.string.update_title, R.string.update_message, new Runnable() {
                 @Override
