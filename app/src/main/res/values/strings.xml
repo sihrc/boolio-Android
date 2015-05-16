@@ -30,7 +30,7 @@
     <string name="login_email">email</string>
     <string name="login_password">password</string>
     <string name="login_with_facebook">or Login with</string>
-    <string name="login_button_facebook">Sign up with Facebook</string>
+    <string name="login_button_facebook">Sign in with Facebook</string>
 
     <!-- CreateQuestion Fragment -->
     <string name="loading_picture">Loading Picture …</string>
@@ -68,6 +68,8 @@
     <string name="check_google_play_warning">Please enable Google Play Services to receive notifications about questions!</string>
     <string name="report_title">Report</string>
     <string name="report_message">You are about to mark this question as inappropriate.</string>
+    <string name="delete_title">Delete</string>
+    <string name="delete_message">You are about to delete this question.</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
 

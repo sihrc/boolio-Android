@@ -2,17 +2,16 @@ package io.boolio.android.network;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Collection;
-import java.util.List;
 
 import io.boolio.android.callbacks.QuestionsCallback;
 import io.boolio.android.helpers.BoolioUserHandler;
@@ -143,6 +142,24 @@ public class ServerQuestion extends BoolioServer {
                     @Override
                     public void onResponse(JSONObject response) {
                         Debugger.log(BoolioServer.class, "Reported Question: " + id);
+                    }
+                });
+    }
+
+    public void deleteQuestion(final String id) {
+        makeRequest(Request.Method.POST, API.DELETE_QUESTION,
+                new JSONObject() {{
+                    try {
+                        put("questionId", id);
+                        put("creatorId",  BoolioUserHandler.getInstance(context).getUser().userId);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }}, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Debugger.log(BoolioServer.class, "Deleted Question: " + id);
                     }
                 });
     }

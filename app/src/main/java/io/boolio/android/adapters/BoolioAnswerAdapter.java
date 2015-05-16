@@ -5,7 +5,9 @@ import android.view.View;
 
 import io.boolio.android.R;
 import io.boolio.android.helpers.BoolioUserHandler;
+import io.boolio.android.helpers.Dialogs;
 import io.boolio.android.models.Question;
+import io.boolio.android.network.ServerQuestion;
 
 /**
  * Created by james on 4/24/15.
@@ -21,7 +23,7 @@ public class BoolioAnswerAdapter extends BoolioAdapter {
     }
 
     @Override
-    public void fillContent(QuestionHolder holder, Question question) {
+    public void fillContent(QuestionHolder holder, final Question question) {
         String left = String.valueOf(question.left + " (" + question.leftCount + ")");
         String right = String.valueOf(question.right + " (" + question.rightCount + ")");
         holder.leftAnswer.setText(left);

@@ -51,7 +51,7 @@ public class ProfileFragment extends BoolioFragment {
 
     LinearLayout karmaBar;
     RelativeLayout karmaShow;
-    View profileSetting;
+    View profileSetting, gifLoading;
 
     // List Fragment Pager
     ViewPager viewPager;
@@ -68,6 +68,7 @@ public class ProfileFragment extends BoolioFragment {
             askedAdapter.clear();
             askedAdapter.addAll(questionList);
             askedAdapter.notifyDataSetChanged();
+            gifLoading.setVisibility(View.GONE);
         }
     };
     QuestionsCallback answeredCallback = new QuestionsCallback() {
@@ -76,6 +77,7 @@ public class ProfileFragment extends BoolioFragment {
             answeredAdapter.clear();
             answeredAdapter.addAll(questionList);
             answeredAdapter.notifyDataSetChanged();
+            gifLoading.setVisibility(View.GONE);
         }
     };
 
@@ -112,6 +114,7 @@ public class ProfileFragment extends BoolioFragment {
                     public void handle(User user) {
                         ProfileFragment.this.user = user;
                         updateViews();
+                        gifLoading.setVisibility(View.VISIBLE);
                         ServerQuestion.getInstance(activity).getQuestions(user.questionsAnswered, answeredCallback);
                         ServerQuestion.getInstance(activity).getQuestions(user.questionsAsked, askedCallback);
                     }
@@ -158,6 +161,8 @@ public class ProfileFragment extends BoolioFragment {
         viewPager = (ViewPager) rootView.findViewById(R.id.asked_answered_view_pager);
         askedView = (TextView) rootView.findViewById(R.id.profile_asked_view);
         answerView = (TextView) rootView.findViewById(R.id.profile_answered_view);
+
+        gifLoading = rootView.findViewById(R.id.list_frag_gif_loading);
 
         setupPager();
         setupTabOnClick();

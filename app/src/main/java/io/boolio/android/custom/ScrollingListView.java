@@ -2,6 +2,7 @@ package io.boolio.android.custom;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.AbsListView;
 
 /**
@@ -37,7 +38,8 @@ public class ScrollingListView extends EnhancedListView {
                     return;
                 }
                 int scrolledOffset = computeVerticalScrollOffset();
-                if (scrolledOffset != mInitialScroll) {
+
+                if (Math.abs(scrolledOffset - mInitialScroll) > 15) {
                     //if scroll position changed
                     if (scrollChangeListener != null)
                         scrollChangeListener.onScroll((scrolledOffset - mInitialScroll) < 0);
