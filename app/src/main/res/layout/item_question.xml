@@ -55,6 +55,15 @@
                 android:layout_height="@dimen/report_button_size"
                 android:padding="@dimen/report_button_padding"
                 android:background="@drawable/report"/>
+
+            <ImageView
+                android:id="@+id/delete_button"
+                android:layout_alignParentRight="true"
+                android:layout_width="@dimen/report_button_size"
+                android:layout_height="@dimen/report_button_size"
+                android:padding="@dimen/report_button_padding"
+                android:background="@drawable/ic_navigation_close"/>
+
         </RelativeLayout>
 
         <io.boolio.android.custom.BoolioNetworkImageView
