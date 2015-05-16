@@ -91,7 +91,7 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
         holder.date.setText(Utils.formatTimeDifferences(question.dateCreated) + " ago");
 
         // Setup Creator Image and Name
-        if (question.creatorId.equals(BoolioUserHandler.getInstance(context).getUser().userId)){
+        if (question.creatorId != null && question.creatorId.equals(BoolioUserHandler.getInstance(context).getUser().userId)){
             holder.delete.setVisibility(View.VISIBLE);
             holder.report.setVisibility(View.GONE);
         } else {
