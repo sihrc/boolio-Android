@@ -2,6 +2,7 @@ package io.boolio.android;
 
 import android.content.Intent;
 import android.graphics.Point;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -16,12 +17,12 @@ import io.boolio.android.fragments.tutorials.TutorialPagerFragment;
 import io.boolio.android.gcm.GCMHelper;
 import io.boolio.android.helpers.ApplicationCheckHelper;
 import io.boolio.android.helpers.BoolioUserHandler;
+import io.boolio.android.helpers.Dialogs;
 import io.boolio.android.helpers.FacebookAuth;
 import io.boolio.android.helpers.PrefsHelper;
 import io.boolio.android.models.User;
-import io.boolio.android.network.ServerUser;
 import io.boolio.android.network.NetworkCallback;
-import io.boolio.android.network.parser.UserParser;
+import io.boolio.android.network.ServerUser;
 
 
 public class MainActivity extends FacebookAuth {
@@ -56,6 +57,7 @@ public class MainActivity extends FacebookAuth {
                 GCMHelper.getInstance(MainActivity.this).getRegistrationId();
                 fragmentManager.beginTransaction().replace(R.id.container, MainFragment.newInstance(parseIntent(getIntent()))).commitAllowingStateLoss();
                 PrefsHelper.getInstance(MainActivity.this).saveString("userId", object.userId);
+                updateApp();
             }
         };
 
@@ -72,6 +74,7 @@ public class MainActivity extends FacebookAuth {
 
     /**
      * Parses Intent and decides which fragment to show first
+     *
      * @param intent - intent from the notification or other sources
      * @return order of fragment
      */
@@ -85,6 +88,23 @@ public class MainActivity extends FacebookAuth {
                 return ProfileFragment.ORDER;
             default:
                 return FeedFragment.ORDER;
+        }
+    }
+
+    private void updateApp() {
+        Log.v("debugdebug", " " + BoolioUserHandler.getInstance(MainActivity.this).getUser().version);
+        if (BuildConfig.VERSION_CODE != BoolioUserHandler.getInstance(MainActivity.this).getUser().version) {
+            Dialogs.messageDialog(this, R.string.update_title, R.string.update_message, new Runnable() {
+                @Override
+                public void run() {
+                    final String appPackageName = getPackageName();
+                    try {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                    } catch (android.content.ActivityNotFoundException anfe) {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                    }
+                }
+            });
         }
     }
 }
