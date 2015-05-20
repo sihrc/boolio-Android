@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.facebook.Profile;
@@ -19,9 +18,8 @@ import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.FacebookAuth;
 import io.boolio.android.helpers.PrefsHelper;
 import io.boolio.android.models.User;
-import io.boolio.android.network.ServerUser;
 import io.boolio.android.network.NetworkCallback;
-import io.boolio.android.network.parser.UserParser;
+import io.boolio.android.network.ServerUser;
 
 
 public class MainActivity extends FacebookAuth {
@@ -45,6 +43,8 @@ public class MainActivity extends FacebookAuth {
         getWindowManager().getDefaultDisplay().getSize(size);
         SCREEN_WIDTH = size.x;
         SCREEN_HEIGHT = size.y;
+
+        ServerUser.getInstance(MainActivity.this).getABTests();
     }
 
     @Override
