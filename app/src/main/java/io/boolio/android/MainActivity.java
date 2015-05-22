@@ -5,7 +5,6 @@ import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.facebook.Profile;
@@ -46,6 +45,8 @@ public class MainActivity extends FacebookAuth {
         getWindowManager().getDefaultDisplay().getSize(size);
         SCREEN_WIDTH = size.x;
         SCREEN_HEIGHT = size.y;
+
+        ServerUser.getInstance(MainActivity.this).getABTests();
     }
 
     @Override

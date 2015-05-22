@@ -4,18 +4,24 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.util.LruCache;
-import android.view.View;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpClientStack;
+import com.android.volley.toolbox.HttpStack;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.apache.http.client.CookieStore;
+import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
 
-import io.boolio.android.callbacks.QuestionsCallback;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+
 import io.boolio.android.helpers.Debugger;
 
 /**
@@ -27,6 +33,7 @@ public class BoolioServer {
     ImageLoader imageLoader;
     Context context;
     RequestQueue queue;
+    CookieManager cookieManager;
     // Default Error Listener
     Response.ErrorListener errorListener = new Response.ErrorListener() {
         @Override
@@ -39,6 +46,8 @@ public class BoolioServer {
 
     public BoolioServer(Context context) {
         this.context = context;
+        cookieManager = new CookieManager();
+        CookieHandler.setDefault(cookieManager);
         this.queue = Volley.newRequestQueue(context);
         this.imageLoader = new ImageLoader(queue, new ImageLoader.ImageCache() {
             LruCache<String, Bitmap> cache = new LruCache<>(40);
