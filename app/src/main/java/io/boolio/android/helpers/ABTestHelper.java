@@ -1,7 +1,6 @@
 package io.boolio.android.helpers;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +29,6 @@ public class ABTestHelper {
 
     public void addTest(String name, int value) {
         abtests.put(name, value);
-        Log.i("DebugDebug", name + " valOf " + value);
     }
 
     public int getTest(String key) {
