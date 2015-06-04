@@ -47,6 +47,12 @@ public class MainActivity extends FacebookAuth {
         SCREEN_HEIGHT = size.y;
 
         ServerUser.getInstance(MainActivity.this).getABTests();
+        ServerUser.getInstance(this).getConfigs(new Runnable() {
+            @Override
+            public void run() {
+                updateApp();
+            }
+        });
     }
 
     @Override
@@ -93,8 +99,7 @@ public class MainActivity extends FacebookAuth {
     }
 
     private void updateApp() {
-        Log.v("debugdebug", " " + BoolioUserHandler.getInstance(MainActivity.this).getUser().version);
-        if (BuildConfig.VERSION_CODE != BoolioUserHandler.getInstance(MainActivity.this).getUser().version) {
+        if (BuildConfig.VERSION_CODE < Integer.parseInt(PrefsHelper.getInstance(this).getString("version"))) {
             Dialogs.messageDialog(this, R.string.update_title, R.string.update_message, new Runnable() {
                 @Override
                 public void run() {
