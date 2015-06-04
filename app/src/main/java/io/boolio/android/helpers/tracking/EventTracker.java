@@ -5,11 +5,10 @@ import android.util.Log;
 
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import io.boolio.android.BuildConfig;
 import io.boolio.android.R;
+import io.boolio.android.helpers.Debugger;
 
 /**
  * Created by Chris on 6/3/15.
@@ -27,35 +26,24 @@ public class EventTracker {
      * Mixpanel project token, MIXPANEL_TOKEN, and a reference
      * to your application context.
      */
-    public static void init(Context context) {
-        if (instance == null)
-            instance = new EventTracker(context);
-        if (instance.mixpanel == null)
-            instance.mixpanel = MixpanelAPI.getInstance(context, context.getString(R.string.mixpanel_token));
-    }
-
     public static EventTracker getInstance(Context context) {
         if (instance == null)
-            init(context);
+            instance = new EventTracker(context);
         return instance;
     }
 
     public EventTracker(Context context) {
         this.context = context;
+        this.mixpanel = MixpanelAPI.getInstance(context, context.getString(R.string.mixpanel_token));
         setupDefaultValues();
     }
 
     private void setupDefaultValues() {
+        // Mixpanel already has date / operating system/ etc
         // Send a "User Type: Paid" property will be sent
         // with all future track calls.
-        JSONObject props = new JSONObject();
-        try {
-            props.put("client", "Android");
-            props.put("version", BuildConfig.VERSION_NAME);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        mixpanel.registerSuperProperties(props);
+        // JSONObject props = new JSONObject();
+        // mixpanel.registerSuperProperties(props);
     }
 
     public void attachUser(String userId) {
@@ -86,6 +74,16 @@ public class EventTracker {
         if (tag == null || value == 0)
             return;
         mixpanel.getPeople().increment(tag.toString(), value);
+    }
+
+    /**
+     * Event Tracking *
+     */
+    public void track(TrackEvent event) {
+        JSONObject pack = new JSONObject();
+
+        Debugger.log(EventTracker.class, event.toString() + " " + pack.toString());
+        mixpanel.track(event.toString(), pack);
     }
 
 }

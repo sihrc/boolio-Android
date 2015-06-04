@@ -20,6 +20,7 @@ import io.boolio.android.helpers.Dialogs;
 import io.boolio.android.helpers.FacebookAuth;
 import io.boolio.android.helpers.PrefsHelper;
 import io.boolio.android.helpers.tracking.EventTracker;
+import io.boolio.android.helpers.tracking.TrackEvent;
 import io.boolio.android.models.User;
 import io.boolio.android.network.NetworkCallback;
 import io.boolio.android.network.ServerUser;
@@ -47,7 +48,6 @@ public class MainActivity extends FacebookAuth {
         SCREEN_WIDTH = size.x;
         SCREEN_HEIGHT = size.y;
 
-        EventTracker.init(this);
         ServerUser.getInstance(this).getABTests();
     }
 
@@ -61,10 +61,10 @@ public class MainActivity extends FacebookAuth {
                 fragmentManager.beginTransaction().replace(R.id.container, MainFragment.newInstance(parseIntent(getIntent()))).commitAllowingStateLoss();
                 PrefsHelper.getInstance(MainActivity.this).saveString("userId", object.userId);
                 EventTracker.getInstance(MainActivity.this).attachUser(object.userId);
+                EventTracker.getInstance(MainActivity.this).track(TrackEvent.OPEN_APP);
                 updateApp();
             }
         };
-
         User user = new User(profile.getId(), profile.getName());
         BoolioUserHandler.getInstance(this).setUser(user);
         ServerUser.getInstance(this).getBoolioUserFromFacebook

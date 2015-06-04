@@ -42,9 +42,7 @@ public abstract class FacebookAuth extends FragmentActivity {
         profileTracker = new ProfileTracker() {
             @Override
             protected void onCurrentProfileChanged(Profile profile, Profile profile2) {
-                if (profile2 != null) {
-                    loggedIn(profile2);
-                } else {
+                if (profile2 == null) {
                     loggedOut();
                 }
             }
@@ -56,28 +54,6 @@ public abstract class FacebookAuth extends FragmentActivity {
             }
         };
         callbackManager = CallbackManager.Factory.create();
-        LoginManager.getInstance().registerCallback(callbackManager,
-                new FacebookCallback<LoginResult>() {
-                    @Override
-                    public void onSuccess(LoginResult loginResult) {
-                        // App code
-                        getProfileInfo();
-                    }
-
-                    @Override
-                    public void onCancel() {
-                        // App code
-                        Log.e("Facebook Login", "Login Cancelled");
-                        loggedOut();
-                    }
-
-                    @Override
-                    public void onError(FacebookException exception) {
-                        // App code
-                        Log.e("Facebook Login", "Failed to Login " + exception.toString());
-                        loggedOut();
-                    }
-                });
         super.onCreate(savedInstanceState);
     }
 

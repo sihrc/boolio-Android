@@ -1,6 +1,5 @@
 package io.boolio.android.gcm;
 
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +16,5 @@ public class GCMReceiver extends WakefulBroadcastReceiver {
                 GCMService.class.getName());
         // Start the service, keeping the device awake while it is launching.
         startWakefulService(context, (intent.setComponent(comp)));
-        setResultCode(Activity.RESULT_OK);
     }
 }
