@@ -10,6 +10,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Iterator;
+
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.PrefsHelper;
 import io.boolio.android.helpers.ABTestHelper;
@@ -108,6 +110,33 @@ public class ServerUser extends BoolioServer {
                 }
             }
         });
+    }
+
+    public void getConfigs(final Runnable runnable) {
+        makeRequest(Request.Method.GET,
+                API.GET_VERSION,
+                new JSONObject(),
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        PrefsHelper prefsHelper = PrefsHelper.getInstance(context);
+                        Iterator<String> keys = response.keys();
+
+                        String tag;
+                        while (keys.hasNext()) {
+                            tag = keys.next();
+                            try {
+                                prefsHelper.saveString(tag, response.getString(tag));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        if (runnable != null) {
+                            runnable.run();
+                        }
+                    }
+                });
     }
 
     /**
