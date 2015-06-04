@@ -19,6 +19,7 @@ import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.Dialogs;
 import io.boolio.android.helpers.FacebookAuth;
 import io.boolio.android.helpers.PrefsHelper;
+import io.boolio.android.helpers.tracking.EventTracker;
 import io.boolio.android.models.User;
 import io.boolio.android.network.NetworkCallback;
 import io.boolio.android.network.ServerUser;
@@ -46,7 +47,8 @@ public class MainActivity extends FacebookAuth {
         SCREEN_WIDTH = size.x;
         SCREEN_HEIGHT = size.y;
 
-        ServerUser.getInstance(MainActivity.this).getABTests();
+        EventTracker.init(this);
+        ServerUser.getInstance(this).getABTests();
     }
 
     @Override
@@ -58,6 +60,7 @@ public class MainActivity extends FacebookAuth {
                 GCMHelper.getInstance(MainActivity.this).getRegistrationId();
                 fragmentManager.beginTransaction().replace(R.id.container, MainFragment.newInstance(parseIntent(getIntent()))).commitAllowingStateLoss();
                 PrefsHelper.getInstance(MainActivity.this).saveString("userId", object.userId);
+                EventTracker.getInstance(MainActivity.this).attachUser(object.userId);
                 updateApp();
             }
         };
@@ -93,7 +96,6 @@ public class MainActivity extends FacebookAuth {
     }
 
     private void updateApp() {
-        Log.v("debugdebug", " " + BoolioUserHandler.getInstance(MainActivity.this).getUser().version);
         if (BuildConfig.VERSION_CODE != BoolioUserHandler.getInstance(MainActivity.this).getUser().version) {
             Dialogs.messageDialog(this, R.string.update_title, R.string.update_message, new Runnable() {
                 @Override
