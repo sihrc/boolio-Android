@@ -98,7 +98,7 @@ public class EventTracker {
     public void trackQuestion(TrackEvent event, final Question question, final String answer) {
        track(event, new HashMap<String, Object>() {{
            put("tags", question.tags);
-           put("has_image", !question.image.equals(""));
+           put("has_image", question.image != null && !question.image.equals(""));
            put("default_answer", question.left.equals("No"));
            put("question_id", question.questionId);
            put("creator_id", question.creatorId);

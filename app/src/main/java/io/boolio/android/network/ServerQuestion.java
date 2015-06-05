@@ -40,6 +40,8 @@ public class ServerQuestion extends BoolioServer {
     }
 
     public void getQuestions(final Collection<String> questionIds, final QuestionsCallback callback) {
+        if (questionIds.isEmpty())
+            return;
         makeRequest(Request.Method.POST, API.POST_GET_QUESTIONS, new JSONObject() {{
             try {
                 put("ids", Utils.stringArrayToString.build(questionIds));
