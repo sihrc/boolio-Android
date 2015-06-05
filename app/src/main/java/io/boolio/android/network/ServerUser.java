@@ -171,11 +171,7 @@ public class ServerUser extends BoolioServer {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }}, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-            }
-        });
+        }}, null);
     }
 
     public void unskipQuestion(final Question question) {
@@ -186,10 +182,6 @@ public class ServerUser extends BoolioServer {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }}, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-            }
-        });
+        }}, null);
     }
 }

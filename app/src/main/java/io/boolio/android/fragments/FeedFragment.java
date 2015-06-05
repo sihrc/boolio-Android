@@ -19,7 +19,6 @@ import io.boolio.android.custom.EnhancedListView;
 import io.boolio.android.custom.PullToRefreshView;
 import io.boolio.android.custom.ScrollingListView;
 import io.boolio.android.gcm.GCMService;
-import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.tracking.EventTracker;
 import io.boolio.android.helpers.tracking.TrackEvent;
 import io.boolio.android.models.Question;
@@ -42,10 +41,9 @@ public class FeedFragment extends BoolioFragment {
                 public void run() {
                     questionAdapter.clear();
                     questionAdapter.addAll(questionList);
-                    questionAdapter.notifyDataSetChanged();
+                    questionAdapter.onDataSetChanged();
                     pullToRefreshLayout.setRefreshing(false);
                     gifLoading.setVisibility(View.GONE);
-                    emptyBear.setVisibility(questionAdapter.getCount() == 0 ? View.VISIBLE : View.GONE);
                     GCMService.clearFeedUpdate(activity);
                 }
             }, REFRESH_DELAY);
@@ -100,29 +98,27 @@ public class FeedFragment extends BoolioFragment {
         questionAdapter = new BoolioQuestionAdapter(activity);
         setupListView(listView);
 
-        BoolioUserHandler.getInstance(activity).setUserCallback(new Runnable() {
-            @Override
-            public void run() {
-                pullQuestions();
-            }
-        });
-
-        instance.pullQuestions();
+        pullQuestions(false);
         return rootView;
     }
 
     private void pullQuestions() {
-        emptyBear.setVisibility(View.GONE);
+        pullQuestions(true);
+    }
+
+    private void pullQuestions(boolean hideBear) {
+        if (hideBear)
+            showBear(false);
         ServerFeed.getInstance(activity).getQuestionFeed(prevSeenQuestions, callback);
     }
 
     private void setupListView(final ScrollingListView scrollingListView) {
         /** Scrolling List View With Dismiss and Undo **/
-        questionAdapter.setOnEmpty(new Runnable() {
+        questionAdapter.setOnDataSetChanged(new Runnable() {
             @Override
             public void run() {
-                AnimationHelper.getInstance(activity).animateViewFadeIn(emptyBear);
-                ((MainFragment) getParentFragment()).showNavBar(true);
+                if (questionAdapter != null)
+                    showBear(questionAdapter.isEmpty());
             }
         });
         scrollingListView.setAdapter(questionAdapter);
@@ -130,7 +126,7 @@ public class FeedFragment extends BoolioFragment {
             @Override
             public EnhancedListView.Undoable onDismiss(EnhancedListView enhancedListView, final int i) {
                 final Question question = questionAdapter.remove(i);
-                questionAdapter.notifyDataSetChanged();
+                questionAdapter.onDataSetChanged();
                 EventTracker.getInstance(activity).trackQuestion(TrackEvent.ANSWER_QUESTION, question, "skipped");
                 ServerUser.getInstance(activity).skipQuestion(question);
                 return new EnhancedListView.Undoable() {
@@ -138,9 +134,8 @@ public class FeedFragment extends BoolioFragment {
                     public void undo() {
                         EventTracker.getInstance(activity).trackQuestion(TrackEvent.ANSWER_QUESTION, question, "undo");
                         questionAdapter.insert(question, i);
-                        questionAdapter.notifyDataSetChanged();
+                        questionAdapter.onDataSetChanged();
                         ServerUser.getInstance(activity).unskipQuestion(question);
-                        emptyBear.setVisibility(questionAdapter.getCount() == 0 ? View.VISIBLE : View.GONE);
                     }
                 };
             }
@@ -153,5 +148,13 @@ public class FeedFragment extends BoolioFragment {
                 ((MainFragment) getParentFragment()).showNavBar(isScrollingUp);
             }
         });
+    }
+    private void showBear(boolean empty){
+        if (empty) {
+            AnimationHelper.getInstance(activity).animateViewFadeIn(emptyBear);
+            ((MainFragment) getParentFragment()).showNavBar(true);
+        }
+        else
+            emptyBear.setVisibility(View.GONE);
     }
 }
