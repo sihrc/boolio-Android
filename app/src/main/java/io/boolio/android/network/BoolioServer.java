@@ -98,7 +98,8 @@ public class BoolioServer {
             public void onResponse(JSONObject response) {
                 if (DEBUG)
                     Debugger.log(BoolioServer.class, "Request at: " + url + " \n Returned with: \n" + response.toString());
-                listener.onResponse(response);
+                if (listener != null)
+                    listener.onResponse(response);
             }
         }, errorListener));
     }
