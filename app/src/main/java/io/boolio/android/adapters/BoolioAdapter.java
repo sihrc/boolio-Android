@@ -1,15 +1,12 @@
 package io.boolio.android.adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
-
-import com.android.volley.toolbox.NetworkImageView;
 
 import io.boolio.android.R;
 import io.boolio.android.animation.TextAnimation;
@@ -19,8 +16,6 @@ import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.Dialogs;
 import io.boolio.android.helpers.Utils;
 import io.boolio.android.models.Question;
-import io.boolio.android.network.BoolioServer;
-import io.boolio.android.network.NetworkCallback;
 import io.boolio.android.network.ServerFeed;
 import io.boolio.android.network.ServerQuestion;
 import io.boolio.android.network.ServerUser;
@@ -32,7 +27,7 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
     Context context;
     int resource;
 
-    Runnable onEmpty;
+    Runnable onDataSetChanged;
 
     public BoolioAdapter(Context context) {
         super(context, R.layout.item_question);
@@ -158,15 +153,13 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
         BoolioNetworkImageView questionImage;
     }
 
-    public void setOnEmpty(Runnable onEmpty) {
-        this.onEmpty = onEmpty;
+    public void setOnDataSetChanged(Runnable onDataSetChanged) {
+        this.onDataSetChanged = onDataSetChanged;
     }
 
-    @Override
-    public void notifyDataSetChanged() {
-        super.notifyDataSetChanged();
-        if (getCount() == 0 && onEmpty != null) {
-            onEmpty.run();
-        }
+    public void onDataSetChanged() {
+        notifyDataSetChanged();
+        if (onDataSetChanged != null)
+            onDataSetChanged.run();
     }
 }
