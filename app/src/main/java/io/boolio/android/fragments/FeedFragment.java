@@ -135,6 +135,7 @@ public class FeedFragment extends BoolioFragment {
                         questionAdapter.insert(question, i);
                         questionAdapter.notifyDataSetChanged();
                         ServerUser.getInstance(activity).unskipQuestion(question);
+                        emptyBear.setVisibility(questionAdapter.getCount() == 0 ? View.VISIBLE : View.GONE);
                     }
                 };
             }
