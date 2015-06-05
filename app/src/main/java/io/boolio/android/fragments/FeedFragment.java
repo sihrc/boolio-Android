@@ -19,6 +19,8 @@ import io.boolio.android.custom.EnhancedListView;
 import io.boolio.android.custom.PullToRefreshView;
 import io.boolio.android.custom.ScrollingListView;
 import io.boolio.android.gcm.GCMService;
+import io.boolio.android.helpers.tracking.EventTracker;
+import io.boolio.android.helpers.tracking.TrackEvent;
 import io.boolio.android.models.Question;
 import io.boolio.android.network.ServerFeed;
 import io.boolio.android.network.ServerUser;
@@ -87,6 +89,7 @@ public class FeedFragment extends BoolioFragment {
         pullToRefreshLayout.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                EventTracker.getInstance(activity).track(TrackEvent.PULL_DOWN);
                 pullQuestions();
             }
         });
@@ -124,10 +127,12 @@ public class FeedFragment extends BoolioFragment {
             public EnhancedListView.Undoable onDismiss(EnhancedListView enhancedListView, final int i) {
                 final Question question = questionAdapter.remove(i);
                 questionAdapter.onDataSetChanged();
+                EventTracker.getInstance(activity).trackQuestion(TrackEvent.ANSWER_QUESTION, question, "skipped");
                 ServerUser.getInstance(activity).skipQuestion(question);
                 return new EnhancedListView.Undoable() {
                     @Override
                     public void undo() {
+                        EventTracker.getInstance(activity).trackQuestion(TrackEvent.ANSWER_QUESTION, question, "undo");
                         questionAdapter.insert(question, i);
                         questionAdapter.onDataSetChanged();
                         ServerUser.getInstance(activity).unskipQuestion(question);

@@ -5,10 +5,17 @@ import android.util.Log;
 
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
+import io.boolio.android.BuildConfig;
 import io.boolio.android.R;
 import io.boolio.android.helpers.Debugger;
+import io.boolio.android.models.Question;
 
 /**
  * Created by Chris on 6/3/15.
@@ -42,8 +49,13 @@ public class EventTracker {
         // Mixpanel already has date / operating system/ etc
         // Send a "User Type: Paid" property will be sent
         // with all future track calls.
-        // JSONObject props = new JSONObject();
-        // mixpanel.registerSuperProperties(props);
+        JSONObject props = new JSONObject();
+        try {
+            props.put("dev", BuildConfig.DEBUG);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        mixpanel.registerSuperProperties(props);
     }
 
     public void attachUser(String userId) {
@@ -80,7 +92,32 @@ public class EventTracker {
      * Event Tracking *
      */
     public void track(TrackEvent event) {
+        track(event, null);
+    }
+
+    public void trackQuestion(TrackEvent event, final Question question, final String answer) {
+       track(event, new HashMap<String, Object>() {{
+           put("tags", question.tags);
+           put("has_image", question.image != null && !question.image.equals(""));
+           put("default_answer", question.left.equals("No"));
+           put("question_id", question.questionId);
+           put("creator_id", question.creatorId);
+           if (answer != null)
+               put("answer", answer);
+       }});
+    }
+
+    public void track(TrackEvent event, Map<String, Object> params) {
         JSONObject pack = new JSONObject();
+        if (params != null) {
+            for (Map.Entry<String, Object> entry : params.entrySet()) {
+                try {
+                    pack.put(entry.getKey(), entry.getValue());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 
         Debugger.log(EventTracker.class, event.toString() + " " + pack.toString());
         mixpanel.track(event.toString(), pack);
