@@ -15,6 +15,7 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import io.boolio.android.R;
@@ -23,6 +24,8 @@ import io.boolio.android.callbacks.QuestionsCallback;
 import io.boolio.android.custom.BoolioSearchView;
 import io.boolio.android.custom.ScrollingListView;
 import io.boolio.android.helpers.Utils;
+import io.boolio.android.helpers.tracking.EventTracker;
+import io.boolio.android.helpers.tracking.TrackEvent;
 import io.boolio.android.models.Question;
 import io.boolio.android.network.ServerFeed;
 
@@ -95,7 +98,7 @@ public class SearchFragment extends BoolioFragment {
         return rootView;
     }
 
-    private boolean search(String query) {
+    private boolean search(final String query) {
         if (viewPager.getCurrentItem() != 0 || query.isEmpty()) {
             questionsTabAdapter.clear();
             questionsTabAdapter.notifyDataSetChanged();
@@ -104,6 +107,9 @@ public class SearchFragment extends BoolioFragment {
         }
         isEmpty = false;
         searchServer(query);
+        EventTracker.getInstance(context).track(TrackEvent.SEARCH, new HashMap<String, Object>() {{
+            put("query", query);
+        }});
         return true;
     }
 

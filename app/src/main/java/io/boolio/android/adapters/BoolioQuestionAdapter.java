@@ -5,7 +5,11 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
+import java.util.HashMap;
+
 import io.boolio.android.R;
+import io.boolio.android.helpers.tracking.EventTracker;
+import io.boolio.android.helpers.tracking.TrackEvent;
 import io.boolio.android.models.Question;
 import io.boolio.android.network.ServerQuestion;
 import io.boolio.android.network.NetworkCallback;
@@ -15,9 +19,11 @@ import io.boolio.android.network.NetworkCallback;
  */
 public class BoolioQuestionAdapter extends BoolioAdapter {
     final private static int ANIMATION_DELAY = 1000;
+    Context context;
 
     public BoolioQuestionAdapter(Context context) {
         super(context);
+        this.context = context;
     }
 
     @Override
@@ -27,6 +33,7 @@ public class BoolioQuestionAdapter extends BoolioAdapter {
             public void onClick(View v) {
                 holder.leftAnswer.setEnabled(false);
                 holder.rightAnswer.setEnabled(false);
+                EventTracker.getInstance(context).trackQuestion(TrackEvent.ANSWER_QUESTION, question, "left");
                 ServerQuestion.getInstance(context).postAnswer(question.questionId, "left", getNewNetworkCallback(holder, question));
             }
         });
@@ -35,6 +42,7 @@ public class BoolioQuestionAdapter extends BoolioAdapter {
             public void onClick(View v) {
                 holder.leftAnswer.setEnabled(false);
                 holder.rightAnswer.setEnabled(false);
+                EventTracker.getInstance(context).trackQuestion(TrackEvent.ANSWER_QUESTION, question, "right");
                 ServerQuestion.getInstance(context).postAnswer(question.questionId, "right",
                         getNewNetworkCallback(holder, question));
             }

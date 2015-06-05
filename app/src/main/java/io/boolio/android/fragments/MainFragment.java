@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import com.soundcloud.android.crop.Crop;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import io.boolio.android.R;
@@ -25,6 +26,8 @@ import io.boolio.android.custom.ScrollingListView;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.PictureHelper;
 import io.boolio.android.helpers.Utils;
+import io.boolio.android.helpers.tracking.EventTracker;
+import io.boolio.android.helpers.tracking.TrackEvent;
 
 /**
  * Created by Chris on 4/28/15.
@@ -118,7 +121,11 @@ public class MainFragment extends BoolioFragment {
 
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            public void onPageScrolled(final int position, float positionOffset, int positionOffsetPixels) {
+                EventTracker.getInstance(activity).track(TrackEvent.SLIDE_NAVIGATE, new HashMap<String, Object>() {{
+                    if (position < fragmentList.size())
+                        put("fragment", fragmentList.get(position).getClass().getSimpleName().replace("Fragment", "").toLowerCase());
+                }});
             }
 
             @Override
@@ -173,7 +180,10 @@ public class MainFragment extends BoolioFragment {
                 if (v == curNavButton) {
                     return;
                 }
-
+                EventTracker.getInstance(activity).track(TrackEvent.BUTTON_NAVIGATE, new HashMap<String, Object>() {{
+                    if (index < fragmentList.size())
+                        put("fragment", fragmentList.get(index).getClass().getSimpleName().replace("Fragment", "").toLowerCase());
+                }});
                 viewPager.setCurrentItem(index, true);
 
                 if (callback != null) {

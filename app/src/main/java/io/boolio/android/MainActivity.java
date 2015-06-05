@@ -93,6 +93,7 @@ public class MainActivity extends FacebookAuth {
             return FeedFragment.ORDER;
         }
 
+        EventTracker.getInstance(this).track(TrackEvent.PUSH_NOTIFICATION);
         switch (intent.getAction()) {
             case "boolio-question":
                 return ProfileFragment.ORDER;

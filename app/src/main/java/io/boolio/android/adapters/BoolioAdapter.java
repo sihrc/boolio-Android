@@ -18,6 +18,8 @@ import io.boolio.android.custom.BoolioProfileImage;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.Dialogs;
 import io.boolio.android.helpers.Utils;
+import io.boolio.android.helpers.tracking.EventTracker;
+import io.boolio.android.helpers.tracking.TrackEvent;
 import io.boolio.android.models.Question;
 import io.boolio.android.network.BoolioServer;
 import io.boolio.android.network.NetworkCallback;
@@ -109,6 +111,7 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
         holder.report.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                EventTracker.getInstance(context).trackQuestion(TrackEvent.DELETE_QUESTION, question, null);
                 Dialogs.messageDialog(context, R.string.report_title, R.string.report_message, new Runnable() {
                     @Override
                     public void run() {
@@ -123,6 +126,7 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                EventTracker.getInstance(context).trackQuestion(TrackEvent.DELETE_QUESTION, question, null);
                 Dialogs.messageDialog(context, R.string.delete_title, R.string.delete_message, new Runnable() {
                     @Override
                     public void run() {

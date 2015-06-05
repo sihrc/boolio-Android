@@ -1,4 +1,4 @@
-package io.boolio.android.tracking;
+package io.boolio.android.helpers.tracking;
 
 import android.content.Context;
 
