@@ -74,6 +74,8 @@ public class GCMService extends IntentService {
     // This is just one simple example of what you might choose to do with
     // a GCM message.
     private void sendNotification(final Bundle bundle) {
+        if (bundle == null)
+            return;
         final NotificationManager mNotificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
 
