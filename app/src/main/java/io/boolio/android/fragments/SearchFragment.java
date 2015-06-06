@@ -50,7 +50,7 @@ public class SearchFragment extends BoolioFragment {
             questionsTabAdapter.clear();
             if (!isEmpty)
                 questionsTabAdapter.addAll(questionList);
-            questionsTabAdapter.notifyDataSetChanged();
+            questionsTabAdapter.onDataSetChanged();
         }
     };
 
@@ -79,7 +79,10 @@ public class SearchFragment extends BoolioFragment {
 
         searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
+            public boolean onQueryTextSubmit(final String query) {
+                EventTracker.getInstance(context).track(TrackEvent.SEARCH, new HashMap<String, Object>() {{
+                    put("query", query);
+                }});
                 searchBar.clearFocus();
                 Utils.hideKeyboard(activity, searchBar);
                 return true;
@@ -98,7 +101,7 @@ public class SearchFragment extends BoolioFragment {
         return rootView;
     }
 
-    private boolean search(final String query) {
+    private boolean search(String query) {
         if (viewPager.getCurrentItem() != 0 || query.isEmpty()) {
             questionsTabAdapter.clear();
             questionsTabAdapter.notifyDataSetChanged();
@@ -107,9 +110,6 @@ public class SearchFragment extends BoolioFragment {
         }
         isEmpty = false;
         searchServer(query);
-        EventTracker.getInstance(context).track(TrackEvent.SEARCH, new HashMap<String, Object>() {{
-            put("query", query);
-        }});
         return true;
     }
 
