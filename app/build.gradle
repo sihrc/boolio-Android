@@ -60,5 +60,5 @@ dependencies {
     // NineOlds for dismissable listview
     compile 'com.nineoldandroids:library:2.4.0'
     // Mixpanel
-    compile "com.mixpanel.android:mixpanel-android:4.5.3"
+    compile 'com.mixpanel.android:mixpanel-android:4.5.3'
 }

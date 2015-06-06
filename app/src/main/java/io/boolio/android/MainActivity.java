@@ -9,6 +9,8 @@ import android.widget.Toast;
 
 import com.facebook.Profile;
 
+import java.util.HashMap;
+
 import io.boolio.android.fragments.FeedFragment;
 import io.boolio.android.fragments.MainFragment;
 import io.boolio.android.fragments.ProfileFragment;
@@ -93,11 +95,16 @@ public class MainActivity extends FacebookAuth {
             return FeedFragment.ORDER;
         }
 
-        EventTracker.getInstance(this).track(TrackEvent.PUSH_NOTIFICATION);
         switch (intent.getAction()) {
             case "boolio-question":
+                EventTracker.getInstance(this).track(TrackEvent.PUSH_NOTIFICATION, new HashMap<String, Object>() {{
+                    put("type", "update_answers");
+                }});
                 return ProfileFragment.ORDER;
             default:
+                EventTracker.getInstance(this).track(TrackEvent.PUSH_NOTIFICATION, new HashMap<String, Object>(){{
+                    put("type", "new_questions");
+                }});
                 return FeedFragment.ORDER;
         }
     }
