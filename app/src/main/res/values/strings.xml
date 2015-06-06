@@ -8,7 +8,7 @@
     <string name="gcm_project_id">744244130696</string>
 
     <!-- Mixpanel-->
-    <string name="mixpanel_token">729163f26fd10f2f724f263a6d01f0d2</string>
+    <string name="mixpanel_token">33daa7896565704894f869bceca83b08</string>
 
     <!-- Google Android API Key -->
     <string name="google_api_key">AIzaSyCd4ZKm-acJXnOfXiSvhEyPj4OjHN_fYBo</string>
