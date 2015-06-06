@@ -121,12 +121,7 @@ public class MainFragment extends BoolioFragment {
 
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(final int position, float positionOffset, int positionOffsetPixels) {
-                EventTracker.getInstance(activity).track(TrackEvent.SLIDE_NAVIGATE, new HashMap<String, Object>() {{
-                    if (position < fragmentList.size())
-                        put("fragment", fragmentList.get(position).getClass().getSimpleName().replace("Fragment", "").toLowerCase());
-                }});
-            }
+            public void onPageScrolled(final int position, float positionOffset, int positionOffsetPixels) {}
 
             @Override
             public void onPageSelected(int position) {
@@ -149,7 +144,6 @@ public class MainFragment extends BoolioFragment {
                     }
                 }
                 Utils.hideKeyboard(activity);
-
             }
 
             @Override
