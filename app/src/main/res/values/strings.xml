@@ -7,6 +7,9 @@
     <string name="facebook_app_id">952141981483350</string>
     <string name="gcm_project_id">744244130696</string>
 
+    <!-- Mixpanel-->
+    <string name="mixpanel_token">729163f26fd10f2f724f263a6d01f0d2</string>
+
     <!-- Google Android API Key -->
     <string name="google_api_key">AIzaSyCd4ZKm-acJXnOfXiSvhEyPj4OjHN_fYBo</string>
     <string name="google_cx_key">007715071266837083845:nqg2-xtnsga</string>
@@ -30,7 +33,7 @@
     <string name="login_email">email</string>
     <string name="login_password">password</string>
     <string name="login_with_facebook">or Login with</string>
-    <string name="login_button_facebook">Sign up with Facebook</string>
+    <string name="login_button_facebook">Sign in with Facebook</string>
 
     <!-- CreateQuestion Fragment -->
     <string name="loading_picture">Loading Picture …</string>
@@ -68,8 +71,14 @@
     <string name="check_google_play_warning">Please enable Google Play Services to receive notifications about questions!</string>
     <string name="report_title">Report</string>
     <string name="report_message">You are about to mark this question as inappropriate.</string>
+    <string name="delete_title">Delete</string>
+    <string name="delete_message">You are about to delete this question.</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+
+    <!-- Update App -->
+    <string name="update_title">Update</string>
+    <string name="update_message">New version of boolio is available. Would you like to update boolio?</string>
 
     <!-- ScrollListView-->
     <string name="elv_undo">Undo</string>

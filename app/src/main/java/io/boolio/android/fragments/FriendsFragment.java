@@ -78,7 +78,7 @@ public class FriendsFragment extends BoolioFragment {
             public void handleContactClick(String number) {
                 Intent smsIntent = new Intent(android.content.Intent.ACTION_VIEW);
                 smsIntent.setData(Uri.parse("sms:" + number));
-                smsIntent.putExtra("sms_body", "Hey! I'm on boolio. You should join!\n https://boolio.io");
+                smsIntent.putExtra("sms_body", "Hey! I'm on boolio. You should join!\n https://boolio.io/android");
                 FriendsFragment.this.startActivityForResult(smsIntent, 9);
             }
         };

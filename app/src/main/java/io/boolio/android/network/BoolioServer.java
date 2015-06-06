@@ -8,11 +8,19 @@ import android.util.LruCache;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpClientStack;
+import com.android.volley.toolbox.HttpStack;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.apache.http.client.CookieStore;
+import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
+
+import java.net.CookieHandler;
+import java.net.CookieManager;
 
 import io.boolio.android.helpers.Debugger;
 
@@ -25,6 +33,7 @@ public class BoolioServer {
     ImageLoader imageLoader;
     Context context;
     RequestQueue queue;
+    CookieManager cookieManager;
     // Default Error Listener
     Response.ErrorListener errorListener = new Response.ErrorListener() {
         @Override
@@ -37,9 +46,12 @@ public class BoolioServer {
 
     public BoolioServer(Context context) {
         this.context = context;
+        cookieManager = new CookieManager();
+        CookieHandler.setDefault(cookieManager);
         this.queue = Volley.newRequestQueue(context);
         this.imageLoader = new ImageLoader(queue, new ImageLoader.ImageCache() {
             LruCache<String, Bitmap> cache = new LruCache<>(40);
+
             @Override
             public Bitmap getBitmap(String url) {
                 return cache.get(url);
@@ -55,6 +67,24 @@ public class BoolioServer {
         NukeSSLCerts.nuke();
     }
 
+    public void getNetworkImage(String url, final NetworkCallback<Bitmap> callback){
+        imageLoader.get(url, new ImageLoader.ImageListener() {
+            @Override
+            public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                if (callback != null && response != null && response.getBitmap() != null) {
+                    callback.handle(response.getBitmap());
+                }
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if (error.networkResponse != null && error.networkResponse.data != null)
+                    Log.e("Volley Error", new String(error.networkResponse.data));
+                error.printStackTrace();
+            }
+        });
+    }
+
     public ImageLoader getImageLoader() {
         return imageLoader;
     }
@@ -68,7 +98,8 @@ public class BoolioServer {
             public void onResponse(JSONObject response) {
                 if (DEBUG)
                     Debugger.log(BoolioServer.class, "Request at: " + url + " \n Returned with: \n" + response.toString());
-                listener.onResponse(response);
+                if (listener != null)
+                    listener.onResponse(response);
             }
         }, errorListener));
     }

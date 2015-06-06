@@ -29,7 +29,7 @@ public class PrefsHelper {
     public String getString(String key) {
         return prefs.getString(key, "");
     }
-    public int getInt(String key) {return prefs.getInt(key, 0);}
+    public int getInt(String key) {return prefs.getInt(key, -1);}
 
     /**
      * Setters *

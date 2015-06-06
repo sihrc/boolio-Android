@@ -6,10 +6,15 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Iterator;
+
 import io.boolio.android.helpers.BoolioUserHandler;
+import io.boolio.android.helpers.PrefsHelper;
+import io.boolio.android.helpers.ABTestHelper;
 import io.boolio.android.models.Question;
 import io.boolio.android.models.User;
 import io.boolio.android.network.parser.UserParser;
@@ -59,6 +64,81 @@ public class ServerUser extends BoolioServer {
                 });
     }
 
+    public void getABTests() {
+        final PrefsHelper helper = PrefsHelper.getInstance(context);
+        makeRequest(Request.Method.GET,
+                API.GET_TESTS,
+                new JSONObject(),
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONArray tests = response.getJSONArray("tests");
+                            for (int i = 0; i < tests.length(); i++) {
+                                String test = tests.getString(i);
+                                int value = helper.getInt(test);
+                                if (value == -1) {
+                                    getABTest(test);
+                                } else {
+                                    ABTestHelper.getInstance(context).addTest(test, value);
+                                }
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
+
+    private void getABTest(final String name) {
+        makeRequest(Request.Method.POST, API.GET_TESTS, new JSONObject() {{
+            try {
+                put("name", name);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }}, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    int value = response.getInt("value");
+                    PrefsHelper.getInstance(context).saveInt(name, value);
+                    ABTestHelper.getInstance(context).addTest(name, value);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    public void getConfigs(final Runnable runnable) {
+        makeRequest(Request.Method.GET,
+                API.GET_VERSION,
+                new JSONObject(),
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        PrefsHelper prefsHelper = PrefsHelper.getInstance(context);
+                        Iterator<String> keys = response.keys();
+
+                        String tag;
+                        while (keys.hasNext()) {
+                            tag = keys.next();
+                            try {
+                                prefsHelper.saveString(tag, response.getString(tag));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        if (runnable != null) {
+                            runnable.run();
+                        }
+                    }
+                });
+    }
+
     /**
      * POST
      */
@@ -91,11 +171,7 @@ public class ServerUser extends BoolioServer {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }}, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-            }
-        });
+        }}, null);
     }
 
     public void unskipQuestion(final Question question) {
@@ -106,10 +182,6 @@ public class ServerUser extends BoolioServer {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }}, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-            }
-        });
+        }}, null);
     }
 }
