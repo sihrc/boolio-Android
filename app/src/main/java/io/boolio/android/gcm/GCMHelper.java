@@ -10,6 +10,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.io.IOException;
 
+import io.boolio.android.BuildConfig;
 import io.boolio.android.R;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.PrefsHelper;

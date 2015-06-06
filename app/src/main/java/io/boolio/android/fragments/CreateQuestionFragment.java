@@ -16,12 +16,17 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.util.HashMap;
+import java.util.Objects;
+
 import io.boolio.android.R;
 import io.boolio.android.fragments.search.SearchImageFragment;
 import io.boolio.android.helpers.BoolioCallback;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.PictureHelper;
 import io.boolio.android.helpers.Utils;
+import io.boolio.android.helpers.tracking.EventTracker;
+import io.boolio.android.helpers.tracking.TrackEvent;
 import io.boolio.android.models.Question;
 import io.boolio.android.network.ServerQuestion;
 
@@ -94,7 +99,7 @@ public class CreateQuestionFragment extends BoolioFragment {
             return;
         }
 
-        Question question = new Question();
+        final Question question = new Question();
         question.question = questionText.getText().toString();
         question.left = left.getText().length() == 0 ? "No" : left.getText().toString();
         question.right = right.getText().length() == 0 ? "Yes" : right.getText().toString();
@@ -109,6 +114,7 @@ public class CreateQuestionFragment extends BoolioFragment {
         ServerQuestion.getInstance(activity).postQuestion(question, imageSaved, new Runnable() {
             @Override
             public void run() {
+                EventTracker.getInstance(activity).trackQuestion(TrackEvent.CREATE_QUESTION, question, null);
                 progress.setVisibility(View.GONE);
                 reset();
                 if (runnable != null)
@@ -126,18 +132,22 @@ public class CreateQuestionFragment extends BoolioFragment {
                         switch (which) {
                             case 0: // Load from Gallery
                                 imageType = "string";
+                                EventTracker.getInstance(activity).track(TrackEvent.LOAD_PICTURE);
                                 helper.dispatchChoosePictureIntent(activity, CreateQuestionFragment.this.getParentFragment());
                                 break;
                             case 1: // Take a picture
                                 imageType = "string";
+                                EventTracker.getInstance(activity).track(TrackEvent.TAKE_PICTURE);
                                 helper.dispatchTakePictureIntent(activity, CreateQuestionFragment.this.getParentFragment());
                                 break;
                             case 2: // Search
                                 imageType = "string";
+                                EventTracker.getInstance(activity).track(TrackEvent.ATTEMPT_IMAGE_SEARCH);
                                 SearchImageFragment.newInstance(new BoolioCallback<Uri>() {
                                     @Override
                                     public void handle(Uri object) {
                                         helper.dispatchCropPictureIntent(CreateQuestionFragment.this.getParentFragment(), networkImageView, object);
+                                        EventTracker.getInstance(activity).track(TrackEvent.CHOSE_IMAGE_SEARCH);
                                     }
                                 }).show(getChildFragmentManager(), "Search");
                                 break;

@@ -15,6 +15,7 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import io.boolio.android.R;
@@ -23,6 +24,8 @@ import io.boolio.android.callbacks.QuestionsCallback;
 import io.boolio.android.custom.BoolioSearchView;
 import io.boolio.android.custom.ScrollingListView;
 import io.boolio.android.helpers.Utils;
+import io.boolio.android.helpers.tracking.EventTracker;
+import io.boolio.android.helpers.tracking.TrackEvent;
 import io.boolio.android.models.Question;
 import io.boolio.android.network.ServerFeed;
 
@@ -47,7 +50,7 @@ public class SearchFragment extends BoolioFragment {
             questionsTabAdapter.clear();
             if (!isEmpty)
                 questionsTabAdapter.addAll(questionList);
-            questionsTabAdapter.notifyDataSetChanged();
+            questionsTabAdapter.onDataSetChanged();
         }
     };
 
@@ -76,7 +79,10 @@ public class SearchFragment extends BoolioFragment {
 
         searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
+            public boolean onQueryTextSubmit(final String query) {
+                EventTracker.getInstance(context).track(TrackEvent.SEARCH, new HashMap<String, Object>() {{
+                    put("query", query);
+                }});
                 searchBar.clearFocus();
                 Utils.hideKeyboard(activity, searchBar);
                 return true;
