@@ -108,6 +108,7 @@ public class MainFragment extends BoolioFragment {
     private void setupViewPager() {
         fragmentList = new ArrayList<BoolioFragment>() {{
             add(FeedFragment.getInstance());
+            // breaking here because userId is null
             add(ProfileFragment.newInstance(BoolioUserHandler.getInstance(activity).getUser().userId));
             add(CreateQuestionFragment.newInstance(new Runnable() {
                 @Override
