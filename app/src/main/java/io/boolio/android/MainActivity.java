@@ -101,10 +101,13 @@ public class MainActivity extends FacebookAuth {
                     put("type", "update_answers");
                 }});
                 return ProfileFragment.ORDER;
-            default:
+            case "new-feed":
                 EventTracker.getInstance(this).track(TrackEvent.PUSH_NOTIFICATION, new HashMap<String, Object>(){{
                     put("type", "new_questions");
                 }});
+                return FeedFragment.ORDER;
+
+            default:
                 return FeedFragment.ORDER;
         }
     }
