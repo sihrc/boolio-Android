@@ -71,7 +71,7 @@ public class BoolioQuestionAdapter extends BoolioAdapter {
             @Override
             public void onAnimationEnd(Animation animation) {
                 remove(question);
-                notifyDataSetChanged();
+                onDataSetChanged();
                 holder.leftAnswer.setEnabled(true);
                 holder.rightAnswer.setEnabled(true);
             }
