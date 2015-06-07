@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.Profile;
 
+import io.fabric.sdk.android.Fabric;
 import java.util.HashMap;
 
 import io.boolio.android.fragments.FeedFragment;
@@ -36,6 +38,7 @@ public class MainActivity extends FacebookAuth {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main);
 
         fragmentManager = getSupportFragmentManager();
