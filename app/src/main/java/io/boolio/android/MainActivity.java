@@ -132,6 +132,11 @@ public class MainActivity extends FacebookAuth {
                 }
             }
         });
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventTracker.getInstance(this).flush();
     }
 }
