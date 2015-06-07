@@ -139,6 +139,21 @@ public class ServerUser extends BoolioServer {
                 });
     }
 
+    public void getAPPVersion(final NetworkCallback<String> versionCallback) {
+        makeRequest(Request.Method.GET,
+                API.PLAY_STORE_API, new JSONObject(), new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        if (versionCallback != null)
+                            try {
+                                versionCallback.handle(response.getString("version"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                    }
+                });
+    }
+
     /**
      * POST
      */

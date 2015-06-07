@@ -54,12 +54,7 @@ public class MainActivity extends FacebookAuth {
         SCREEN_HEIGHT = size.y;
 
         ServerUser.getInstance(this).getABTests();
-        ServerUser.getInstance(this).getConfigs(new Runnable() {
-            @Override
-            public void run() {
-                updateApp();
-            }
-        });
+        checkVersion();
     }
 
     @Override
@@ -73,7 +68,6 @@ public class MainActivity extends FacebookAuth {
                 PrefsHelper.getInstance(MainActivity.this).saveString("userId", object.userId);
                 EventTracker.getInstance(MainActivity.this).attachUser(object.userId);
                 EventTracker.getInstance(MainActivity.this).track(TrackEvent.OPEN_APP);
-                updateApp();
             }
         };
         User user = new User(profile.getId(), profile.getName());
@@ -115,19 +109,29 @@ public class MainActivity extends FacebookAuth {
         }
     }
 
-    private void updateApp() {
-        if (BuildConfig.VERSION_CODE < Integer.parseInt(PrefsHelper.getInstance(this).getString("version"))) {
-            Dialogs.messageDialog(this, R.string.update_title, R.string.update_message, new Runnable() {
-                @Override
-                public void run() {
-                    final String appPackageName = getPackageName();
-                    try {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
-                    } catch (android.content.ActivityNotFoundException anfe) {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
-                    }
+    /**
+     * Gets the app version from the play store through an external API call
+     */
+    private void checkVersion() {
+        ServerUser.getInstance(this).getAPPVersion(new NetworkCallback<String>() {
+            @Override
+            public void handle(String version) {
+                PrefsHelper.getInstance(MainActivity.this).saveString("version", version);
+                if (!BuildConfig.VERSION_NAME.equals(version)) {
+                    Dialogs.messageDialog(MainActivity.this, R.string.update_title, R.string.update_message, new Runnable() {
+                        @Override
+                        public void run() {
+                            final String appPackageName = getPackageName();
+                            try {
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                            } catch (android.content.ActivityNotFoundException anfe) {
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                            }
+                        }
+                    });
                 }
-            });
-        }
+            }
+        });
+
     }
 }

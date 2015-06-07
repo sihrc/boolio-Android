@@ -27,6 +27,9 @@ public class API {
     final static public String UNSKIP_QUESTION = BASE + "/users/unskip";
     final static public String GET_VERSION = BASE + "/configs/android";
 
+    // External
+    final static public String PLAY_STORE_API = "https://androidquery.appspot.com/api/market?app=io.boolio.android";
+
     // Tests
     final static public String GET_TESTS = BASE + "/tests";
 
