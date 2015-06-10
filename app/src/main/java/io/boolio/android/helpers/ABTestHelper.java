@@ -33,7 +33,7 @@ public class ABTestHelper {
 
     public int getTest(String key) {
         if (!abtests.containsKey(key)) {
-            return PrefsHelper.getInstance(context).getInt(key);
+            return PrefsHelper.getInstance().getInt(key);
         }
         return abtests.get(key);
     }

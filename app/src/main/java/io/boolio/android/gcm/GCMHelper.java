@@ -4,22 +4,20 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.io.IOException;
 
-import io.boolio.android.BuildConfig;
 import io.boolio.android.R;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.PrefsHelper;
 import io.boolio.android.models.User;
-import io.boolio.android.network.BoolioServer;
-import io.boolio.android.network.ServerUser;
+import io.boolio.android.network.clients.BoolioUserClient;
 
 /**
  * Created by Chris on 5/2/15.
+ * Helps with GCM registration on the Boolio Server
  */
 public class GCMHelper {
     final static private String PROPERTY_REG_ID = "gcm_reg_id";
@@ -42,16 +40,16 @@ public class GCMHelper {
     }
 
     public String getRegistrationId() {
-        String registrationId = PrefsHelper.getInstance(context).getString(PROPERTY_REG_ID);
+        String registrationId = PrefsHelper.getInstance().getString(PROPERTY_REG_ID);
 
         // Check if app was updated; if so, it must clear the registration ID
         // since the existing registration ID is not guaranteed to work with
         // the new app version.
-        int registeredVersion = PrefsHelper.getInstance(context).getInt(PROPERTY_APP_VERSION);
+        int registeredVersion = PrefsHelper.getInstance().getInt(PROPERTY_APP_VERSION);
         int currentVersion = getAppVersion(context);
         if (registeredVersion != currentVersion) {
             registerInBackground();
-            PrefsHelper.getInstance(context).saveInt(PROPERTY_APP_VERSION, currentVersion);
+            PrefsHelper.getInstance().saveInt(PROPERTY_APP_VERSION, currentVersion);
         }
         return registrationId;
     }
@@ -85,22 +83,24 @@ public class GCMHelper {
                     if (gcm == null) {
                         gcm = GoogleCloudMessaging.getInstance(context);
                     }
-                    User user = BoolioUserHandler.getInstance(context).getUser();
+                    User user = BoolioUserHandler.getInstance().getUser();
                     String regId = gcm.register(context.getString(R.string.gcm_project_id));
+
+                    user.gcm = regId;
 
                     // You should send the registration ID to your server over HTTP,
                     // so it can use GCM/HTTP or CCS to send messages to your app.
                     // The request to your server should be authenticated if your app
                     // is using accounts.
-                    ServerUser.getInstance(context).updateUserGCM(user.userId, regId);
+                    BoolioUserClient.api().updateUserGCM(user, null);
 
                     // For this demo: we don't need to send it because the device
                     // will send upstream messages to a server that echo back the
                     // message using the 'from' address in the message.
 
                     // Persist the registration ID - no need to register again.
-                    PrefsHelper.getInstance(context).saveString(PROPERTY_REG_ID, regId);
-                    user.gcmId = getRegistrationId();
+                    PrefsHelper.getInstance().saveString(PROPERTY_REG_ID, regId);
+                    user.gcm = getRegistrationId();
                 } catch (IOException ex) {
                     // If there is an error, don't just keep trying to register.
                     // Require the user to click a button again, or perform

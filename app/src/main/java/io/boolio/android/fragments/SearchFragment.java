@@ -10,7 +10,6 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -20,14 +19,15 @@ import java.util.List;
 
 import io.boolio.android.R;
 import io.boolio.android.adapters.BoolioQuestionAdapter;
-import io.boolio.android.callbacks.QuestionsCallback;
 import io.boolio.android.custom.BoolioSearchView;
 import io.boolio.android.custom.ScrollingListView;
 import io.boolio.android.helpers.Utils;
 import io.boolio.android.helpers.tracking.EventTracker;
 import io.boolio.android.helpers.tracking.TrackEvent;
 import io.boolio.android.models.Question;
-import io.boolio.android.network.ServerFeed;
+import io.boolio.android.network.clients.BoolioQuestionClient;
+import io.boolio.android.network.helpers.BoolioCallback;
+import io.boolio.android.network.models.BoolioData;
 
 /**
  * Created by james on 4/21/15.
@@ -44,9 +44,9 @@ public class SearchFragment extends BoolioFragment {
     List<BoolioListFragment> fragmentList;
 
     BoolioQuestionAdapter questionsTabAdapter, friendsTabAdapter, categoriesTabAdapter;
-    QuestionsCallback questionsCallback = new QuestionsCallback() {
+    BoolioCallback<List<Question>> questionsCallback = new BoolioCallback<List<Question>>() {
         @Override
-        public void handleQuestions(List<Question> questionList) {
+        public void handle(List<Question> questionList) {
             questionsTabAdapter.clear();
             if (!isEmpty)
                 questionsTabAdapter.addAll(questionList);
@@ -114,8 +114,8 @@ public class SearchFragment extends BoolioFragment {
     }
 
     private void searchServer(String query) {
-        ServerFeed.getInstance(context).searchQuestion(
-                query, questionsCallback);
+        BoolioQuestionClient.api().searchQuestions(
+                BoolioData.keys("query").values(query), questionsCallback);
     }
 
     private void setupPager() {
@@ -138,8 +138,7 @@ public class SearchFragment extends BoolioFragment {
             }
         };
 
-
-        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }

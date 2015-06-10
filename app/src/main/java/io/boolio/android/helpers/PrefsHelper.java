@@ -14,12 +14,14 @@ public class PrefsHelper {
 
     SharedPreferences prefs;
 
-    public static PrefsHelper getInstance(Context context) {
+    public static void init(Context context) {
         if (instance == null) {
             instance = new PrefsHelper();
             instance.prefs = context.getSharedPreferences(context.getString(R.string.app_name), Context.MODE_PRIVATE);
         }
+    }
 
+    public static PrefsHelper getInstance() {
         return instance;
     }
 

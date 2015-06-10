@@ -5,7 +5,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -19,9 +18,8 @@ import io.boolio.android.MainActivity;
 import io.boolio.android.R;
 import io.boolio.android.callbacks.QuestionsCallback;
 import io.boolio.android.models.Question;
-import io.boolio.android.network.BoolioServer;
-import io.boolio.android.network.ServerFeed;
-import io.boolio.android.network.ServerQuestion;
+import io.boolio.android.network.clients.BoolioQuestionClient;
+import io.boolio.android.network.helpers.BoolioCallback;
 
 /**
  * Created by Chris on 5/2/15.
@@ -87,12 +85,12 @@ public class GCMService extends IntentService {
                 intent.setAction("new-feed");
                 contentIntent = PendingIntent.getActivity(this, GCM + FEED_UPDATE_ID,
                         intent, 0);
-                ServerFeed.getInstance(this).getQuestionFeed(new ArrayList<String>(0), new QuestionsCallback() {
-                    @Override
-                    public void handleQuestions(List<Question> questionList) {
-                        buildFeedUpdate(mNotificationManager, contentIntent, questionList.size());
-                    }
-                });
+               BoolioQuestionClient.api().getQuestionFeed(new ArrayList<String>(0), new BoolioCallback<List<Question>>() {
+                   @Override
+                   public void handle(List<Question> questionList) {
+                       buildFeedUpdate(mNotificationManager, contentIntent, questionList.size());
+                   }
+               });
                 break;
             default:
             case "boolio-question":

@@ -5,12 +5,16 @@ import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.Profile;
+import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
-import io.fabric.sdk.android.Fabric;
 import java.util.HashMap;
 
 import io.boolio.android.fragments.FeedFragment;
@@ -26,9 +30,11 @@ import io.boolio.android.helpers.PrefsHelper;
 import io.boolio.android.helpers.tracking.EventTracker;
 import io.boolio.android.helpers.tracking.TrackEvent;
 import io.boolio.android.models.User;
-import io.boolio.android.network.NetworkCallback;
-import io.boolio.android.network.ServerUser;
-
+import io.boolio.android.network.clients.BoolioGeneralClient;
+import io.boolio.android.network.clients.BoolioUserClient;
+import io.boolio.android.network.helpers.BoolioCallback;
+import io.fabric.sdk.android.Fabric;
+import retrofit.Callback;
 
 public class MainActivity extends FacebookAuth {
     public static int SCREEN_WIDTH, SCREEN_HEIGHT;
@@ -38,7 +44,10 @@ public class MainActivity extends FacebookAuth {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Crashlytics());
+
+        if (!BuildConfig.DEBUG)
+            Fabric.with(this, new Crashlytics());
+
         setContentView(R.layout.activity_main);
 
         fragmentManager = getSupportFragmentManager();
@@ -53,26 +62,43 @@ public class MainActivity extends FacebookAuth {
         SCREEN_WIDTH = size.x;
         SCREEN_HEIGHT = size.y;
 
-        ServerUser.getInstance(this).getABTests();
-        checkVersion();
+
+        ImageLoader.getInstance().init(
+                new ImageLoaderConfiguration.Builder(this)
+                        .memoryCacheExtraOptions(SCREEN_WIDTH, SCREEN_HEIGHT)
+                        .diskCacheExtraOptions(SCREEN_WIDTH, SCREEN_HEIGHT, null)
+                        .diskCacheFileCount(20)
+                        .threadPoolSize(4)
+                        .memoryCache(new LruMemoryCache(2 * 1024 * 1024))
+                        .denyCacheImageMultipleSizesInMemory()
+                        .writeDebugLogs()
+                        .build()
+        );
+
+        BoolioGeneralClient.getConfigs(new BoolioCallback<Object>() {
+            @Override
+            public void handle(Object o) {
+                checkVersion();
+            }
+        });
     }
 
     @Override
     public void loggedIn(Profile profile) {
-        NetworkCallback<User> userCallback = new NetworkCallback<User>() {
+        Callback<User> userCallback = new BoolioCallback<User>() {
             @Override
             public void handle(User object) {
-                BoolioUserHandler.getInstance(MainActivity.this).setUser(object);
+                BoolioUserHandler.getInstance().setUser(object);
                 GCMHelper.getInstance(MainActivity.this).getRegistrationId();
-                fragmentManager.beginTransaction().replace(R.id.container, MainFragment.newInstance(parseIntent(getIntent()))).commitAllowingStateLoss();
-                PrefsHelper.getInstance(MainActivity.this).saveString("userId", object.userId);
-                EventTracker.getInstance(MainActivity.this).attachUser(object.userId);
+                PrefsHelper.getInstance().saveString("_id", object._id);
+                EventTracker.getInstance(MainActivity.this).attachUser(object._id);
                 EventTracker.getInstance(MainActivity.this).track(TrackEvent.OPEN_APP);
+                fragmentManager.beginTransaction().replace(R.id.container, MainFragment.newInstance(parseIntent(getIntent()))).commitAllowingStateLoss();
             }
         };
         User user = new User(profile.getId(), profile.getName());
-        BoolioUserHandler.getInstance(this).setUser(user);
-        ServerUser.getInstance(this).getBoolioUserFromFacebook
+        BoolioUserHandler.getInstance().setUser(user);
+        BoolioUserClient.api().getBoolioUserFromFacebook
                 (user, userCallback);
     }
 
@@ -99,7 +125,7 @@ public class MainActivity extends FacebookAuth {
                 }});
                 return ProfileFragment.ORDER;
             case "new-feed":
-                EventTracker.getInstance(this).track(TrackEvent.PUSH_NOTIFICATION, new HashMap<String, Object>(){{
+                EventTracker.getInstance(this).track(TrackEvent.PUSH_NOTIFICATION, new HashMap<String, Object>() {{
                     put("type", "new_questions");
                 }});
                 return FeedFragment.ORDER;
@@ -113,25 +139,20 @@ public class MainActivity extends FacebookAuth {
      * Gets the app version from the play store through an external API call
      */
     private void checkVersion() {
-        ServerUser.getInstance(this).getAPPVersion(new NetworkCallback<String>() {
-            @Override
-            public void handle(String version) {
-                PrefsHelper.getInstance(MainActivity.this).saveString("version", version);
-                if (!BuildConfig.VERSION_NAME.equals(version)) {
-                    Dialogs.messageDialog(MainActivity.this, R.string.update_title, R.string.update_message, new Runnable() {
-                        @Override
-                        public void run() {
-                            final String appPackageName = getPackageName();
-                            try {
-                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
-                            } catch (android.content.ActivityNotFoundException anfe) {
-                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
-                            }
-                        }
-                    });
+        String version = PrefsHelper.getInstance().getString("version");
+        if (!BuildConfig.VERSION_NAME.equals(version) && !BuildConfig.DEBUG) {
+            Dialogs.messageDialog(MainActivity.this, R.string.update_title, R.string.update_message, new Runnable() {
+                @Override
+                public void run() {
+                    final String appPackageName = getPackageName();
+                    try {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                    } catch (android.content.ActivityNotFoundException anfe) {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     @Override

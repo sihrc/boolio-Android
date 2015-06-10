@@ -9,26 +9,28 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+
+import io.boolio.android.network.helpers.BoolioCallback;
+import retrofit.mime.TypedFile;
 
 /**
  * Created by Chris on 4/17/15.
  */
 public class Utils {
+    public static boolean isNotHere(Object object) {
+        return object == null || object.toString().isEmpty();
+    }
     public static String formatTimeDifferences(String value) {
         long diff = (System.currentTimeMillis() - Long.parseLong(value)) / 1000;
         StringBuilder buf = new StringBuilder();
@@ -59,13 +61,17 @@ public class Utils {
     }
 
     public static File getTempFile(Context context) {
-        File tempFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separatorChar + "Android/data/" + context.getPackageName() + "/files");
+        File tempFile = new File(getTempDir(context) + "/files");
         if (!tempFile.exists() && !tempFile.mkdirs()) {
             Log.e("PictureHelper", "Unable to make Temp File");
             return null;
         }
 
         return new File(tempFile, System.currentTimeMillis() + ".jpg");
+    }
+
+    public static String getTempDir(Context context) {
+        return Environment.getExternalStorageDirectory().getAbsolutePath() + File.separatorChar + "Android/data/" + context.getPackageName();
     }
 
     /**
@@ -186,12 +192,41 @@ public class Utils {
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
 
-    public static ArrayToStringBuilder<String> stringArrayToString = new ArrayToStringBuilder<String>() {
-        @Override
-        public String getItem(String object) {
-            return object;
+    /**
+     * Bitmap to Retrofit TypeFile
+     */
+    public static BoolioTypedFile getTypedFile(Context context, String questionId, Bitmap bm) {
+        if (bm == null) {
+            Log.e("TypedFile Error", "Bitmap is null");
+            return null;
         }
-    };
+
+        File imageFileName = getTempFile(context);
+
+        if (imageFileName == null) {
+            Log.e("TypedFile Error", "Temporary File created was null");
+            return null;
+        }
+
+        // Bitmap to jpeg to TypedFile conversion
+        FileOutputStream out = null;
+        try {
+            out = new FileOutputStream(imageFileName);
+            bm.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            out.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (out != null)
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+        }
+        return new BoolioTypedFile("image/jpeg", questionId, imageFileName);
+    }
+
 
     public static void hideKeyboard(Activity activity) {
         View view = activity.getCurrentFocus();

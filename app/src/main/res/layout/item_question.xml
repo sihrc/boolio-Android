@@ -66,7 +66,7 @@
 
         </RelativeLayout>
 
-        <io.boolio.android.custom.BoolioNetworkImageView
+        <ImageView
             android:id="@+id/question_image"
             android:layout_width="match_parent"
             android:layout_height="@dimen/question_image_height"

@@ -2,14 +2,12 @@ package io.boolio.android.fragments.search;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,20 +16,27 @@ import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
+import com.google.gson.internal.LinkedTreeMap;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageSize;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import org.lucasr.smoothie.AsyncGridView;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import io.boolio.android.MainActivity;
 import io.boolio.android.R;
 import io.boolio.android.custom.BoolioSearchView;
-import io.boolio.android.helpers.BoolioCallback;
 import io.boolio.android.helpers.Utils;
-import io.boolio.android.network.NetworkCallback;
-import io.boolio.android.network.ServerGoogle;
+import io.boolio.android.network.clients.ExternalClient;
+import io.boolio.android.network.helpers.BoolioCallback;
+import io.boolio.android.network.models.BoolioData;
 
 /**
  * Created by Chris on 5/5/15.
@@ -42,7 +47,6 @@ public class SearchImageFragment extends DialogFragment {
     GalleryAdapter galleryAdapter;
 
     // Image Loading
-    ImageLoader imageLoader;
     View progress;
 
 
@@ -62,7 +66,6 @@ public class SearchImageFragment extends DialogFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         this.activity = activity;
-        this.imageLoader = ServerGoogle.getInstance(activity).getImageLoader();
     }
 
     @Nullable
@@ -76,17 +79,38 @@ public class SearchImageFragment extends DialogFragment {
             public boolean onQueryTextSubmit(String query) {
                 galleryAdapter.clear();
                 progress.setVisibility(View.VISIBLE);
-                ServerGoogle.getInstance(activity).getImages(query, new NetworkCallback<List<SearchImage>>() {
-                    @Override
-                    public void handle(List<SearchImage> object) {
-                        if (galleryAdapter != null) {
-                            galleryAdapter.addAll(object);
-                            galleryAdapter.notifyDataSetChanged();
-                        }
+                try {
+                    query = URLEncoder.encode(query, "utf-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
 
-                        progress.setVisibility(View.GONE);
-                    }
-                });
+                for (int i = 0; i < 2; i++) {
+                    ExternalClient.api().getImages(
+                            i * 10 + 1,
+                            getString(R.string.google_cx_key),
+                            getString(R.string.google_api_key),
+                            query,
+                            new BoolioCallback<BoolioData>() {
+                                @Override
+                                public void handle(BoolioData objects) {
+                                    @SuppressWarnings({"unchecked"})
+                                    ArrayList<LinkedTreeMap> items = (ArrayList<LinkedTreeMap>) objects.get("items");
+                                    if (items != null) {
+                                        for (LinkedTreeMap obj : items) {
+                                            LinkedTreeMap image = (LinkedTreeMap) obj.get("image");
+                                            if (galleryAdapter != null) {
+                                                galleryAdapter.add(new SearchImage((String) image.get("thumbnailLink"), (String) obj.get("link")));
+                                            }
+                                        }
+                                    }
+
+                                    galleryAdapter.notifyDataSetChanged();
+                                    progress.setVisibility(View.GONE);
+                                }
+                            });
+                }
+
                 searchView.clearFocus();
                 Utils.hideKeyboard(activity, searchView);
                 return false;
@@ -137,26 +161,26 @@ public class SearchImageFragment extends DialogFragment {
                         dialog.dismiss();
                     }
                 }).setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        }).show();
     }
 
 
     private void showLargerImage(String original) {
-        imageLoader.get(original, new ImageLoader.ImageListener() {
+        ImageSize imageSize = new ImageSize(MainActivity.SCREEN_WIDTH, MainActivity.SCREEN_WIDTH);
+        ImageLoader.getInstance().loadImage(original, imageSize, new SimpleImageLoadingListener() {
             @Override
-            public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                if (response.getBitmap() != null)
-                    showImagePreviewDialog(response.getBitmap());
+            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                showImagePreviewDialog(loadedImage);
             }
 
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
                 Toast.makeText(activity, "Sorry, this image is unavailable", Toast.LENGTH_SHORT).show();
             }
-        }, MainActivity.SCREEN_WIDTH, MainActivity.SCREEN_WIDTH);
+        });
     }
 }
