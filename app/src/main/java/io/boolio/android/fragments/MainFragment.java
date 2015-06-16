@@ -1,5 +1,6 @@
 package io.boolio.android.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,7 +23,6 @@ import java.util.List;
 
 import io.boolio.android.R;
 import io.boolio.android.animation.AnimationHelper;
-import io.boolio.android.custom.ScrollingListView;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.PictureHelper;
 import io.boolio.android.helpers.Utils;
@@ -61,6 +61,24 @@ public class MainFragment extends BoolioFragment {
         if (requestCode == PictureHelper.REQUEST_TAKE_PHOTO || requestCode == PictureHelper.REQUEST_PICK_PHOTO || requestCode == Crop.REQUEST_CROP) {
             fragmentList.get(2).onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    @Override
+    public void onAttach(final Activity activity) {
+        super.onAttach(activity);
+        fragmentList = new ArrayList<BoolioFragment>() {{
+            add(FeedFragment.getInstance());
+            // breaking here because userId is null
+            add(ProfileFragment.newInstance(BoolioUserHandler.getInstance(activity).getUser().userId));
+            add(CreateQuestionFragment.newInstance(new Runnable() {
+                @Override
+                public void run() {
+                    navBar.getChildAt(0).callOnClick();
+                }
+            }));
+            add(SearchFragment.getInstance());
+            add(FriendsFragment.getInstance());
+        }};
     }
 
     @Override
@@ -106,20 +124,6 @@ public class MainFragment extends BoolioFragment {
     }
 
     private void setupViewPager() {
-        fragmentList = new ArrayList<BoolioFragment>() {{
-            add(FeedFragment.getInstance());
-            // breaking here because userId is null
-            add(ProfileFragment.newInstance(BoolioUserHandler.getInstance(activity).getUser().userId));
-            add(CreateQuestionFragment.newInstance(new Runnable() {
-                @Override
-                public void run() {
-                    navBar.getChildAt(0).callOnClick();
-                }
-            }));
-            add(SearchFragment.getInstance());
-            add(FriendsFragment.getInstance());
-        }};
-
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(final int position, float positionOffset, int positionOffsetPixels) {}
