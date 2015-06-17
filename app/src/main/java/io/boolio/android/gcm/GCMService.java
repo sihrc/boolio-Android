@@ -90,6 +90,8 @@ public class GCMService extends IntentService {
                 ServerFeed.getInstance(this).getQuestionFeed(new ArrayList<String>(0), new QuestionsCallback() {
                     @Override
                     public void handleQuestions(List<Question> questionList) {
+                        if (questionList.isEmpty())
+                            return;
                         buildFeedUpdate(mNotificationManager, contentIntent, questionList.size());
                     }
                 });
