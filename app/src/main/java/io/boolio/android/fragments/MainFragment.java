@@ -22,7 +22,6 @@ import java.util.List;
 
 import io.boolio.android.R;
 import io.boolio.android.animation.AnimationHelper;
-import io.boolio.android.custom.ScrollingListView;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.PictureHelper;
 import io.boolio.android.helpers.Utils;
@@ -120,6 +119,9 @@ public class MainFragment extends BoolioFragment {
             add(FriendsFragment.getInstance());
         }};
 
+        // viewPager by default only loads the fragments that are right next to each other.
+        // this makes sure that all of our fragments are loaded
+        viewPager.setOffscreenPageLimit(fragmentList.size());
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(final int position, float positionOffset, int positionOffsetPixels) {}
