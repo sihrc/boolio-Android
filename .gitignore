@@ -11,3 +11,4 @@ app/*.log
 *.apk
 app/app-release.apk
 my-release-key.keystore
+*.properties
