@@ -62,7 +62,7 @@
                 android:layout_width="@dimen/report_button_size"
                 android:layout_height="@dimen/report_button_size"
                 android:padding="@dimen/report_button_padding"
-                android:background="@drawable/ic_navigation_close"/>
+                android:background="@drawable/delete"/>
 
         </RelativeLayout>
 
