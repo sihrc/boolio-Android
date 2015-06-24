@@ -59,6 +59,7 @@
     <dimen name="profile_image_size">60dp</dimen>
     <dimen name="profile_score_margin">20dp</dimen>
     <dimen name="profile_pane_height">300dp</dimen>
+    <dimen name="profile_settings_padding">5dp</dimen>
 
     <!-- Nav Bar -->
     <dimen name="nav_bar_height">56dp</dimen>
