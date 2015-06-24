@@ -14,4 +14,10 @@ public class Question {
     public Question() {
 
     }
+
+    // override toString so that when question is serialized, we only return its questionId
+    @Override
+    public String toString() {
+        return questionId;
+    }
 }

@@ -10,7 +10,6 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.Profile;
 
-import io.fabric.sdk.android.Fabric;
 import java.util.HashMap;
 
 import io.boolio.android.fragments.FeedFragment;
@@ -28,6 +27,7 @@ import io.boolio.android.helpers.tracking.TrackEvent;
 import io.boolio.android.models.User;
 import io.boolio.android.network.NetworkCallback;
 import io.boolio.android.network.ServerUser;
+import io.fabric.sdk.android.Fabric;
 
 
 public class MainActivity extends FacebookAuth {
