@@ -1,5 +1,6 @@
 package io.boolio.android.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -63,6 +64,24 @@ public class MainFragment extends BoolioFragment {
     }
 
     @Override
+    public void onAttach(final Activity activity) {
+        super.onAttach(activity);
+        fragmentList = new ArrayList<BoolioFragment>() {{
+            add(FeedFragment.getInstance());
+            // breaking here because userId is null
+            add(ProfileFragment.newInstance(BoolioUserHandler.getInstance(activity).getUser().userId));
+            add(CreateQuestionFragment.newInstance(new Runnable() {
+                @Override
+                public void run() {
+                    navBar.getChildAt(0).callOnClick();
+                }
+            }));
+            add(SearchFragment.getInstance());
+            add(FriendsFragment.getInstance());
+        }};
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
@@ -105,20 +124,6 @@ public class MainFragment extends BoolioFragment {
     }
 
     private void setupViewPager() {
-        fragmentList = new ArrayList<BoolioFragment>() {{
-            add(FeedFragment.getInstance());
-            // breaking here because userId is null
-            add(ProfileFragment.newInstance(BoolioUserHandler.getInstance(activity).getUser().userId));
-            add(CreateQuestionFragment.newInstance(new Runnable() {
-                @Override
-                public void run() {
-                    navBar.getChildAt(0).callOnClick();
-                }
-            }));
-            add(SearchFragment.getInstance());
-            add(FriendsFragment.getInstance());
-        }};
-
         // viewPager by default only loads the fragments that are right next to each other.
         // this makes sure that all of our fragments are loaded
         viewPager.setOffscreenPageLimit(fragmentList.size());
