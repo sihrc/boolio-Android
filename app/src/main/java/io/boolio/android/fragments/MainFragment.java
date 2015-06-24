@@ -124,6 +124,9 @@ public class MainFragment extends BoolioFragment {
     }
 
     private void setupViewPager() {
+        // viewPager by default only loads the fragments that are right next to each other.
+        // this makes sure that all of our fragments are loaded
+        viewPager.setOffscreenPageLimit(fragmentList.size());
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(final int position, float positionOffset, int positionOffsetPixels) {}

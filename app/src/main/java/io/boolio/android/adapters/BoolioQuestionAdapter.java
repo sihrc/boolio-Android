@@ -5,14 +5,18 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import io.boolio.android.R;
 import io.boolio.android.helpers.tracking.EventTracker;
 import io.boolio.android.helpers.tracking.TrackEvent;
 import io.boolio.android.models.Question;
-import io.boolio.android.network.ServerQuestion;
 import io.boolio.android.network.NetworkCallback;
+import io.boolio.android.network.ServerQuestion;
 
 /**
  * Created by james on 4/24/15.
@@ -20,10 +24,12 @@ import io.boolio.android.network.NetworkCallback;
 public class BoolioQuestionAdapter extends BoolioAdapter {
     final private static int ANIMATION_DELAY = 1000;
     Context context;
+    List<Question> questions;
 
     public BoolioQuestionAdapter(Context context) {
         super(context);
         this.context = context;
+        this.questions = new ArrayList<>();
     }
 
     @Override
@@ -83,4 +89,42 @@ public class BoolioQuestionAdapter extends BoolioAdapter {
         return animation;
     }
 
+    @Override
+    public Question getItem(int position) {
+        return questions.get(position);
+    }
+
+    @Override
+    public int getCount() {
+        return questions.size();
+    }
+
+    @Override
+    public void addAll(Collection<? extends Question> collection) {
+        questions.addAll(collection);
+    }
+
+    @Override
+    public void add(Question object) {
+        questions.add(object);
+    }
+
+    @Override
+    public void insert(Question object, int index) {
+        questions.add(index, object);
+    }
+
+    @Override
+    public void clear() {
+        questions.clear();
+    }
+
+    @Override
+    public void sort(Comparator<? super Question> comparator) {
+        Collections.sort(questions, comparator);
+    }
+
+    public List<Question> getList() {
+        return questions;
+    }
 }

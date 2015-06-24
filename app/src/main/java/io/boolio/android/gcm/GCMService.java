@@ -5,23 +5,19 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.boolio.android.MainActivity;
 import io.boolio.android.R;
 import io.boolio.android.callbacks.QuestionsCallback;
 import io.boolio.android.models.Question;
-import io.boolio.android.network.BoolioServer;
 import io.boolio.android.network.ServerFeed;
-import io.boolio.android.network.ServerQuestion;
 
 /**
  * Created by Chris on 5/2/15.
@@ -30,6 +26,7 @@ public class GCMService extends IntentService {
     public static final int GCM = 2939;
     public static final int QUESTION_UPDATE_ID = 1;
     public static final int FEED_UPDATE_ID = 2;
+    public static final int QUESTION_LIMIT = 10;
 
     public GCMService() {
         super("GCMService");
@@ -87,9 +84,11 @@ public class GCMService extends IntentService {
                 intent.setAction("new-feed");
                 contentIntent = PendingIntent.getActivity(this, GCM + FEED_UPDATE_ID,
                         intent, 0);
-                ServerFeed.getInstance(this).getQuestionFeed(new ArrayList<String>(0), new QuestionsCallback() {
+                ServerFeed.getInstance(this).getQuestionFeed(QUESTION_LIMIT,null, new QuestionsCallback() {
                     @Override
                     public void handleQuestions(List<Question> questionList) {
+                        if (questionList.isEmpty())
+                            return;
                         buildFeedUpdate(mNotificationManager, contentIntent, questionList.size());
                     }
                 });
