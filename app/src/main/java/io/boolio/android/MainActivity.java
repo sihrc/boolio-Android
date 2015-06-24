@@ -38,7 +38,8 @@ public class MainActivity extends FacebookAuth {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Crashlytics());
+        if (!BuildConfig.DEBUG)
+            Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main);
 
         fragmentManager = getSupportFragmentManager();
