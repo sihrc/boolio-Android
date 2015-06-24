@@ -96,6 +96,12 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
             holder.report.setVisibility(View.VISIBLE);
         }
 
+        // Hide Question TextView if no question provided
+        if (question.question == null || question.question.replace(" ", "").isEmpty())
+            holder.question.setVisibility(View.GONE);
+        else
+            holder.question.setVisibility(View.VISIBLE);
+
         // Setup Question Image
         if (question.image.equals("")) {
             holder.questionImage.setVisibility(View.GONE);
