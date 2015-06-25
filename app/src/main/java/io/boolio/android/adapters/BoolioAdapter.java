@@ -117,6 +117,7 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
                     @Override
                     public void run() {
                         ServerQuestion.getInstance(context).reportQuestion(question.questionId);
+                        ServerUser.getInstance(context).skipQuestion(question);
                         remove(question);
                         notifyDataSetChanged();
                     }

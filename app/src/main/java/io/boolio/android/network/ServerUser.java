@@ -112,44 +112,26 @@ public class ServerUser extends BoolioServer {
         });
     }
 
-    public void getConfigs(final Runnable runnable) {
-        makeRequest(Request.Method.GET,
+    public void getAndroidVersion(final int version, final NetworkCallback<Integer> runnable) {
+        makeRequest(Request.Method.POST,
                 API.GET_VERSION,
-                new JSONObject(),
+                new JSONObject() {{
+                    try {
+                        put("version", version);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }},
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        PrefsHelper prefsHelper = PrefsHelper.getInstance(context);
-                        Iterator<String> keys = response.keys();
-
-                        String tag;
-                        while (keys.hasNext()) {
-                            tag = keys.next();
-                            try {
-                                prefsHelper.saveString(tag, response.getString(tag));
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-
                         if (runnable != null) {
-                            runnable.run();
-                        }
-                    }
-                });
-    }
-
-    public void getAPPVersion(final NetworkCallback<String> versionCallback) {
-        makeRequest(Request.Method.GET,
-                API.PLAY_STORE_API, new JSONObject(), new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        if (versionCallback != null)
                             try {
-                                versionCallback.handle(response.getString("version"));
+                                runnable.handle(response.getInt("version"));
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
+                        }
                     }
                 });
     }

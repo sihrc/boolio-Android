@@ -2,6 +2,8 @@ package io.boolio.android.helpers;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -206,7 +208,20 @@ public class Utils {
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
+    public static boolean isFromPlayStore(Context context) {
+        PackageManager packageManager = context.getPackageManager();
+        try {
+            final ApplicationInfo applicationInfo = packageManager.getApplicationInfo(context.getPackageName(), 0);
+            return ("com.android.vending".equals(packageManager.getInstallerPackageName(applicationInfo.packageName)));
+        } catch (final PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
     public static abstract class ArrayToStringBuilder<T> {
+
         public String build(Collection<T> objects) {
             if (objects == null) {
                 return "";
@@ -220,7 +235,8 @@ public class Utils {
 
             return builder.length() > 1 ? builder.substring(0, builder.length() - 1) : builder.toString();
         }
-
         public abstract String getItem(T object);
+
     }
+
 }

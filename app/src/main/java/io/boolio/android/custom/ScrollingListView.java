@@ -48,7 +48,7 @@ public class ScrollingListView extends EnhancedListView {
                     mInitialScroll = scrolledOffset;
                 }
 
-                if (!stopQuestion && (totalItemCount - firstVisibleItem < QUESTION_THRESHOLD) && totalItemCount != firstVisibleItem) {
+                if (pullQuestionListener != null && !stopQuestion && (totalItemCount - firstVisibleItem < QUESTION_THRESHOLD) && totalItemCount != firstVisibleItem) {
                     pullQuestionListener.pullQuestion();
                     stopQuestion = true;
                     questionNum = totalItemCount;

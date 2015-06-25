@@ -22,6 +22,7 @@ import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.Dialogs;
 import io.boolio.android.helpers.FacebookAuth;
 import io.boolio.android.helpers.PrefsHelper;
+import io.boolio.android.helpers.Utils;
 import io.boolio.android.helpers.tracking.EventTracker;
 import io.boolio.android.helpers.tracking.TrackEvent;
 import io.boolio.android.models.User;
@@ -114,11 +115,12 @@ public class MainActivity extends FacebookAuth {
      * Gets the app version from the play store through an external API call
      */
     private void checkVersion() {
-        ServerUser.getInstance(this).getAPPVersion(new NetworkCallback<String>() {
+        if (!Utils.isFromPlayStore(this))
+            return;
+        ServerUser.getInstance(this).getAndroidVersion(BuildConfig.VERSION_CODE, new NetworkCallback<Integer>() {
             @Override
-            public void handle(String version) {
-                PrefsHelper.getInstance(MainActivity.this).saveString("version", version);
-                if (!BuildConfig.VERSION_NAME.equals(version)) {
+            public void handle(Integer object) {
+                if (BuildConfig.VERSION_CODE < object) {
                     Dialogs.messageDialog(MainActivity.this, R.string.update_title, R.string.update_message, new Runnable() {
                         @Override
                         public void run() {

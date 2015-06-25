@@ -124,6 +124,11 @@ public class BoolioQuestionAdapter extends BoolioAdapter {
         Collections.sort(questions, comparator);
     }
 
+    @Override
+    public void remove(Question object) {
+        questions.remove(object);
+    }
+
     public List<Question> getList() {
         return questions;
     }
