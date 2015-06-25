@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import io.boolio.android.MainActivity;
@@ -29,32 +29,49 @@ import io.boolio.android.network.ServerUser;
  * Created by Chris on 4/16/15.
  */
 public class FeedFragment extends BoolioFragment {
-    final public static int ORDER = 0;
-    final private static int REFRESH_DELAY = 500;
     static FeedFragment instance;
+    final public static int ORDER = 0;
 
-    QuestionsCallback callback = new QuestionsCallback() {
+    final private static int REFRESH_DELAY = 500;
+    final private static int QUESTION_LIMIT = 10;
+
+    ScrollingListView.PullQuestionListener pullQuestionListener = new ScrollingListView.PullQuestionListener() {
         @Override
-        public void handleQuestions(final List<Question> questionList) {
-            pullToRefreshLayout.postDelayed(new Runnable() {
+        public void pullQuestion() {
+            if (questionAdapter != null && questionAdapter.isEmpty())
+                showBear(false);
+            ServerFeed.getInstance(activity).getQuestionFeed(QUESTION_LIMIT, questionAdapter.getList(), new QuestionsCallback() {
                 @Override
-                public void run() {
-                    questionAdapter.clear();
-                    questionAdapter.addAll(questionList);
-                    questionAdapter.onDataSetChanged();
-                    pullToRefreshLayout.setRefreshing(false);
-                    gifLoading.setVisibility(View.GONE);
-                    GCMService.clearFeedUpdate(activity);
+                public void handleQuestions(final List<Question> questionList) {
+                    pullToRefreshLayout.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            questionAdapter.addAll(questionList);
+                            questionAdapter.sort(new Comparator<Question>() {
+                                @Override
+                                public int compare(Question lhs, Question rhs) {
+                                    return rhs.dateCreated.compareTo(lhs.dateCreated);
+                                }
+
+                                @Override
+                                public boolean equals(Object object) {
+                                    return false;
+                                }
+                            });
+                            questionAdapter.onDataSetChanged();
+                            pullToRefreshLayout.setRefreshing(false);
+                            gifLoading.setVisibility(View.GONE);
+                            GCMService.clearFeedUpdate(activity);
+                        }
+                    }, REFRESH_DELAY);
                 }
-            }, REFRESH_DELAY);
+            });
         }
     };
 
     PullToRefreshView pullToRefreshLayout;
     BoolioQuestionAdapter questionAdapter;
-    List<String> prevSeenQuestions;
-    View gifLoading, emptyBear;
-    View headerBar;
+    View gifLoading, emptyBear, headerBar;
 
     public static FeedFragment getInstance() {
         instance = new FeedFragment();
@@ -64,13 +81,12 @@ public class FeedFragment extends BoolioFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        prevSeenQuestions = new ArrayList<>();
         this.activity = (MainActivity) activity;
     }
 
     @Override
     public void refreshPage() {
-        pullQuestions();
+        pullQuestionListener.pullQuestion();
         if (questionAdapter.getCount() == 0) {
             gifLoading.setVisibility(View.VISIBLE);
         }
@@ -90,7 +106,7 @@ public class FeedFragment extends BoolioFragment {
             @Override
             public void onRefresh() {
                 EventTracker.getInstance(activity).track(TrackEvent.PULL_DOWN);
-                pullQuestions();
+                pullQuestionListener.pullQuestion();
             }
         });
 
@@ -98,19 +114,10 @@ public class FeedFragment extends BoolioFragment {
         questionAdapter = new BoolioQuestionAdapter(activity);
         setupListView(listView);
 
-        pullQuestions(false);
+        pullQuestionListener.pullQuestion();
         return rootView;
     }
 
-    private void pullQuestions() {
-        pullQuestions(true);
-    }
-
-    private void pullQuestions(boolean hideBear) {
-        if (hideBear)
-            showBear(false);
-        ServerFeed.getInstance(activity).getQuestionFeed(prevSeenQuestions, callback);
-    }
 
     private void setupListView(final ScrollingListView scrollingListView) {
         /** Scrolling List View With Dismiss and Undo **/
@@ -142,6 +149,7 @@ public class FeedFragment extends BoolioFragment {
         });
         scrollingListView.setUndoHideDelay(500);
         scrollingListView.enableSwipeToDismiss();
+        scrollingListView.setPullQuestionListener(pullQuestionListener);
         scrollingListView.setScrollChangeListener(new ScrollingListView.ScrollChangeListener() {
             @Override
             public void onScroll(boolean isScrollingUp) {
@@ -149,12 +157,12 @@ public class FeedFragment extends BoolioFragment {
             }
         });
     }
-    private void showBear(boolean empty){
+
+    private void showBear(boolean empty) {
         if (empty) {
             AnimationHelper.getInstance(activity).animateViewFadeIn(emptyBear);
             ((MainFragment) getParentFragment()).showNavBar(true);
-        }
-        else
+        } else
             emptyBear.setVisibility(View.GONE);
     }
 }

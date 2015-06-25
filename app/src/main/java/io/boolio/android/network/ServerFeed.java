@@ -12,7 +12,6 @@ import org.json.JSONObject;
 import java.util.List;
 
 import io.boolio.android.callbacks.QuestionsCallback;
-import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.PrefsHelper;
 import io.boolio.android.models.Question;
 import io.boolio.android.network.parser.JSONArrayParser;
@@ -36,11 +35,15 @@ public class ServerFeed extends BoolioServer {
         return instance;
     }
 
-    public void getQuestionFeed(final List<String> prevSeenQuestions, final QuestionsCallback callback) {
+    public void getQuestionFeed(final int questionLimit, final List<Question> prevSeenQuestions, final QuestionsCallback callback) {
         makeRequest(Request.Method.POST, API.FEED_ENDPOINT, new JSONObject() {{
                     try {
-                        put("prevSeenQuestions", new JSONArray(prevSeenQuestions));
+                        if (prevSeenQuestions == null){
+                            put("prevSeenQuestions", new JSONArray());
+                        } else
+                            put("prevSeenQuestions", new JSONArray(prevSeenQuestions.toString()));
                         put("id", PrefsHelper.getInstance(context).getString("userId"));
+                        put("count", questionLimit);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

@@ -5,7 +5,7 @@ package io.boolio.android.network;
  */
 public class API {
 //    final static private String BASE = "https://beta.boolio.io/api";
-    final static private String BASE = "http://192.168.1.126:3000/api";
+    final static private String BASE = "http://192.168.1.113:3000/api";
 
     // Auth Routes
     final static public String FACEBOOK_USER_ENDPOINT = BASE + "/users/facebook";
@@ -25,7 +25,7 @@ public class API {
     final static public String POST_USER_GCMID = BASE + "/users/gcm";
     final static public String SKIP_QUESTION = BASE + "/users/skip";
     final static public String UNSKIP_QUESTION = BASE + "/users/unskip";
-    final static public String GET_VERSION = BASE + "/configs/android";
+    final static public String GET_VERSION = BASE + "/configs/android/version";
 
     // Tests
     final static public String GET_TESTS = BASE + "/tests";

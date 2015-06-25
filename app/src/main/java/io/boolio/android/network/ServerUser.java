@@ -112,28 +112,25 @@ public class ServerUser extends BoolioServer {
         });
     }
 
-    public void getConfigs(final Runnable runnable) {
-        makeRequest(Request.Method.GET,
+    public void getAndroidVersion(final int version, final NetworkCallback<Integer> runnable) {
+        makeRequest(Request.Method.POST,
                 API.GET_VERSION,
-                new JSONObject(),
+                new JSONObject() {{
+                    try {
+                        put("version", version);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }},
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        PrefsHelper prefsHelper = PrefsHelper.getInstance(context);
-                        Iterator<String> keys = response.keys();
-
-                        String tag;
-                        while (keys.hasNext()) {
-                            tag = keys.next();
+                        if (runnable != null) {
                             try {
-                                prefsHelper.saveString(tag, response.getString(tag));
+                                runnable.handle(response.getInt("version"));
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                        }
-
-                        if (runnable != null) {
-                            runnable.run();
                         }
                     }
                 });
