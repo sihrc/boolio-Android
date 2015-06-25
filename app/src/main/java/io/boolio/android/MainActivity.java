@@ -10,7 +10,6 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.Profile;
 
-import io.fabric.sdk.android.Fabric;
 import java.util.HashMap;
 
 import io.boolio.android.fragments.FeedFragment;
@@ -23,11 +22,13 @@ import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.Dialogs;
 import io.boolio.android.helpers.FacebookAuth;
 import io.boolio.android.helpers.PrefsHelper;
+import io.boolio.android.helpers.Utils;
 import io.boolio.android.helpers.tracking.EventTracker;
 import io.boolio.android.helpers.tracking.TrackEvent;
 import io.boolio.android.models.User;
 import io.boolio.android.network.NetworkCallback;
 import io.boolio.android.network.ServerUser;
+import io.fabric.sdk.android.Fabric;
 
 
 public class MainActivity extends FacebookAuth {
@@ -38,7 +39,8 @@ public class MainActivity extends FacebookAuth {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Crashlytics());
+        if (!BuildConfig.DEBUG)
+            Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main);
 
         fragmentManager = getSupportFragmentManager();
@@ -54,12 +56,7 @@ public class MainActivity extends FacebookAuth {
         SCREEN_HEIGHT = size.y;
 
         ServerUser.getInstance(this).getABTests();
-        ServerUser.getInstance(this).getConfigs(new Runnable() {
-            @Override
-            public void run() {
-                updateApp();
-            }
-        });
+        checkVersion();
     }
 
     @Override
@@ -73,7 +70,6 @@ public class MainActivity extends FacebookAuth {
                 PrefsHelper.getInstance(MainActivity.this).saveString("userId", object.userId);
                 EventTracker.getInstance(MainActivity.this).attachUser(object.userId);
                 EventTracker.getInstance(MainActivity.this).track(TrackEvent.OPEN_APP);
-                updateApp();
             }
         };
         User user = new User(profile.getId(), profile.getName());
@@ -115,19 +111,35 @@ public class MainActivity extends FacebookAuth {
         }
     }
 
-    private void updateApp() {
-        if (BuildConfig.VERSION_CODE < Integer.parseInt(PrefsHelper.getInstance(this).getString("version"))) {
-            Dialogs.messageDialog(this, R.string.update_title, R.string.update_message, new Runnable() {
-                @Override
-                public void run() {
-                    final String appPackageName = getPackageName();
-                    try {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
-                    } catch (android.content.ActivityNotFoundException anfe) {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
-                    }
+    /**
+     * Gets the app version from the play store through an external API call
+     */
+    private void checkVersion() {
+        if (!Utils.isFromPlayStore(this))
+            return;
+        ServerUser.getInstance(this).getAndroidVersion(BuildConfig.VERSION_CODE, new NetworkCallback<Integer>() {
+            @Override
+            public void handle(Integer object) {
+                if (BuildConfig.VERSION_CODE < object) {
+                    Dialogs.messageDialog(MainActivity.this, R.string.update_title, R.string.update_message, new Runnable() {
+                        @Override
+                        public void run() {
+                            final String appPackageName = getPackageName();
+                            try {
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                            } catch (android.content.ActivityNotFoundException anfe) {
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                            }
+                        }
+                    });
                 }
-            });
-        }
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventTracker.getInstance(this).flush();
     }
 }

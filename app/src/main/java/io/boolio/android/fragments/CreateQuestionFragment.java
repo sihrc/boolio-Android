@@ -16,15 +16,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import java.util.HashMap;
-import java.util.Objects;
-
 import io.boolio.android.R;
 import io.boolio.android.fragments.search.SearchImageFragment;
 import io.boolio.android.helpers.BoolioCallback;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.PictureHelper;
-import io.boolio.android.helpers.Utils;
 import io.boolio.android.helpers.tracking.EventTracker;
 import io.boolio.android.helpers.tracking.TrackEvent;
 import io.boolio.android.models.Question;
@@ -94,8 +90,12 @@ public class CreateQuestionFragment extends BoolioFragment {
     }
 
     public void submitOnClickSetup() {
-        if (questionText.getText().length() == 0 && imageSaved == null) {
-            Toast.makeText(activity, "Please enter a question or choose an image", Toast.LENGTH_SHORT).show();
+        boolean answersEmpty = left.getText().toString().replace(" ", "").isEmpty()
+                || right.getText().toString().replace(" ", "").isEmpty();
+        boolean questionEmpty = questionText.getText().length() == 0 && imageSaved == null;
+
+        if (answersEmpty && questionEmpty) {
+            Toast.makeText(activity, "Please enter a question, image, or answers", Toast.LENGTH_SHORT).show();
             return;
         }
 

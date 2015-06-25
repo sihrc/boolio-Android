@@ -96,6 +96,12 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
             holder.report.setVisibility(View.VISIBLE);
         }
 
+        // Hide Question TextView if no question provided
+        if (question.question == null || question.question.replace(" ", "").isEmpty())
+            holder.question.setVisibility(View.GONE);
+        else
+            holder.question.setVisibility(View.VISIBLE);
+
         // Setup Question Image
         if (question.image.equals("")) {
             holder.questionImage.setVisibility(View.GONE);
@@ -111,6 +117,7 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
                     @Override
                     public void run() {
                         ServerQuestion.getInstance(context).reportQuestion(question.questionId);
+                        ServerUser.getInstance(context).skipQuestion(question);
                         remove(question);
                         notifyDataSetChanged();
                     }

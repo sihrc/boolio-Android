@@ -123,4 +123,9 @@ public class EventTracker {
         mixpanel.track(event.toString(), pack);
     }
 
+    public void flush() {
+        if (mixpanel != null)
+            mixpanel.flush();
+    }
+
 }

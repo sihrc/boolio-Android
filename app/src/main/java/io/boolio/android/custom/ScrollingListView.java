@@ -2,7 +2,6 @@ package io.boolio.android.custom;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.AbsListView;
 
 /**
@@ -10,7 +9,8 @@ import android.widget.AbsListView;
  */
 public class ScrollingListView extends EnhancedListView {
     ScrollChangeListener scrollChangeListener;
-
+    PullQuestionListener pullQuestionListener;
+    final static private int QUESTION_THRESHOLD = 8;
 
     public ScrollingListView(Context context) {
         super(context);
@@ -22,6 +22,8 @@ public class ScrollingListView extends EnhancedListView {
         super.setOnScrollListener(new OnScrollListener() {
             private int mInitialScroll = 0;
             private boolean touching = false;
+            private boolean stopQuestion = false;
+            private int questionNum;
 
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -45,6 +47,14 @@ public class ScrollingListView extends EnhancedListView {
                         scrollChangeListener.onScroll((scrolledOffset - mInitialScroll) < 0);
                     mInitialScroll = scrolledOffset;
                 }
+
+                if (pullQuestionListener != null && !stopQuestion && (totalItemCount - firstVisibleItem < QUESTION_THRESHOLD) && totalItemCount != firstVisibleItem) {
+                    pullQuestionListener.pullQuestion();
+                    stopQuestion = true;
+                    questionNum = totalItemCount;
+                } else if (questionNum != totalItemCount) {
+                    stopQuestion = false;
+                }
             }
         });
     }
@@ -63,7 +73,15 @@ public class ScrollingListView extends EnhancedListView {
         this.scrollChangeListener = scrollChangeListener;
     }
 
+    public void setPullQuestionListener(PullQuestionListener pullQuestionListener) {
+        this.pullQuestionListener = pullQuestionListener;
+    }
+
     public interface ScrollChangeListener {
         void onScroll(boolean isScrollingUp);
+    }
+
+    public interface PullQuestionListener {
+        void pullQuestion();
     }
 }
