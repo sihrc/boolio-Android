@@ -1,4 +1,4 @@
-package io.boolio.android.network.models;
+package io.boolio.android.network;
 
 import java.security.InvalidParameterException;
 import java.util.HashMap;
@@ -8,6 +8,10 @@ import java.util.HashMap;
  */
 public class BoolioData extends HashMap<String, Object> {
     String[] keys;
+
+    public static BoolioData create() {
+        return new BoolioData();
+    }
 
     public static BoolioData keys(String... strings) {
         BoolioData data = new BoolioData();
@@ -23,6 +27,11 @@ public class BoolioData extends HashMap<String, Object> {
             put(keys[i], objs[i]);
         }
 
+        return this;
+    }
+
+    public BoolioData add(String key, Object value) {
+        put(key, value);
         return this;
     }
 }

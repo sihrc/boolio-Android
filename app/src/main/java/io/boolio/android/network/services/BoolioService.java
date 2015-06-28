@@ -1,6 +1,8 @@
 package io.boolio.android.network.services;
 
+import io.boolio.android.network.helpers.BoolioCallback;
 import retrofit.Callback;
+import retrofit.http.Body;
 import retrofit.http.GET;
 
 /**
@@ -10,6 +12,6 @@ public interface BoolioService {
     @GET("/tests")
     void getABTests(Callback callback);
 
-    @GET("/configs/android")
-    void getConfigs(Callback<?> callback);
+    @GET("/configs/android/version")
+    void getAndroidVersion(@Body int version, BoolioCallback<Integer> callback);
 }

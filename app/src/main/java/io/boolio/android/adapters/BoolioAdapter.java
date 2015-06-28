@@ -1,7 +1,6 @@
 package io.boolio.android.adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +10,8 @@ import android.widget.TextSwitcher;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.imageaware.ImageAware;
 import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import io.boolio.android.Boolio;
 import io.boolio.android.R;
@@ -27,8 +24,9 @@ import io.boolio.android.helpers.tracking.EventTracker;
 import io.boolio.android.helpers.tracking.TrackEvent;
 import io.boolio.android.models.Question;
 import io.boolio.android.network.clients.BoolioQuestionClient;
+import io.boolio.android.network.clients.BoolioUserClient;
 import io.boolio.android.network.helpers.DefaultBoolioCallback;
-import io.boolio.android.network.models.BoolioData;
+import io.boolio.android.network.BoolioData;
 
 /**
  * Created by james on 4/24/15.
@@ -104,6 +102,25 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
             holder.report.setVisibility(View.VISIBLE);
         }
 
+        // Hide Question TextView if no question provided
+        if (question.question == null || question.question.replace(" ", "").isEmpty())
+            holder.question.setVisibility(View.GONE);
+        else
+            holder.question.setVisibility(View.VISIBLE);
+
+        // Question Image
+        boolean hasImage = !Utils.isNotHere(question.image);
+        holder.questionImage.setVisibility(hasImage? View.VISIBLE : View.GONE);
+        if (hasImage && (holder.questionImage.getTag() == null ||
+                !holder.questionImage.getTag().equals(question.image))) {
+
+            //we only load image if prev. URL and current URL do not match, or tag is null
+            ImageAware imageAware = new ImageViewAware(holder.questionImage, false);
+            ImageLoader.getInstance().displayImage(question.image, imageAware, Boolio.ImageOptions);
+            holder.questionImage.setTag(question.image);
+        }
+
+        // Deleting and Reporting click Listeners
         holder.report.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,6 +129,8 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
                     @Override
                     public void run() {
                         BoolioQuestionClient.api().reportQuestion(BoolioData.keys("questionId").values(question._id), new DefaultBoolioCallback());
+                        BoolioUserClient.api().skipQuestion(BoolioData.keys("questionId").values(question._id), new DefaultBoolioCallback());
+
                         remove(question);
                         notifyDataSetChanged();
                     }
@@ -136,16 +155,6 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
 
         fillContent(holder, question);
 
-        boolean hasImage = !Utils.isNotHere(question.image);
-        holder.questionImage.setVisibility(hasImage? View.VISIBLE : View.GONE);
-        if (hasImage && (holder.questionImage.getTag() == null ||
-                !holder.questionImage.getTag().equals(question.image))) {
-
-            //we only load image if prev. URL and current URL do not match, or tag is null
-            ImageAware imageAware = new ImageViewAware(holder.questionImage, false);
-            ImageLoader.getInstance().displayImage(question.image, imageAware, Boolio.ImageOptions);
-            holder.questionImage.setTag(question.image);
-        }
 
         ImageLoader.getInstance().displayImage(question.creatorPic, holder.creatorImage);
     }

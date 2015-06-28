@@ -13,7 +13,7 @@ import retrofit.converter.GsonConverter;
  */
 public abstract class BoolioClient<T> {
     //    final static private String ADDRESS = "https://beta.boolio.io";
-    final static private String ADDRESS = "http://192.168.1.126:3000";
+    final static private String ADDRESS = "http://192.168.1.114:3000";
     T api;
 
     public BoolioClient(String endpoint, Class<T> classType) {

@@ -2,6 +2,7 @@ package io.boolio.android.network.services;
 
 import io.boolio.android.models.Question;
 import io.boolio.android.models.User;
+import io.boolio.android.network.BoolioData;
 import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.GET;
@@ -16,7 +17,7 @@ public interface BoolioUserService {
     void updateUserGCM(@Body User user, Callback<?> callback);
 
     @POST("/skip")
-    void skipQuestion(@Body Question question, Callback<?> callback);
+    void skipQuestion(@Body BoolioData question, Callback<?> callback);
 
     @POST("/unskip")
     void unskipQuestion(@Body Question question, Callback<?> callback);

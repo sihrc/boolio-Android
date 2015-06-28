@@ -27,8 +27,6 @@ import org.lucasr.smoothie.AsyncGridView;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import io.boolio.android.MainActivity;
 import io.boolio.android.R;
@@ -36,7 +34,7 @@ import io.boolio.android.custom.BoolioSearchView;
 import io.boolio.android.helpers.Utils;
 import io.boolio.android.network.clients.ExternalClient;
 import io.boolio.android.network.helpers.BoolioCallback;
-import io.boolio.android.network.models.BoolioData;
+import io.boolio.android.network.BoolioData;
 
 /**
  * Created by Chris on 5/5/15.

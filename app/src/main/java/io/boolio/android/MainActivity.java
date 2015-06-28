@@ -5,13 +5,10 @@ import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
 import com.facebook.Profile;
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
@@ -27,14 +24,15 @@ import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.Dialogs;
 import io.boolio.android.helpers.FacebookAuth;
 import io.boolio.android.helpers.PrefsHelper;
+import io.boolio.android.helpers.Utils;
 import io.boolio.android.helpers.tracking.EventTracker;
 import io.boolio.android.helpers.tracking.TrackEvent;
 import io.boolio.android.models.User;
 import io.boolio.android.network.clients.BoolioGeneralClient;
 import io.boolio.android.network.clients.BoolioUserClient;
 import io.boolio.android.network.helpers.BoolioCallback;
-import io.fabric.sdk.android.Fabric;
 import retrofit.Callback;
+
 
 public class MainActivity extends FacebookAuth {
     public static int SCREEN_WIDTH, SCREEN_HEIGHT;
@@ -44,9 +42,6 @@ public class MainActivity extends FacebookAuth {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (!BuildConfig.DEBUG)
-            Fabric.with(this, new Crashlytics());
 
         setContentView(R.layout.activity_main);
 
@@ -64,23 +59,18 @@ public class MainActivity extends FacebookAuth {
 
 
         ImageLoader.getInstance().init(
-                new ImageLoaderConfiguration.Builder(this)
-                        .memoryCacheExtraOptions(SCREEN_WIDTH, SCREEN_HEIGHT)
-                        .diskCacheExtraOptions(SCREEN_WIDTH, SCREEN_HEIGHT, null)
-                        .diskCacheFileCount(20)
-                        .threadPoolSize(4)
-                        .memoryCache(new LruMemoryCache(2 * 1024 * 1024))
-                        .denyCacheImageMultipleSizesInMemory()
-                        .writeDebugLogs()
-                        .build()
+            new ImageLoaderConfiguration.Builder(this)
+                .memoryCacheExtraOptions(SCREEN_WIDTH, SCREEN_HEIGHT)
+                .diskCacheExtraOptions(SCREEN_WIDTH, SCREEN_HEIGHT, null)
+                .diskCacheFileCount(20)
+                .threadPoolSize(4)
+                .memoryCache(new LruMemoryCache(2 * 1024 * 1024))
+                .denyCacheImageMultipleSizesInMemory()
+                .writeDebugLogs()
+                .build()
         );
 
-        BoolioGeneralClient.getConfigs(new BoolioCallback<Object>() {
-            @Override
-            public void handle(Object o) {
-                checkVersion();
-            }
-        });
+        checkVersion();
     }
 
     @Override
@@ -139,20 +129,26 @@ public class MainActivity extends FacebookAuth {
      * Gets the app version from the play store through an external API call
      */
     private void checkVersion() {
-        String version = PrefsHelper.getInstance().getString("version");
-        if (!BuildConfig.VERSION_NAME.equals(version) && !BuildConfig.DEBUG) {
-            Dialogs.messageDialog(MainActivity.this, R.string.update_title, R.string.update_message, new Runnable() {
-                @Override
-                public void run() {
-                    final String appPackageName = getPackageName();
-                    try {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
-                    } catch (android.content.ActivityNotFoundException anfe) {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
-                    }
+        if (!Utils.isFromPlayStore(this))
+            return;
+        BoolioGeneralClient.api().getAndroidVersion(BuildConfig.VERSION_CODE, new BoolioCallback<Integer>() {
+            @Override
+            public void handle(Integer object) {
+                if (BuildConfig.VERSION_CODE < object) {
+                    Dialogs.messageDialog(MainActivity.this, R.string.update_title, R.string.update_message, new Runnable() {
+                        @Override
+                        public void run() {
+                            final String appPackageName = getPackageName();
+                            try {
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                            } catch (android.content.ActivityNotFoundException anfe) {
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                            }
+                        }
+                    });
                 }
-            });
-        }
+            }
+        });
     }
 
     @Override

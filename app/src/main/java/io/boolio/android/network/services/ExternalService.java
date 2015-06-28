@@ -1,6 +1,6 @@
 package io.boolio.android.network.services;
 
-import io.boolio.android.network.models.BoolioData;
+import io.boolio.android.network.BoolioData;
 import retrofit.Callback;
 import retrofit.http.GET;
 import retrofit.http.Query;

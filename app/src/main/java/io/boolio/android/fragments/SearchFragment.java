@@ -27,7 +27,7 @@ import io.boolio.android.helpers.tracking.TrackEvent;
 import io.boolio.android.models.Question;
 import io.boolio.android.network.clients.BoolioQuestionClient;
 import io.boolio.android.network.helpers.BoolioCallback;
-import io.boolio.android.network.models.BoolioData;
+import io.boolio.android.network.BoolioData;
 
 /**
  * Created by james on 4/21/15.

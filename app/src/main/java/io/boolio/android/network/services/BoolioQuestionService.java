@@ -4,7 +4,7 @@ import java.util.List;
 
 import io.boolio.android.helpers.BoolioTypedFile;
 import io.boolio.android.models.Question;
-import io.boolio.android.network.models.BoolioData;
+import io.boolio.android.network.BoolioData;
 import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.Multipart;
@@ -17,7 +17,7 @@ import retrofit.http.Part;
 public interface BoolioQuestionService {
     // Questions
     @POST("/")
-    void getQuestionFeed(@Body List<String> prevSeenQuestions, Callback<List<Question>> callback);
+    void getQuestionFeed(@Body BoolioData data, Callback<List<Question>> callback);
 
     @POST("/search")
     void searchQuestions(@Body BoolioData query, Callback<List<Question>> callback);

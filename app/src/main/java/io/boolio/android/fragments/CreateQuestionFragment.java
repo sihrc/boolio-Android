@@ -90,8 +90,12 @@ public class CreateQuestionFragment extends BoolioFragment {
     }
 
     public void submitOnClickSetup() {
-        if (questionText.getText().length() == 0 && imageSaved == null) {
-            Toast.makeText(activity, "Please enter a question or choose an image", Toast.LENGTH_SHORT).show();
+        boolean answersEmpty = left.getText().toString().replace(" ", "").isEmpty()
+                || right.getText().toString().replace(" ", "").isEmpty();
+        boolean questionEmpty = questionText.getText().length() == 0 && imageSaved == null;
+
+        if (answersEmpty && questionEmpty) {
+            Toast.makeText(activity, "Please enter a question, image, or answers", Toast.LENGTH_SHORT).show();
             return;
         }
 
