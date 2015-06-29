@@ -30,8 +30,8 @@ import retrofit.mime.TypedFile;
  * Created by Chris on 4/17/15.
  */
 public class Utils {
-    public static boolean isNotHere(Object object) {
-        return object == null || object.toString().isEmpty();
+    public static boolean exists(Object object) {
+        return object != null && !object.toString().isEmpty();
     }
     public static String formatTimeDifferences(String value) {
         long diff = (System.currentTimeMillis() - Long.parseLong(value)) / 1000;

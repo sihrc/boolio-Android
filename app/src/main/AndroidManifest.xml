@@ -65,6 +65,10 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="bc1715dc8a64429fec92331a07852a09ac1e177f" />
+
+        <meta-data
+            android:name="com.bumptech.glide.integration.okhttp.OkHttpGlideModule"
+            android:value="GlideModule" />
     </application>
 
 </manifest>

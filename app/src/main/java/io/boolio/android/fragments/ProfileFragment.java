@@ -17,7 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +28,7 @@ import io.boolio.android.custom.BoolioProfileImage;
 import io.boolio.android.custom.ScrollingListView;
 import io.boolio.android.gcm.GCMService;
 import io.boolio.android.helpers.BoolioUserHandler;
+import io.boolio.android.helpers.Glider;
 import io.boolio.android.helpers.PrefsHelper;
 import io.boolio.android.models.Question;
 import io.boolio.android.models.User;
@@ -129,7 +129,7 @@ public class ProfileFragment extends BoolioFragment {
     public void updateViews() {
         if (user == null)
             return;
-        ImageLoader.getInstance().displayImage(user.profilePic, profileUserImage);
+        Glider.profile(profileUserImage, user.profilePic);
         askedCount.setText(String.valueOf(user.questionsAsked.size()));
         answeredCount.setText(String.valueOf(user.questionsAnswered.size()));
         karmaCount.setText(String.valueOf(user.questionsAnswered.size() + user.questionsAsked.size())); //FIXME IMPLEMENT ON BACKEND

@@ -9,24 +9,20 @@ import android.widget.ImageView;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.imageaware.ImageAware;
-import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
-
-import io.boolio.android.Boolio;
 import io.boolio.android.R;
 import io.boolio.android.animation.TextAnimation;
 import io.boolio.android.custom.BoolioProfileImage;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.Dialogs;
+import io.boolio.android.helpers.Glider;
 import io.boolio.android.helpers.Utils;
 import io.boolio.android.helpers.tracking.EventTracker;
 import io.boolio.android.helpers.tracking.TrackEvent;
 import io.boolio.android.models.Question;
+import io.boolio.android.network.BoolioData;
 import io.boolio.android.network.clients.BoolioQuestionClient;
 import io.boolio.android.network.clients.BoolioUserClient;
 import io.boolio.android.network.helpers.DefaultBoolioCallback;
-import io.boolio.android.network.BoolioData;
 
 /**
  * Created by james on 4/24/15.
@@ -109,15 +105,11 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
             holder.question.setVisibility(View.VISIBLE);
 
         // Question Image
-        boolean hasImage = !Utils.isNotHere(question.image);
-        holder.questionImage.setVisibility(hasImage? View.VISIBLE : View.GONE);
-        if (hasImage && (holder.questionImage.getTag() == null ||
-                !holder.questionImage.getTag().equals(question.image))) {
-
-            //we only load image if prev. URL and current URL do not match, or tag is null
-            ImageAware imageAware = new ImageViewAware(holder.questionImage, false);
-            ImageLoader.getInstance().displayImage(question.image, imageAware, Boolio.ImageOptions);
-            holder.questionImage.setTag(question.image);
+        if (Utils.exists(question.image)) {
+            holder.questionImage.setVisibility(View.VISIBLE);
+            Glider.image(holder.questionImage, question.image);
+        } else {
+            holder.questionImage.setVisibility(View.GONE);
         }
 
         // Deleting and Reporting click Listeners
@@ -155,8 +147,7 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
 
         fillContent(holder, question);
 
-
-        ImageLoader.getInstance().displayImage(question.creatorPic, holder.creatorImage);
+        Glider.image(holder.creatorImage, question.creatorPic);
     }
 
     public abstract void fillContent(QuestionHolder holder, Question question);
