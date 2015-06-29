@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
 import com.facebook.Profile;
+import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.util.HashMap;
 
@@ -26,9 +28,10 @@ import io.boolio.android.helpers.Utils;
 import io.boolio.android.helpers.tracking.EventTracker;
 import io.boolio.android.helpers.tracking.TrackEvent;
 import io.boolio.android.models.User;
-import io.boolio.android.network.NetworkCallback;
-import io.boolio.android.network.ServerUser;
-import io.fabric.sdk.android.Fabric;
+import io.boolio.android.network.clients.BoolioGeneralClient;
+import io.boolio.android.network.clients.BoolioUserClient;
+import io.boolio.android.network.helpers.BoolioCallback;
+import retrofit.Callback;
 
 
 public class MainActivity extends FacebookAuth {
@@ -39,8 +42,7 @@ public class MainActivity extends FacebookAuth {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (!BuildConfig.DEBUG)
-            Fabric.with(this, new Crashlytics());
+
         setContentView(R.layout.activity_main);
 
         fragmentManager = getSupportFragmentManager();
@@ -55,26 +57,38 @@ public class MainActivity extends FacebookAuth {
         SCREEN_WIDTH = size.x;
         SCREEN_HEIGHT = size.y;
 
-        ServerUser.getInstance(this).getABTests();
+
+        ImageLoader.getInstance().init(
+            new ImageLoaderConfiguration.Builder(this)
+                .memoryCacheExtraOptions(SCREEN_WIDTH, SCREEN_HEIGHT)
+                .diskCacheExtraOptions(SCREEN_WIDTH, SCREEN_HEIGHT, null)
+                .diskCacheFileCount(20)
+                .threadPoolSize(4)
+                .memoryCache(new LruMemoryCache(2 * 1024 * 1024))
+                .denyCacheImageMultipleSizesInMemory()
+                .writeDebugLogs()
+                .build()
+        );
+
         checkVersion();
     }
 
     @Override
     public void loggedIn(Profile profile) {
-        NetworkCallback<User> userCallback = new NetworkCallback<User>() {
+        Callback<User> userCallback = new BoolioCallback<User>() {
             @Override
             public void handle(User object) {
-                BoolioUserHandler.getInstance(MainActivity.this).setUser(object);
+                BoolioUserHandler.getInstance().setUser(object);
                 GCMHelper.getInstance(MainActivity.this).getRegistrationId();
-                fragmentManager.beginTransaction().replace(R.id.container, MainFragment.newInstance(parseIntent(getIntent()))).commitAllowingStateLoss();
-                PrefsHelper.getInstance(MainActivity.this).saveString("userId", object.userId);
-                EventTracker.getInstance(MainActivity.this).attachUser(object.userId);
+                PrefsHelper.getInstance().saveString("_id", object._id);
+                EventTracker.getInstance(MainActivity.this).attachUser(object._id);
                 EventTracker.getInstance(MainActivity.this).track(TrackEvent.OPEN_APP);
+                fragmentManager.beginTransaction().replace(R.id.container, MainFragment.newInstance(parseIntent(getIntent()))).commitAllowingStateLoss();
             }
         };
         User user = new User(profile.getId(), profile.getName());
-        BoolioUserHandler.getInstance(this).setUser(user);
-        ServerUser.getInstance(this).getBoolioUserFromFacebook
+        BoolioUserHandler.getInstance().setUser(user);
+        BoolioUserClient.api().getBoolioUserFromFacebook
                 (user, userCallback);
     }
 
@@ -101,7 +115,7 @@ public class MainActivity extends FacebookAuth {
                 }});
                 return ProfileFragment.ORDER;
             case "new-feed":
-                EventTracker.getInstance(this).track(TrackEvent.PUSH_NOTIFICATION, new HashMap<String, Object>(){{
+                EventTracker.getInstance(this).track(TrackEvent.PUSH_NOTIFICATION, new HashMap<String, Object>() {{
                     put("type", "new_questions");
                 }});
                 return FeedFragment.ORDER;
@@ -117,7 +131,7 @@ public class MainActivity extends FacebookAuth {
     private void checkVersion() {
         if (!Utils.isFromPlayStore(this))
             return;
-        ServerUser.getInstance(this).getAndroidVersion(BuildConfig.VERSION_CODE, new NetworkCallback<Integer>() {
+        BoolioGeneralClient.api().getAndroidVersion(BuildConfig.VERSION_CODE, new BoolioCallback<Integer>() {
             @Override
             public void handle(Integer object) {
                 if (BuildConfig.VERSION_CODE < object) {

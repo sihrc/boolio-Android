@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,6 @@ import java.util.List;
 import io.boolio.android.R;
 import io.boolio.android.adapters.BoolioAnswerAdapter;
 import io.boolio.android.animation.AnimationHelper;
-import io.boolio.android.callbacks.QuestionsCallback;
 import io.boolio.android.custom.BoolioProfileImage;
 import io.boolio.android.custom.ScrollingListView;
 import io.boolio.android.gcm.GCMService;
@@ -32,12 +32,14 @@ import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.PrefsHelper;
 import io.boolio.android.models.Question;
 import io.boolio.android.models.User;
-import io.boolio.android.network.ServerQuestion;
-import io.boolio.android.network.ServerUser;
-import io.boolio.android.network.NetworkCallback;
+import io.boolio.android.network.clients.BoolioQuestionClient;
+import io.boolio.android.network.clients.BoolioUserClient;
+import io.boolio.android.network.helpers.BoolioCallback;
+import io.boolio.android.network.BoolioData;
 
 /**
  * Created by Chris on 4/17/15.
+ * ProfileFragment contains user profile information and question feeds
  */
 public class ProfileFragment extends BoolioFragment {
     public final static int ORDER = 1;
@@ -62,18 +64,18 @@ public class ProfileFragment extends BoolioFragment {
     int white_color, dark_gray, theme_blue;
 
     // Question Request Callbacks
-    QuestionsCallback askedCallback = new QuestionsCallback() {
+    BoolioCallback<List<Question>> askedCallback = new BoolioCallback<List<Question>>() {
         @Override
-        public void handleQuestions(List<Question> questionList) {
+        public void handle(List<Question> questionList) {
             askedAdapter.clear();
             askedAdapter.addAll(questionList);
             askedAdapter.notifyDataSetChanged();
             gifLoading.setVisibility(View.GONE);
         }
     };
-    QuestionsCallback answeredCallback = new QuestionsCallback() {
+    BoolioCallback<List<Question>> answeredCallback = new BoolioCallback<List<Question>>() {
         @Override
-        public void handleQuestions(List<Question> questionList) {
+        public void handle(List<Question> questionList) {
             answeredAdapter.clear();
             answeredAdapter.addAll(questionList);
             answeredAdapter.notifyDataSetChanged();
@@ -90,13 +92,13 @@ public class ProfileFragment extends BoolioFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        user = BoolioUserHandler.getInstance(activity).getUser();
+        user = BoolioUserHandler.getInstance().getUser();
         white_color = getResources().getColor(R.color.white);
         dark_gray = getResources().getColor(R.color.tab_light_gray);
         theme_blue = getResources().getColor(R.color.darker_blue);
-        ServerUser.getInstance(activity).getUserProfile(
-                userId == null ? PrefsHelper.getInstance(activity).getString("userId") : userId,
-                new NetworkCallback<User>() {
+        BoolioUserClient.api().getUserProfile(
+                userId == null ? PrefsHelper.getInstance().getString("_id") : userId,
+                new BoolioCallback<User>() {
                     @Override
                     public void handle(User user) {
                         ProfileFragment.this.user = user;
@@ -107,16 +109,16 @@ public class ProfileFragment extends BoolioFragment {
 
     @Override
     public void refreshPage() {
-        ServerUser.getInstance(activity).getUserProfile(
-                userId == null ? BoolioUserHandler.getInstance(activity).getUser().userId : userId,
-                new NetworkCallback<User>() {
+        BoolioUserClient.api().getUserProfile(
+                userId == null ? BoolioUserHandler.getInstance().getUserId() : userId,
+                new BoolioCallback<User>() {
                     @Override
                     public void handle(User user) {
                         ProfileFragment.this.user = user;
                         updateViews();
                         gifLoading.setVisibility(View.VISIBLE);
-                        ServerQuestion.getInstance(activity).getQuestions(user.questionsAnswered, answeredCallback);
-                        ServerQuestion.getInstance(activity).getQuestions(user.questionsAsked, askedCallback);
+                        BoolioQuestionClient.api().getQuestions(BoolioData.keys("ids").values(user.questionsAnswered), answeredCallback);
+                        BoolioQuestionClient.api().getQuestions(BoolioData.keys("ids").values(user.questionsAsked), askedCallback);
                     }
                 });
     }
@@ -127,7 +129,7 @@ public class ProfileFragment extends BoolioFragment {
     public void updateViews() {
         if (user == null)
             return;
-        profileUserImage.setImageUrl(user.profilePic, ServerUser.getInstance(activity).getImageLoader());
+        ImageLoader.getInstance().displayImage(user.profilePic, profileUserImage);
         askedCount.setText(String.valueOf(user.questionsAsked.size()));
         answeredCount.setText(String.valueOf(user.questionsAnswered.size()));
         karmaCount.setText(String.valueOf(user.questionsAnswered.size() + user.questionsAsked.size())); //FIXME IMPLEMENT ON BACKEND
@@ -192,7 +194,7 @@ public class ProfileFragment extends BoolioFragment {
         }};
 
 
-        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }

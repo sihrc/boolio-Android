@@ -69,7 +69,7 @@ public class MainFragment extends BoolioFragment {
         fragmentList = new ArrayList<BoolioFragment>() {{
             add(FeedFragment.getInstance());
             // breaking here because userId is null
-            add(ProfileFragment.newInstance(BoolioUserHandler.getInstance(activity).getUser().userId));
+            add(ProfileFragment.newInstance(BoolioUserHandler.getInstance().getUserId()));
             add(CreateQuestionFragment.newInstance(new Runnable() {
                 @Override
                 public void run() {
@@ -127,9 +127,10 @@ public class MainFragment extends BoolioFragment {
         // viewPager by default only loads the fragments that are right next to each other.
         // this makes sure that all of our fragments are loaded
         viewPager.setOffscreenPageLimit(fragmentList.size());
-        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(final int position, float positionOffset, int positionOffsetPixels) {}
+            public void onPageScrolled(final int position, float positionOffset, int positionOffsetPixels) {
+            }
 
             @Override
             public void onPageSelected(int position) {

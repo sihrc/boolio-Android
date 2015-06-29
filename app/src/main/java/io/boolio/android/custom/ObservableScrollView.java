@@ -5,8 +5,6 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.ScrollView;
 
-import io.boolio.android.callbacks.ScrollViewListener;
-
 /**
  * Created by Chris on 4/21/15.
  */
@@ -49,4 +47,9 @@ public class ObservableScrollView extends ScrollView {
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         return enabled && super.onInterceptTouchEvent(ev);
     }
+
+    public interface ScrollViewListener {
+        void onScrollChanged(ObservableScrollView scrollView, int x, int y, int oldx, int oldy);
+    }
+
 }

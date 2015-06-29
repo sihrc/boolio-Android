@@ -18,13 +18,15 @@ import android.widget.Toast;
 
 import io.boolio.android.R;
 import io.boolio.android.fragments.search.SearchImageFragment;
-import io.boolio.android.helpers.BoolioCallback;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.PictureHelper;
+import io.boolio.android.helpers.Utils;
 import io.boolio.android.helpers.tracking.EventTracker;
 import io.boolio.android.helpers.tracking.TrackEvent;
 import io.boolio.android.models.Question;
-import io.boolio.android.network.ServerQuestion;
+import io.boolio.android.models.User;
+import io.boolio.android.network.clients.BoolioQuestionClient;
+import io.boolio.android.network.helpers.BoolioCallback;
 
 /**
  * Created by james on 4/17/15.
@@ -61,8 +63,6 @@ public class CreateQuestionFragment extends BoolioFragment {
                 networkImageView.setImageBitmap(bitmap);
                 if (imageType.equals("string")) {
                     imageSaved = bitmap;
-                } else {
-                    // TODO URL
                 }
             }
         });
@@ -99,26 +99,33 @@ public class CreateQuestionFragment extends BoolioFragment {
             return;
         }
 
+        User user = BoolioUserHandler.getInstance().getUser();
+
         final Question question = new Question();
         question.question = questionText.getText().toString();
         question.left = left.getText().length() == 0 ? "No" : left.getText().toString();
         question.right = right.getText().length() == 0 ? "Yes" : right.getText().toString();
-        question.creatorName = BoolioUserHandler.getInstance(activity).getUser().name;
-        question.creatorImage = BoolioUserHandler.getInstance(activity).getUser().profilePic;
-        question.creatorId = BoolioUserHandler.getInstance(activity).getUser().userId;
+        question.creatorName = user.name;
+        question.creatorPic = user.profilePic;
+        question.creatorId = user._id;
 
 
         // Upload Image to Server
         progress.setVisibility(View.VISIBLE);
-
-        ServerQuestion.getInstance(activity).postQuestion(question, imageSaved, new Runnable() {
+        BoolioQuestionClient.api().postQuestion(question, new BoolioCallback<Question>() {
             @Override
-            public void run() {
-                EventTracker.getInstance(activity).trackQuestion(TrackEvent.CREATE_QUESTION, question, null);
-                progress.setVisibility(View.GONE);
-                reset();
-                if (runnable != null)
-                    runnable.run();
+            public void handle(Question obj) {
+                if (imageSaved != null)
+                    BoolioQuestionClient.api().uploadImage(Utils.getTypedFile(activity, obj._id, imageSaved), new BoolioCallback<Question>() {
+                        @Override
+                        public void handle(Question resObj) {
+                            EventTracker.getInstance(activity).trackQuestion(TrackEvent.CREATE_QUESTION, question, null);
+                            progress.setVisibility(View.GONE);
+                            reset();
+                            if (runnable != null)
+                                runnable.run();
+                        }
+                    });
             }
         });
     }

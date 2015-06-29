@@ -14,12 +14,15 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.util.List;
 
+import io.boolio.android.BuildConfig;
 import io.boolio.android.MainActivity;
 import io.boolio.android.R;
-import io.boolio.android.callbacks.QuestionsCallback;
 import io.boolio.android.models.Question;
-import io.boolio.android.network.ServerFeed;
+import io.boolio.android.network.clients.BoolioQuestionClient;
+import io.boolio.android.network.helpers.BoolioCallback;
+import io.boolio.android.network.BoolioData;
 import io.fabric.sdk.android.Fabric;
+
 
 /**
  * Created by Chris on 5/2/15.
@@ -32,6 +35,13 @@ public class GCMService extends IntentService {
 
     public GCMService() {
         super("GCMService");
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        if (!BuildConfig.DEBUG)
+            Fabric.with(this, new Crashlytics());
     }
 
     @Override
@@ -69,7 +79,9 @@ public class GCMService extends IntentService {
             // Release the wake lock provided by the WakefulBroadcastReceiver.
             GCMReceiver.completeWakefulIntent(intent);
         } catch (Exception e) {
-            Crashlytics.getInstance().core.logException(e);
+            if (!BuildConfig.DEBUG) {
+                Crashlytics.getInstance().core.logException(e);
+            }
         }
     }
 
@@ -90,14 +102,14 @@ public class GCMService extends IntentService {
                 intent.setAction("new-feed");
                 contentIntent = PendingIntent.getActivity(this, GCM + FEED_UPDATE_ID,
                         intent, 0);
-                ServerFeed.getInstance(this).getQuestionFeed(QUESTION_LIMIT,null, new QuestionsCallback() {
-                    @Override
-                    public void handleQuestions(List<Question> questionList) {
-                        if (questionList.isEmpty())
-                            return;
-                        buildFeedUpdate(mNotificationManager, contentIntent, questionList.size());
-                    }
-                });
+               BoolioQuestionClient.api().getQuestionFeed(
+                       BoolioData.keys("count", "prevSeenQuestions").values(QUESTION_LIMIT, null),
+                       new BoolioCallback<List<Question>>() {
+                   @Override
+                   public void handle(List<Question> questionList) {
+                       buildFeedUpdate(mNotificationManager, contentIntent, questionList.size());
+                   }
+               });
                 break;
             default:
             case "boolio-question":

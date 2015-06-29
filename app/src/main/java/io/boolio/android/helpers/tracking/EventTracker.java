@@ -10,7 +10,6 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import io.boolio.android.BuildConfig;
 import io.boolio.android.R;
@@ -100,7 +99,7 @@ public class EventTracker {
            put("tags", question.tags);
            put("has_image", question.image != null && !question.image.equals(""));
            put("default_answer", question.left.equals("No"));
-           put("question_id", question.questionId);
+           put("question_id", question._id);
            put("creator_id", question.creatorId);
            if (answer != null)
                put("answer", answer);

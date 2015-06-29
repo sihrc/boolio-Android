@@ -9,13 +9,12 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-
-import com.android.volley.toolbox.NetworkImageView;
+import android.widget.ImageView;
 
 /**
  * Created by Chris on 4/17/15.
  */
-public class BoolioProfileImage extends BoolioNetworkImageView {
+public class BoolioProfileImage extends ImageView {
     public BoolioProfileImage(Context context) {
         super(context);
     }

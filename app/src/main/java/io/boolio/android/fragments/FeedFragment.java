@@ -14,7 +14,6 @@ import io.boolio.android.MainActivity;
 import io.boolio.android.R;
 import io.boolio.android.adapters.BoolioQuestionAdapter;
 import io.boolio.android.animation.AnimationHelper;
-import io.boolio.android.callbacks.QuestionsCallback;
 import io.boolio.android.custom.EnhancedListView;
 import io.boolio.android.custom.PullToRefreshView;
 import io.boolio.android.custom.ScrollingListView;
@@ -22,8 +21,11 @@ import io.boolio.android.gcm.GCMService;
 import io.boolio.android.helpers.tracking.EventTracker;
 import io.boolio.android.helpers.tracking.TrackEvent;
 import io.boolio.android.models.Question;
-import io.boolio.android.network.ServerFeed;
-import io.boolio.android.network.ServerUser;
+import io.boolio.android.network.clients.BoolioQuestionClient;
+import io.boolio.android.network.clients.BoolioUserClient;
+import io.boolio.android.network.helpers.BoolioCallback;
+import io.boolio.android.network.helpers.DefaultBoolioCallback;
+import io.boolio.android.network.BoolioData;
 
 /**
  * Created by Chris on 4/16/15.
@@ -35,37 +37,41 @@ public class FeedFragment extends BoolioFragment {
     final private static int REFRESH_DELAY = 500;
     final private static int QUESTION_LIMIT = 10;
 
+
     ScrollingListView.PullQuestionListener pullQuestionListener = new ScrollingListView.PullQuestionListener() {
         @Override
         public void pullQuestion() {
             if (questionAdapter != null && questionAdapter.isEmpty())
                 showBear(false);
-            ServerFeed.getInstance(activity).getQuestionFeed(QUESTION_LIMIT, questionAdapter.getList(), new QuestionsCallback() {
-                @Override
-                public void handleQuestions(final List<Question> questionList) {
-                    pullToRefreshLayout.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            questionAdapter.addAll(questionList);
-                            questionAdapter.sort(new Comparator<Question>() {
-                                @Override
-                                public int compare(Question lhs, Question rhs) {
-                                    return rhs.dateCreated.compareTo(lhs.dateCreated);
-                                }
+            BoolioQuestionClient.api().getQuestionFeed(
+                BoolioData.keys("count", "prevSeenQuestions")
+                    .values(QUESTION_LIMIT, questionAdapter.getQuestionIds())
+                , new BoolioCallback<List<Question>>() {
+                    @Override
+                    public void handle(final List<Question> resObj) {
+                        pullToRefreshLayout.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                questionAdapter.addAll(resObj);
+                                questionAdapter.sort(new Comparator<Question>() {
+                                    @Override
+                                    public int compare(Question lhs, Question rhs) {
+                                        return rhs.dateCreated.compareTo(lhs.dateCreated);
+                                    }
 
-                                @Override
-                                public boolean equals(Object object) {
-                                    return false;
-                                }
-                            });
-                            questionAdapter.onDataSetChanged();
-                            pullToRefreshLayout.setRefreshing(false);
-                            gifLoading.setVisibility(View.GONE);
-                            GCMService.clearFeedUpdate(activity);
-                        }
-                    }, REFRESH_DELAY);
-                }
-            });
+                                    @Override
+                                    public boolean equals(Object object) {
+                                        return false;
+                                    }
+                                });
+                                questionAdapter.onDataSetChanged();
+                                pullToRefreshLayout.setRefreshing(false);
+                                gifLoading.setVisibility(View.GONE);
+                                GCMService.clearFeedUpdate(activity);
+                            }
+                        }, REFRESH_DELAY);
+                    }
+                });
         }
     };
 
@@ -135,14 +141,14 @@ public class FeedFragment extends BoolioFragment {
                 final Question question = questionAdapter.remove(i);
                 questionAdapter.onDataSetChanged();
                 EventTracker.getInstance(activity).trackQuestion(TrackEvent.ANSWER_QUESTION, question, "skipped");
-                ServerUser.getInstance(activity).skipQuestion(question);
+                BoolioUserClient.api().skipQuestion(BoolioData.create().add("questionId", question._id), new DefaultBoolioCallback());
                 return new EnhancedListView.Undoable() {
                     @Override
                     public void undo() {
                         EventTracker.getInstance(activity).trackQuestion(TrackEvent.ANSWER_QUESTION, question, "undo");
                         questionAdapter.insert(question, i);
                         questionAdapter.onDataSetChanged();
-                        ServerUser.getInstance(activity).unskipQuestion(question);
+                        BoolioUserClient.api().unskipQuestion(question, new DefaultBoolioCallback());
                     }
                 };
             }

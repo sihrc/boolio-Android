@@ -5,12 +5,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.imageaware.ImageAware;
+import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
+
+import io.boolio.android.Boolio;
 import io.boolio.android.R;
 import io.boolio.android.animation.TextAnimation;
-import io.boolio.android.custom.BoolioNetworkImageView;
 import io.boolio.android.custom.BoolioProfileImage;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.Dialogs;
@@ -18,9 +23,10 @@ import io.boolio.android.helpers.Utils;
 import io.boolio.android.helpers.tracking.EventTracker;
 import io.boolio.android.helpers.tracking.TrackEvent;
 import io.boolio.android.models.Question;
-import io.boolio.android.network.ServerFeed;
-import io.boolio.android.network.ServerQuestion;
-import io.boolio.android.network.ServerUser;
+import io.boolio.android.network.clients.BoolioQuestionClient;
+import io.boolio.android.network.clients.BoolioUserClient;
+import io.boolio.android.network.helpers.DefaultBoolioCallback;
+import io.boolio.android.network.BoolioData;
 
 /**
  * Created by james on 4/24/15.
@@ -68,7 +74,7 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
 
             //Image Views
             holder.creatorImage = (BoolioProfileImage) view.findViewById(R.id.question_creator_picture);
-            holder.questionImage = (BoolioNetworkImageView) view.findViewById(R.id.question_image);
+            holder.questionImage = (ImageView) view.findViewById(R.id.question_image);
 
             view.setTag(holder);
         } else {
@@ -88,7 +94,7 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
         holder.date.setText(Utils.formatTimeDifferences(question.dateCreated) + " ago");
 
         // Setup Creator Image and Name
-        if (question.creatorId != null && question.creatorId.equals(BoolioUserHandler.getInstance(context).getUser().userId)){
+        if (question.creatorId != null && question.creatorId.equals(BoolioUserHandler.getInstance().getUserId())){
             holder.delete.setVisibility(View.VISIBLE);
             holder.report.setVisibility(View.GONE);
         } else {
@@ -102,13 +108,19 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
         else
             holder.question.setVisibility(View.VISIBLE);
 
-        // Setup Question Image
-        if (question.image.equals("")) {
-            holder.questionImage.setVisibility(View.GONE);
-        } else {
-            holder.questionImage.setVisibility(View.VISIBLE);
+        // Question Image
+        boolean hasImage = !Utils.isNotHere(question.image);
+        holder.questionImage.setVisibility(hasImage? View.VISIBLE : View.GONE);
+        if (hasImage && (holder.questionImage.getTag() == null ||
+                !holder.questionImage.getTag().equals(question.image))) {
+
+            //we only load image if prev. URL and current URL do not match, or tag is null
+            ImageAware imageAware = new ImageViewAware(holder.questionImage, false);
+            ImageLoader.getInstance().displayImage(question.image, imageAware, Boolio.ImageOptions);
+            holder.questionImage.setTag(question.image);
         }
 
+        // Deleting and Reporting click Listeners
         holder.report.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -116,8 +128,9 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
                 Dialogs.messageDialog(context, R.string.report_title, R.string.report_message, new Runnable() {
                     @Override
                     public void run() {
-                        ServerQuestion.getInstance(context).reportQuestion(question.questionId);
-                        ServerUser.getInstance(context).skipQuestion(question);
+                        BoolioQuestionClient.api().reportQuestion(BoolioData.keys("questionId").values(question._id), new DefaultBoolioCallback());
+                        BoolioUserClient.api().skipQuestion(BoolioData.keys("questionId").values(question._id), new DefaultBoolioCallback());
+
                         remove(question);
                         notifyDataSetChanged();
                     }
@@ -132,7 +145,7 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
                 Dialogs.messageDialog(context, R.string.delete_title, R.string.delete_message, new Runnable() {
                     @Override
                     public void run() {
-                        ServerQuestion.getInstance(context).deleteQuestion(question.questionId);
+                        BoolioQuestionClient.api().deleteQuestion(BoolioData.keys("questionId").values(question._id), new DefaultBoolioCallback());
                         remove(question);
                         notifyDataSetChanged();
                     }
@@ -142,16 +155,8 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
 
         fillContent(holder, question);
 
-        holder.questionImage.setDefaultImageResId(R.drawable.default_image);
 
-        if (question.image.equals("")) {
-            holder.questionImage.setVisibility(View.GONE);
-        } else {
-            holder.questionImage.setVisibility(View.VISIBLE);
-            holder.questionImage.setImageUrl(question.image, ServerFeed.getInstance(context).getImageLoader());
-        }
-
-        holder.creatorImage.setImageUrl(question.creatorImage, ServerUser.getInstance(context).getImageLoader());
+        ImageLoader.getInstance().displayImage(question.creatorPic, holder.creatorImage);
     }
 
     public abstract void fillContent(QuestionHolder holder, Question question);
@@ -161,7 +166,7 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
         TextView question, creator, date, highLeft, highRight;
         TextSwitcher leftAnswer, rightAnswer;
         BoolioProfileImage creatorImage;
-        BoolioNetworkImageView questionImage;
+        ImageView questionImage;
     }
 
     public void setOnDataSetChanged(Runnable onDataSetChanged) {

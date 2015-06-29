@@ -6,7 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import io.boolio.android.helpers.tracking.EventTracker;
-import io.boolio.android.network.BoolioServer;
+import io.boolio.android.network.clients.BoolioUserClient;
+import io.boolio.android.network.helpers.BoolioCallback;
 
 /**
  * Created by Chris on 5/4/15.
@@ -22,7 +23,7 @@ public class Debugger {
 
     // Enable Debugging
     public static Map<Class, Boolean> tags = new HashMap<Class, Boolean>() {{
-        put(BoolioServer.class, true);
+        put(BoolioCallback.class, false);
         put(EventTracker.class, false);
     }};
 

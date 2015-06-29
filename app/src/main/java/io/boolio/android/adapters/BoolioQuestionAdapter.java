@@ -15,11 +15,13 @@ import io.boolio.android.R;
 import io.boolio.android.helpers.tracking.EventTracker;
 import io.boolio.android.helpers.tracking.TrackEvent;
 import io.boolio.android.models.Question;
-import io.boolio.android.network.NetworkCallback;
-import io.boolio.android.network.ServerQuestion;
+import io.boolio.android.network.clients.BoolioQuestionClient;
+import io.boolio.android.network.helpers.BoolioCallback;
+import io.boolio.android.network.BoolioData;
 
 /**
  * Created by james on 4/24/15.
+ * Questions Adapter for news feed.
  */
 public class BoolioQuestionAdapter extends BoolioAdapter {
     final private static int ANIMATION_DELAY = 1000;
@@ -40,7 +42,7 @@ public class BoolioQuestionAdapter extends BoolioAdapter {
                 holder.leftAnswer.setEnabled(false);
                 holder.rightAnswer.setEnabled(false);
                 EventTracker.getInstance(context).trackQuestion(TrackEvent.ANSWER_QUESTION, question, "left");
-                ServerQuestion.getInstance(context).postAnswer(question.questionId, "left", getNewNetworkCallback(holder, question));
+                BoolioQuestionClient.api().postAnswer(BoolioData.keys("questionId", "direction").values(question._id, "left"), getNewNetworkCallback(holder, question));
             }
         });
         holder.rightAnswer.setOnClickListener(new View.OnClickListener() {
@@ -49,14 +51,14 @@ public class BoolioQuestionAdapter extends BoolioAdapter {
                 holder.leftAnswer.setEnabled(false);
                 holder.rightAnswer.setEnabled(false);
                 EventTracker.getInstance(context).trackQuestion(TrackEvent.ANSWER_QUESTION, question, "right");
-                ServerQuestion.getInstance(context).postAnswer(question.questionId, "right",
+                BoolioQuestionClient.api().postAnswer(BoolioData.keys("questionId", "direction").values(question._id, "right"),
                         getNewNetworkCallback(holder, question));
             }
         });
     }
 
-    private NetworkCallback<Question> getNewNetworkCallback(final QuestionHolder holder, final Question question){
-        return new NetworkCallback<Question>() {
+    private BoolioCallback<Question> getNewNetworkCallback(final QuestionHolder holder, final Question question){
+        return new BoolioCallback<Question>() {
             @Override
             public void handle(Question object) {
                 holder.leftAnswer.setText(String.valueOf(object.leftCount));
@@ -131,5 +133,13 @@ public class BoolioQuestionAdapter extends BoolioAdapter {
 
     public List<Question> getList() {
         return questions;
+    }
+    public List<String> getQuestionIds() {
+        List<String> questionIds = new ArrayList<>(questions.size());
+        for (Question question : questions) {
+            questionIds.add(question._id);
+        }
+
+        return questionIds;
     }
 }
