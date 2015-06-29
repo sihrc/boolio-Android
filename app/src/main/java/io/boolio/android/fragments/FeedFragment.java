@@ -45,7 +45,7 @@ public class FeedFragment extends BoolioFragment {
                 showBear(false);
             BoolioQuestionClient.api().getQuestionFeed(
                 BoolioData.keys("count", "prevSeenQuestions")
-                    .values(QUESTION_LIMIT, questionAdapter.getList())
+                    .values(QUESTION_LIMIT, questionAdapter.getQuestionIds())
                 , new BoolioCallback<List<Question>>() {
                     @Override
                     public void handle(final List<Question> resObj) {

@@ -34,6 +34,14 @@ public class ScrollingListView extends EnhancedListView {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (pullQuestionListener != null && !stopQuestion && (totalItemCount - firstVisibleItem < QUESTION_THRESHOLD)) {
+                    pullQuestionListener.pullQuestion();
+                    stopQuestion = true;
+                } else if (questionNum != totalItemCount) {
+                    stopQuestion = false;
+                }
+                questionNum = totalItemCount;
+
                 if (onScrollListener != null)
                     onScrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
                 if (!touching) {
@@ -47,14 +55,6 @@ public class ScrollingListView extends EnhancedListView {
                         scrollChangeListener.onScroll((scrolledOffset - mInitialScroll) < 0);
                     mInitialScroll = scrolledOffset;
                 }
-
-                if (pullQuestionListener != null && !stopQuestion && (totalItemCount - firstVisibleItem < QUESTION_THRESHOLD)) {
-                    pullQuestionListener.pullQuestion();
-                    stopQuestion = true;
-                } else if (questionNum != totalItemCount) {
-                    stopQuestion = false;
-                }   
-                questionNum = totalItemCount;
             }
         });
     }

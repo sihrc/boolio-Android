@@ -134,4 +134,12 @@ public class BoolioQuestionAdapter extends BoolioAdapter {
     public List<Question> getList() {
         return questions;
     }
+    public List<String> getQuestionIds() {
+        List<String> questionIds = new ArrayList<>(questions.size());
+        for (Question question : questions) {
+            questionIds.add(question._id);
+        }
+
+        return questionIds;
+    }
 }
