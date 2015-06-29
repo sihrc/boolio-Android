@@ -33,10 +33,11 @@ public class TutorialPagerFragment extends BoolioFragment {
     LinearLayout inactiveIndicators, activeIndicators;
     List<BoolioFragment> fragmentList;
     Drawable inactiveIndicator, activeIndicator;
+    int[] args;
 
     public static TutorialPagerFragment newInstance() {
         TutorialPagerFragment tutorialPagerFragment = new TutorialPagerFragment();
-        tutorialPagerFragment.setTutorials(
+        tutorialPagerFragment.setTutorials(new int[] {
                 // Tutorial I
                 R.drawable.heartbear, R.string.tutorial_1,
 
@@ -46,12 +47,28 @@ public class TutorialPagerFragment extends BoolioFragment {
                 // Tutorial III
                 R.drawable.burgerphone, R.string.tutorial_3
 
-        );
+        });
         return tutorialPagerFragment;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putIntArray("tutorials", args);
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState == null)
+            return;
+        args = savedInstanceState.getIntArray("tutorials");
+        setTutorials(args);
+    }
+
     // Set the Tutorial Fragments
-    private void setTutorials(Integer... args) {
+    private void setTutorials(int[] args) {
+        this.args = args;
         fragmentList = new ArrayList<>();
         int total = args.length, index = 0;
         while (index < total)
