@@ -21,6 +21,8 @@ import com.facebook.login.LoginManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import io.boolio.android.R;
 import io.boolio.android.adapters.BoolioAnswerAdapter;
 import io.boolio.android.animation.AnimationHelper;
@@ -32,10 +34,10 @@ import io.boolio.android.helpers.Glider;
 import io.boolio.android.helpers.PrefsHelper;
 import io.boolio.android.models.Question;
 import io.boolio.android.models.User;
+import io.boolio.android.network.BoolioData;
 import io.boolio.android.network.clients.BoolioQuestionClient;
 import io.boolio.android.network.clients.BoolioUserClient;
 import io.boolio.android.network.helpers.BoolioCallback;
-import io.boolio.android.network.BoolioData;
 
 /**
  * Created by Chris on 4/17/15.
@@ -44,23 +46,34 @@ import io.boolio.android.network.BoolioData;
 public class ProfileFragment extends BoolioFragment {
     public final static int ORDER = 1;
 
-    String userId;
-    User user;
-
     // Profile Page
-    BoolioProfileImage profileUserImage;
-    TextView askedCount, profileUsername, answeredCount, karmaCount, profileDisplayName, answeredCountIn, karmaCountIn, askedCountIn;
+    @Bind(R.id.karma_show) RelativeLayout karmaShow;
 
-    LinearLayout karmaBar;
-    RelativeLayout karmaShow;
-    View profileSetting, gifLoading;
+    @Bind(R.id.asked_count) TextView askedCount;
+
+    @Bind(R.id.asked_count_in) TextView askedCountIn;
+    @Bind(R.id.profile_username) TextView profileUsername;
+    @Bind(R.id.answered_count) TextView answeredCount;
+    @Bind(R.id.answered_count_in) TextView answeredCountIn;
+    @Bind(R.id.karma_bar) LinearLayout karmaBar;
+    @Bind(R.id.karma_count) TextView karmaCount;
+
+    @Bind(R.id.karma_count_in) TextView karmaCountIn;
+    @Bind(R.id.asked_answered_view_pager) ViewPager viewPager;
+
+    @Bind(R.id.profile_asked_view) TextView askedView;
+    @Bind(R.id.profile_answered_view) TextView answerView;
+    @Bind(R.id.list_frag_gif_loading) View gifLoading;
+
+    @Bind(R.id.profile_setting) View profileSetting;
+    @Bind(R.id.profile_user_image) BoolioProfileImage profileUserImage;
 
     // List Fragment Pager
-    ViewPager viewPager;
-    TextView answerView, askedView;
     BoolioAnswerAdapter askedAdapter, answeredAdapter;
     List<BoolioListFragment> fragmentList;
 
+    String userId;
+    User user;
     int white_color, dark_gray, theme_blue;
 
     // Question Request Callbacks
@@ -97,30 +110,30 @@ public class ProfileFragment extends BoolioFragment {
         dark_gray = getResources().getColor(R.color.tab_light_gray);
         theme_blue = getResources().getColor(R.color.darker_blue);
         BoolioUserClient.api().getUserProfile(
-                userId == null ? PrefsHelper.getInstance().getString("_id") : userId,
-                new BoolioCallback<User>() {
-                    @Override
-                    public void handle(User user) {
-                        ProfileFragment.this.user = user;
-                        updateViews();
-                    }
-                });
+            userId == null ? PrefsHelper.getInstance().getString("_id") : userId,
+            new BoolioCallback<User>() {
+                @Override
+                public void handle(User user) {
+                    ProfileFragment.this.user = user;
+                    updateViews();
+                }
+            });
     }
 
     @Override
     public void refreshPage() {
         BoolioUserClient.api().getUserProfile(
-                userId == null ? BoolioUserHandler.getInstance().getUserId() : userId,
-                new BoolioCallback<User>() {
-                    @Override
-                    public void handle(User user) {
-                        ProfileFragment.this.user = user;
-                        updateViews();
-                        gifLoading.setVisibility(View.VISIBLE);
-                        BoolioQuestionClient.api().getQuestions(BoolioData.keys("ids").values(user.questionsAnswered), answeredCallback);
-                        BoolioQuestionClient.api().getQuestions(BoolioData.keys("ids").values(user.questionsAsked), askedCallback);
-                    }
-                });
+            userId == null ? BoolioUserHandler.getInstance().getUserId() : userId,
+            new BoolioCallback<User>() {
+                @Override
+                public void handle(User user) {
+                    ProfileFragment.this.user = user;
+                    updateViews();
+                    gifLoading.setVisibility(View.VISIBLE);
+                    BoolioQuestionClient.api().getQuestions(BoolioData.keys("ids").values(user.questionsAnswered), answeredCallback);
+                    BoolioQuestionClient.api().getQuestions(BoolioData.keys("ids").values(user.questionsAsked), askedCallback);
+                }
+            });
     }
 
     /**
@@ -142,29 +155,7 @@ public class ProfileFragment extends BoolioFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
-
-        profileSetting = rootView.findViewById(R.id.profile_setting);
-        profileUserImage = (BoolioProfileImage) rootView.findViewById(R.id.profile_user_image);
-
-        karmaShow = (RelativeLayout) rootView.findViewById(R.id.karma_show);
-
-        askedCount = (TextView) rootView.findViewById(R.id.asked_count);
-        askedCountIn = (TextView) rootView.findViewById(R.id.asked_count_in); // duplicate
-        profileUsername = (TextView) rootView.findViewById(R.id.profile_username);
-        answeredCount = (TextView) rootView.findViewById(R.id.answered_count);
-        answeredCountIn = (TextView) rootView.findViewById(R.id.answered_count_in); // duplicate
-        profileDisplayName = (TextView) rootView.findViewById(R.id.profile_user_name);
-        karmaBar = (LinearLayout) rootView.findViewById(R.id.karma_bar);
-
-
-        karmaCount = (TextView) rootView.findViewById(R.id.karma_count);
-        karmaCountIn = (TextView) rootView.findViewById(R.id.karma_count_in);  // duplicate
-
-        viewPager = (ViewPager) rootView.findViewById(R.id.asked_answered_view_pager);
-        askedView = (TextView) rootView.findViewById(R.id.profile_asked_view);
-        answerView = (TextView) rootView.findViewById(R.id.profile_answered_view);
-
-        gifLoading = rootView.findViewById(R.id.list_frag_gif_loading);
+        ButterKnife.bind(this, rootView);
 
         setupPager();
         setupTabOnClick();
@@ -266,22 +257,22 @@ public class ProfileFragment extends BoolioFragment {
             @Override
             public void onClick(View v) {
                 new AlertDialog.Builder(activity)
-                        .setTitle(R.string.settings)
-                        .setItems(new CharSequence[]{"Logout", "Cancel"}, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                switch (which) {
-                                    case 0:
-                                        Toast.makeText(activity, "Logged Out", Toast.LENGTH_SHORT).show();
-                                        LoginManager.getInstance().logOut();
-                                        dialog.dismiss();
-                                        break;
-                                    case 1:
-                                        dialog.dismiss();
-                                        break;
-                                }
+                    .setTitle(R.string.settings)
+                    .setItems(new CharSequence[]{"Logout", "Cancel"}, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which) {
+                                case 0:
+                                    Toast.makeText(activity, "Logged Out", Toast.LENGTH_SHORT).show();
+                                    LoginManager.getInstance().logOut();
+                                    dialog.dismiss();
+                                    break;
+                                case 1:
+                                    dialog.dismiss();
+                                    break;
                             }
-                        }).show();
+                        }
+                    }).show();
             }
         });
     }

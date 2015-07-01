@@ -10,6 +10,10 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ListAdapter;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnTouch;
+import butterknife.internal.ButterKnifeProcessor;
 import io.boolio.android.MainActivity;
 import io.boolio.android.R;
 import io.boolio.android.custom.ScrollingListView;
@@ -20,7 +24,7 @@ import io.boolio.android.custom.ScrollingListView;
 public class BoolioListFragment extends BoolioFragment {
     MainActivity context;
     ListAdapter questionAdapter;
-    ScrollingListView listView;
+    @Bind(R.id.profile_asked_feed) ScrollingListView listView;
     ScrollingListView.ScrollChangeListener scrollChangeListener;
     Runnable callback;
 
@@ -38,17 +42,15 @@ public class BoolioListFragment extends BoolioFragment {
         context = (MainActivity) activity;
     }
 
+    @OnTouch(R.id.profile_asked_feed)
+    boolean onTouch(View v, MotionEvent event) {
+        return false;
+    }
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_boolio_list, container, false);
+        ButterKnife.bind(this, rootView);
 
-        listView = (ScrollingListView) rootView.findViewById(R.id.profile_asked_feed);
-        listView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return false;
-            }
-        });
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             int prev = 1;
 

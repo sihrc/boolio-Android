@@ -11,6 +11,7 @@ import com.facebook.Profile;
 
 import java.util.HashMap;
 
+import butterknife.ButterKnife;
 import io.boolio.android.fragments.FeedFragment;
 import io.boolio.android.fragments.MainFragment;
 import io.boolio.android.fragments.ProfileFragment;
@@ -40,6 +41,7 @@ public class MainActivity extends FacebookAuth {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        ButterKnife.bind(this);
         setContentView(R.layout.activity_main);
 
         fragmentManager = getSupportFragmentManager();

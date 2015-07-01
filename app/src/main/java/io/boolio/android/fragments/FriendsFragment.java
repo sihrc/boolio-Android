@@ -19,6 +19,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import io.boolio.android.R;
 import io.boolio.android.adapters.ContactsAdapter;
 
@@ -29,8 +31,9 @@ public class FriendsFragment extends BoolioFragment {
     static FriendsFragment instance;
     Context context;
 
-    ViewPager friendsViewPager;
-    TextView contactsTab, facebookTab;
+    @Bind(R.id.friends_view_pager) ViewPager friendsViewPager;
+    @Bind(R.id.friend_contacts) TextView facebookTab;
+    @Bind(R.id.friend_facebook) TextView contactsTab;
 
     List<BoolioListFragment> fragmentList;
     ContactsAdapter contactsAdapter;
@@ -59,10 +62,7 @@ public class FriendsFragment extends BoolioFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_friends, container, false);
-
-        friendsViewPager = (ViewPager) rootView.findViewById(R.id.friends_view_pager);
-        contactsTab = (TextView) rootView.findViewById(R.id.friend_contacts);
-        facebookTab = (TextView) rootView.findViewById(R.id.friend_facebook);
+        ButterKnife.bind(this, rootView);
 
         setupPager();
 
@@ -90,7 +90,7 @@ public class FriendsFragment extends BoolioFragment {
             }
         };
 
-        friendsViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        friendsViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }

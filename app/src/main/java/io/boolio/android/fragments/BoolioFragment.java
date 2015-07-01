@@ -14,7 +14,7 @@ import io.boolio.android.MainActivity;
  * Created by Chris on 4/15/15.
  */
 public class BoolioFragment extends Fragment {
-    MainActivity activity;
+    public MainActivity activity;
 
     @Override
     public void onAttach(Activity activity) {

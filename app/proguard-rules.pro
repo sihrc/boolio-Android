@@ -16,3 +16,14 @@
 #   public *;
 #}
 -keep class com.bumptech.glide.integration.okhttp.OkHttpGlideModule
+-keep class butterknife.** { *; }
+-dontwarn butterknife.internal.**
+-keep class **$$ViewBinder { *; }
+
+-keepclasseswithmembernames class * {
+    @butterknife.* <fields>;
+}
+
+-keepclasseswithmembernames class * {
+    @butterknife.* <methods>;
+}
