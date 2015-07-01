@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import io.boolio.android.R;
 import io.boolio.android.animation.TextAnimation;
 import io.boolio.android.custom.BoolioProfileImage;
@@ -49,28 +51,11 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
     public View getView(final int position, View view, ViewGroup parent) {
         final QuestionHolder holder;
         if (view == null) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            holder = new QuestionHolder();
-            view = inflater.inflate(resource, parent, false);
-            holder.view = view;
-
-            //TextViews
-            holder.question = (TextView) view.findViewById(R.id.question_text);
-            holder.leftAnswer = (TextSwitcher) view.findViewById(R.id.question_left_answer);
-            holder.rightAnswer = (TextSwitcher) view.findViewById(R.id.question_right_answer);
-            holder.highLeft = (TextView) view.findViewById(R.id.highlighted_left);
-            holder.highRight = (TextView) view.findViewById(R.id.highlighted_right);
-            holder.creator = (TextView) view.findViewById(R.id.question_creator);
-            holder.date = (TextView) view.findViewById(R.id.question_date);
-            holder.report = view.findViewById(R.id.report_button);
-            holder.delete = view.findViewById(R.id.delete_button);
+            view = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(resource, parent, false);
+            holder = new QuestionHolder(view);
 
             TextAnimation.getInstance(context).FadeTextSwitcher(holder.leftAnswer, R.layout.text_answer_left);
             TextAnimation.getInstance(context).FadeTextSwitcher(holder.rightAnswer, R.layout.text_answer_right);
-
-            //Image Views
-            holder.creatorImage = (BoolioProfileImage) view.findViewById(R.id.question_creator_picture);
-            holder.questionImage = (ImageView) view.findViewById(R.id.question_image);
 
             view.setTag(holder);
         } else {
@@ -153,11 +138,24 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
     public abstract void fillContent(QuestionHolder holder, Question question);
 
     public class QuestionHolder {
-        View view, report, delete;
-        TextView question, creator, date, highLeft, highRight;
-        TextSwitcher leftAnswer, rightAnswer;
-        BoolioProfileImage creatorImage;
-        ImageView questionImage;
+        public View view;
+        @Bind(R.id.question_text) TextView question;
+        @Bind(R.id.question_left_answer) TextSwitcher leftAnswer;
+        @Bind(R.id.question_right_answer) TextSwitcher rightAnswer;
+        @Bind(R.id.highlighted_left) TextView highLeft;
+        @Bind(R.id.highlighted_right) TextView highRight;
+        @Bind(R.id.question_creator) TextView creator;
+        @Bind(R.id.question_date) TextView date;
+        @Bind( R.id.report_button) View report;
+        @Bind( R.id.delete_button) View delete;
+        @Bind(R.id.question_creator_picture) BoolioProfileImage creatorImage;
+        @Bind(R.id.question_image) ImageView questionImage;
+
+
+        public QuestionHolder(View view) {
+            this.view = view;
+            ButterKnife.bind(this, view);
+        }
     }
 
     public void setOnDataSetChanged(Runnable onDataSetChanged) {

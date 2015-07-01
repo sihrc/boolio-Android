@@ -12,10 +12,8 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.SearchView;
-import android.widget.Toast;
 
 import com.google.gson.internal.LinkedTreeMap;
 
@@ -25,6 +23,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnItemClick;
 import io.boolio.android.MainActivity;
 import io.boolio.android.R;
 import io.boolio.android.custom.BoolioSearchView;
@@ -43,7 +44,9 @@ public class SearchImageFragment extends DialogFragment {
     GalleryAdapter galleryAdapter;
 
     // Image Loading
-    View progress;
+    @Bind(R.id.progress_bar_saving) View progress;
+    @Bind(R.id.search_bar) BoolioSearchView searchView;
+    @Bind(R.id.search_grid_view) AsyncGridView asyncGridView;
 
 
     public static SearchImageFragment newInstance(BoolioCallback<Uri> savedUri) {
@@ -64,12 +67,16 @@ public class SearchImageFragment extends DialogFragment {
         this.activity = activity;
     }
 
+    @OnItemClick(R.id.search_grid_view) void onItemSelected(int position) {
+        showLargerImage(galleryAdapter.getItem(position).original);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.dialog_search_image, container, false);
-        progress = rootView.findViewById(R.id.progress_bar_saving);
-        final BoolioSearchView searchView = (BoolioSearchView) rootView.findViewById(R.id.search_bar);
+        ButterKnife.bind(this, rootView);
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -120,23 +127,18 @@ public class SearchImageFragment extends DialogFragment {
 
         // Setup GridView
         galleryAdapter = new GalleryAdapter(activity);
-        AsyncGridView asyncGridView = (AsyncGridView) rootView.findViewById(R.id.search_grid_view);
         asyncGridView.setAdapter(galleryAdapter);
         asyncGridView.setNumColumns(3);
-        asyncGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                showLargerImage(galleryAdapter.getItem(position).original);
-            }
-        });
 
         return rootView;
     }
 
     private void showLargerImage(final String original) {
+        progress.setVisibility(View.VISIBLE);
         Glider.getBitmap(original, MainActivity.SCREEN_WIDTH, MainActivity.SCREEN_HEIGHT, new BoolioCallback<Bitmap>() {
             @Override
             public void handle(Bitmap resObj) {
+                progress.setVisibility(View.GONE);
                 final ImageView preview = new ImageView(activity);
                 preview.setImageBitmap(resObj);
                 new AlertDialog.Builder(activity)

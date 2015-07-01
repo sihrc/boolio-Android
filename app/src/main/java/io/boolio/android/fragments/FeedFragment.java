@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import java.util.Comparator;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import io.boolio.android.MainActivity;
 import io.boolio.android.R;
 import io.boolio.android.adapters.BoolioQuestionAdapter;
@@ -32,11 +34,22 @@ import io.boolio.android.network.BoolioData;
  */
 public class FeedFragment extends BoolioFragment {
     static FeedFragment instance;
-    final public static int ORDER = 0;
 
+    final public static int ORDER = 0;
     final private static int REFRESH_DELAY = 500;
     final private static int QUESTION_LIMIT = 10;
 
+    @Bind(R.id.ptr_layout) PullToRefreshView pullToRefreshLayout;
+    @Bind(R.id.gif_loading) View gifLoading;
+    @Bind(R.id.empty_list_message) View emptyBear;
+    @Bind(R.id.question_feed) ScrollingListView listView;
+
+    BoolioQuestionAdapter questionAdapter;
+
+    public static FeedFragment getInstance() {
+        instance = new FeedFragment();
+        return instance;
+    }
 
     ScrollingListView.PullQuestionListener pullQuestionListener = new ScrollingListView.PullQuestionListener() {
         @Override
@@ -75,15 +88,6 @@ public class FeedFragment extends BoolioFragment {
         }
     };
 
-    PullToRefreshView pullToRefreshLayout;
-    BoolioQuestionAdapter questionAdapter;
-    View gifLoading, emptyBear, headerBar;
-
-    public static FeedFragment getInstance() {
-        instance = new FeedFragment();
-        return instance;
-    }
-
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -101,12 +105,8 @@ public class FeedFragment extends BoolioFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_feed, container, false);
+        ButterKnife.bind(this, rootView);
 
-        gifLoading = rootView.findViewById(R.id.gif_loading);
-        emptyBear = rootView.findViewById(R.id.empty_list_message);
-        headerBar = rootView.findViewById(R.id.header_bar);
-
-        pullToRefreshLayout = (PullToRefreshView) rootView.findViewById(R.id.ptr_layout);
         pullToRefreshLayout.setRefreshDrawables(R.drawable.sky, R.drawable.pulldownbear, R.drawable.sun);
         pullToRefreshLayout.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
             @Override
@@ -116,7 +116,6 @@ public class FeedFragment extends BoolioFragment {
             }
         });
 
-        ScrollingListView listView = (ScrollingListView) rootView.findViewById(R.id.question_feed);
         questionAdapter = new BoolioQuestionAdapter(activity);
         setupListView(listView);
 

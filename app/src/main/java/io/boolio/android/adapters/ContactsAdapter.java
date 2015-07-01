@@ -16,6 +16,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.boolio.android.R;
 import io.boolio.android.models.Contact;
 
@@ -98,10 +101,7 @@ public abstract class ContactsAdapter extends ArrayAdapter<Contact> {
         ContactHolder holder;
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.item_contacts, parent, false);
-            holder = new ContactHolder();
-            holder.name = (TextView) convertView.findViewById(R.id.contact_name);
-            holder.add = convertView.findViewById(R.id.contact_add);
-
+            holder = new ContactHolder(convertView);
             convertView.setTag(holder);
         } else {
             holder = (ContactHolder) convertView.getTag();
@@ -119,9 +119,13 @@ public abstract class ContactsAdapter extends ArrayAdapter<Contact> {
         return convertView;
     }
 
-    private class ContactHolder {
-        TextView name;
-        View add;
+    public class ContactHolder {
+        @Bind(R.id.contact_name) TextView name;
+        @Bind(R.id.contact_add) View add;
+
+        public ContactHolder(View view) {
+            ButterKnife.bind(this, view);
+        }
     }
 
     public abstract void handleContactClick(String number);

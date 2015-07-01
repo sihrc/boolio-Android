@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import io.boolio.android.R;
 import io.boolio.android.animation.AnimationHelper;
 import io.boolio.android.helpers.BoolioUserHandler;
@@ -36,11 +38,14 @@ public class MainFragment extends BoolioFragment {
     final static float selectedAlpha = .75f;
 
     // Nav-bar views
-    LinearLayout navBar;
-    View curNavButton, navBarAdd, navBarAddSend;
-    ViewPager viewPager;
+    @Bind(R.id.nav_bar) LinearLayout navBar;
+    @Bind(R.id.nav_bar_add) View navBarAdd;
+    @Bind(R.id.nav_bar_add_send) View navBarAddSend;
+    @Bind(R.id.main_view_pager) ViewPager viewPager;
 
     List<BoolioFragment> fragmentList;
+    View curNavButton;
+
     public static MainFragment newInstance(int startFrag) {
         MainFragment fragment = new MainFragment();
 
@@ -84,18 +89,11 @@ public class MainFragment extends BoolioFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
-        navBar = (LinearLayout) rootView.findViewById(R.id.nav_bar);
-        navBarAdd = rootView.findViewById(R.id.nav_bar_add);
-        navBarAddSend = rootView.findViewById(R.id.nav_bar_add_send);
+        ButterKnife.bind(this, rootView);
 
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
-
-        viewPager = (ViewPager) rootView.findViewById(R.id.main_view_pager);
-
-        ((InputMethodManager)activity.getSystemService(Context.INPUT_METHOD_SERVICE))
-                .hideSoftInputFromWindow(viewPager.getWindowToken(), 0);
+        ((InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE))
+            .hideSoftInputFromWindow(viewPager.getWindowToken(), 0);
 
         setupNavigationBar();
         setupViewPager();

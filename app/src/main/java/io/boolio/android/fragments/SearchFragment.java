@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.boolio.android.R;
 import io.boolio.android.adapters.BoolioQuestionAdapter;
 import io.boolio.android.custom.BoolioSearchView;
@@ -25,9 +28,9 @@ import io.boolio.android.helpers.Utils;
 import io.boolio.android.helpers.tracking.EventTracker;
 import io.boolio.android.helpers.tracking.TrackEvent;
 import io.boolio.android.models.Question;
+import io.boolio.android.network.BoolioData;
 import io.boolio.android.network.clients.BoolioQuestionClient;
 import io.boolio.android.network.helpers.BoolioCallback;
-import io.boolio.android.network.BoolioData;
 
 /**
  * Created by james on 4/21/15.
@@ -36,9 +39,12 @@ public class SearchFragment extends BoolioFragment {
     static SearchFragment instance;
     Context context;
 
-    BoolioSearchView searchBar;
-    ViewPager viewPager;
-    TextView questionsTab, friendsTab, categoriesTab;
+    @Bind(R.id.search_bar) BoolioSearchView searchBar;
+    @Bind(R.id.search_view_pager) ViewPager viewPager;
+    @Bind(R.id.search_questions_tab) TextView questionsTab;
+    @Bind(R.id.search_friends_tab) TextView friendsTab;
+    @Bind(R.id.search_categories_tab) TextView categoriesTab;
+
     boolean isEmpty;
 
     List<BoolioListFragment> fragmentList;
@@ -70,13 +76,9 @@ public class SearchFragment extends BoolioFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_search, container, false);
+        ButterKnife.bind(this, rootView);
 
-        searchBar = (BoolioSearchView) rootView.findViewById(R.id.search_bar);
-        viewPager = (ViewPager) rootView.findViewById(R.id.search_view_pager);
-        questionsTab = (TextView) rootView.findViewById(R.id.search_questions_tab);
-        friendsTab = (TextView) rootView.findViewById(R.id.search_friends_tab);
-        categoriesTab = (TextView) rootView.findViewById(R.id.search_categories_tab);
-
+        searchBar.clearFocus();
         searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(final String query) {
@@ -95,9 +97,7 @@ public class SearchFragment extends BoolioFragment {
         });
 
         setupPager();
-        setupTabOnClick();
 
-        searchBar.clearFocus();
         return rootView;
     }
 
@@ -115,7 +115,7 @@ public class SearchFragment extends BoolioFragment {
 
     private void searchServer(String query) {
         BoolioQuestionClient.api().searchQuestions(
-                BoolioData.keys("query").values(query), questionsCallback);
+            BoolioData.keys("query").values(query), questionsCallback);
     }
 
     private void setupPager() {
@@ -179,26 +179,18 @@ public class SearchFragment extends BoolioFragment {
         });
     }
 
-    private void setupTabOnClick() {
-        questionsTab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewPager.setCurrentItem(0);
-            }
-        });
+    @OnClick(R.id.search_questions_tab)
+    public void onClickQuestionsTab() {
+        viewPager.setCurrentItem(0);
+    }
 
-        friendsTab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewPager.setCurrentItem(1);
-            }
-        });
+    @OnClick(R.id.search_friends_tab)
+    public void onClickFriendsTab() {
+        viewPager.setCurrentItem(1);
+    }
 
-        categoriesTab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewPager.setCurrentItem(2);
-            }
-        });
+    @OnClick(R.id.search_categories_tab)
+    public void onClickCategoriesTab() {
+        viewPager.setCurrentItem(2);
     }
 }
