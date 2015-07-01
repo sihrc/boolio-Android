@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,10 +18,6 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.google.gson.internal.LinkedTreeMap;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.ImageSize;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import org.lucasr.smoothie.AsyncGridView;
 
@@ -31,10 +28,11 @@ import java.util.ArrayList;
 import io.boolio.android.MainActivity;
 import io.boolio.android.R;
 import io.boolio.android.custom.BoolioSearchView;
+import io.boolio.android.helpers.Glider;
 import io.boolio.android.helpers.Utils;
+import io.boolio.android.network.BoolioData;
 import io.boolio.android.network.clients.ExternalClient;
 import io.boolio.android.network.helpers.BoolioCallback;
-import io.boolio.android.network.BoolioData;
 
 /**
  * Created by Chris on 5/5/15.
@@ -85,28 +83,28 @@ public class SearchImageFragment extends DialogFragment {
 
                 for (int i = 0; i < 2; i++) {
                     ExternalClient.api().getImages(
-                            i * 10 + 1,
-                            getString(R.string.google_cx_key),
-                            getString(R.string.google_api_key),
-                            query,
-                            new BoolioCallback<BoolioData>() {
-                                @Override
-                                public void handle(BoolioData objects) {
-                                    @SuppressWarnings({"unchecked"})
-                                    ArrayList<LinkedTreeMap> items = (ArrayList<LinkedTreeMap>) objects.get("items");
-                                    if (items != null) {
-                                        for (LinkedTreeMap obj : items) {
-                                            LinkedTreeMap image = (LinkedTreeMap) obj.get("image");
-                                            if (galleryAdapter != null) {
-                                                galleryAdapter.add(new SearchImage((String) image.get("thumbnailLink"), (String) obj.get("link")));
-                                            }
+                        i * 10 + 1,
+                        getString(R.string.google_cx_key),
+                        getString(R.string.google_api_key),
+                        query,
+                        new BoolioCallback<BoolioData>() {
+                            @Override
+                            public void handle(BoolioData objects) {
+                                @SuppressWarnings({"unchecked"})
+                                ArrayList<LinkedTreeMap> items = (ArrayList<LinkedTreeMap>) objects.get("items");
+                                if (items != null) {
+                                    for (LinkedTreeMap obj : items) {
+                                        LinkedTreeMap image = (LinkedTreeMap) obj.get("image");
+                                        if (galleryAdapter != null) {
+                                            galleryAdapter.add(new SearchImage((String) image.get("thumbnailLink"), (String) obj.get("link")));
                                         }
                                     }
-
-                                    galleryAdapter.notifyDataSetChanged();
-                                    progress.setVisibility(View.GONE);
                                 }
-                            });
+
+                                galleryAdapter.notifyDataSetChanged();
+                                progress.setVisibility(View.GONE);
+                            }
+                        });
                 }
 
                 searchView.clearFocus();
@@ -135,49 +133,42 @@ public class SearchImageFragment extends DialogFragment {
         return rootView;
     }
 
-    private void showImagePreviewDialog(final Bitmap currBitmap) {
-        ImageView preview = new ImageView(activity);
-        preview.setImageBitmap(currBitmap);
-        new AlertDialog.Builder(activity)
-                .setView(preview)
-                .setPositiveButton("CROP", new DialogInterface.OnClickListener() {
+    private void showLargerImage(final String original) {
+        Glider.getBitmap(original, MainActivity.SCREEN_WIDTH, MainActivity.SCREEN_HEIGHT, new BoolioCallback<Bitmap>() {
+            @Override
+            public void handle(Bitmap resObj) {
+                final ImageView preview = new ImageView(activity);
+                preview.setImageBitmap(resObj);
+                new AlertDialog.Builder(activity)
+                    .setView(preview)
+                    .setPositiveButton("CROP", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Bitmap bm = ((BitmapDrawable) preview.getDrawable()).getBitmap();
+                            if (bm == null) {
+                                return;
+                            }
+                            Utils.saveBitmapToUri(activity, bm, new Runnable() {
+                                @Override
+                                public void run() {
+                                    progress.setVisibility(View.VISIBLE);
+                                }
+                            }, new BoolioCallback<Uri>() {
+                                @Override
+                                public void handle(Uri object) {
+                                    callback.handle(object);
+                                    progress.setVisibility(View.GONE);
+                                    SearchImageFragment.this.dismiss();
+                                }
+                            });
+                            dialog.dismiss();
+                        }
+                    }).setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Utils.saveBitmapToUri(activity, currBitmap, new Runnable() {
-                            @Override
-                            public void run() {
-                                progress.setVisibility(View.VISIBLE);
-                            }
-                        }, new BoolioCallback<Uri>() {
-                            @Override
-                            public void handle(Uri object) {
-                                callback.handle(object);
-                                progress.setVisibility(View.GONE);
-                                SearchImageFragment.this.dismiss();
-                            }
-                        });
                         dialog.dismiss();
                     }
-                }).setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        }).show();
-    }
-
-
-    private void showLargerImage(String original) {
-        ImageSize imageSize = new ImageSize(MainActivity.SCREEN_WIDTH, MainActivity.SCREEN_WIDTH);
-        ImageLoader.getInstance().loadImage(original, imageSize, new SimpleImageLoadingListener() {
-            @Override
-            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                showImagePreviewDialog(loadedImage);
-            }
-
-            @Override
-            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-                Toast.makeText(activity, "Sorry, this image is unavailable", Toast.LENGTH_SHORT).show();
+                }).show();
             }
         });
     }

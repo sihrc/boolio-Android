@@ -9,10 +9,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
 
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import io.boolio.android.MainActivity;
 import io.boolio.android.R;
+import io.boolio.android.helpers.Glider;
 
 /**
  * Created by chris on 2/16/15.
@@ -35,7 +35,7 @@ public class GalleryAdapter extends ArrayAdapter<SearchImage> {
             convertView.setLayoutParams(layoutParams);
         }
 
-        ImageLoader.getInstance().displayImage(getItem(position).thumbnail, (ImageView) convertView);
+        Glider.image((ImageView) convertView, getItem(position).thumbnail);
 
         return convertView;
     }

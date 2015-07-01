@@ -8,9 +8,6 @@ import android.support.v4.app.FragmentManager;
 import android.widget.Toast;
 
 import com.facebook.Profile;
-import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.util.HashMap;
 
@@ -56,19 +53,6 @@ public class MainActivity extends FacebookAuth {
         getWindowManager().getDefaultDisplay().getSize(size);
         SCREEN_WIDTH = size.x;
         SCREEN_HEIGHT = size.y;
-
-
-        ImageLoader.getInstance().init(
-            new ImageLoaderConfiguration.Builder(this)
-                .memoryCacheExtraOptions(SCREEN_WIDTH, SCREEN_HEIGHT)
-                .diskCacheExtraOptions(SCREEN_WIDTH, SCREEN_HEIGHT, null)
-                .diskCacheFileCount(20)
-                .threadPoolSize(4)
-                .memoryCache(new LruMemoryCache(2 * 1024 * 1024))
-                .denyCacheImageMultipleSizesInMemory()
-                .writeDebugLogs()
-                .build()
-        );
 
         checkVersion();
     }
