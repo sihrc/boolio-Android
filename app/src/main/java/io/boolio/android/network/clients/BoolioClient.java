@@ -14,21 +14,21 @@ import retrofit.converter.GsonConverter;
 public abstract class BoolioClient<T> {
     //    final static private String ADDRESS = "https://beta.boolio.io";
     final static private String ADDRESS = "https://boolio-staging.herokuapp.com";
-//    final static private String ADDRESS = "http://192.168.1.114:3000";
+    //    final static private String ADDRESS = "http://192.168.1.114:3000";
     T api;
 
     public BoolioClient(String endpoint, Class<T> classType) {
         Gson gson = new GsonBuilder()
-                .registerTypeAdapterFactory(new ItemTypeAdapterFactory())
-                .setDateFormat("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'SSS'Z'")
-                .create();
+            .registerTypeAdapterFactory(new ItemTypeAdapterFactory())
+            .setDateFormat("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'SSS'Z'")
+            .create();
 
         RestAdapter restAdapter = new RestAdapter.Builder()
-                .setLogLevel(RestAdapter.LogLevel.FULL)
-                .setEndpoint(ADDRESS + endpoint)
-                .setConverter(new GsonConverter(gson))
-                .setRequestInterceptor(new SessionRequestInterceptor())
-                .build();
+            .setLogLevel(RestAdapter.LogLevel.FULL)
+            .setEndpoint(ADDRESS + endpoint)
+            .setConverter(new GsonConverter(gson))
+            .setRequestInterceptor(new SessionRequestInterceptor())
+            .build();
 
         api = restAdapter.create(classType);
     }

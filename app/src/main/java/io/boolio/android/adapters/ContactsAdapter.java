@@ -18,7 +18,6 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import io.boolio.android.R;
 import io.boolio.android.models.Contact;
 
@@ -30,6 +29,12 @@ public abstract class ContactsAdapter extends ArrayAdapter<Contact> {
     int resource;
 
     List<Contact> contacts;
+    static Comparator<Contact> comparator = new Comparator<Contact>() {
+        @Override
+        public int compare(Contact lhs, Contact rhs) {
+            return lhs.name.compareTo(rhs.name);
+        }
+    };
 
     public ContactsAdapter(Context context, int resource) {
         super(context, resource);
@@ -39,41 +44,13 @@ public abstract class ContactsAdapter extends ArrayAdapter<Contact> {
         loadContacts();
     }
 
-    @Override
-    public int getCount() {
-        return contacts.size();
-    }
-
-    @Override
-    public Contact getItem(int position) {
-        return contacts.get(position);
-    }
-
-    @Override
-    public void add(Contact object) {
-        contacts.add(object);
-    }
-
-    Comparator<Contact> comparator = new Comparator<Contact>() {
-        @Override
-        public int compare(Contact lhs, Contact rhs) {
-            return lhs.name.compareTo(rhs.name);
-        }
-    };
-
-    @Override
-    public void notifyDataSetChanged() {
-        Collections.sort(contacts, comparator);
-        super.notifyDataSetChanged();
-    }
-
     private void loadContacts() {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
                 Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
                 String[] projection = new String[]{ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
-                        ContactsContract.CommonDataKinds.Phone.NUMBER};
+                    ContactsContract.CommonDataKinds.Phone.NUMBER};
 
                 Cursor people = context.getContentResolver().query(uri, projection, null, null, null);
 
@@ -94,6 +71,27 @@ public abstract class ContactsAdapter extends ArrayAdapter<Contact> {
                 notifyDataSetChanged();
             }
         }.execute();
+    }
+
+    @Override
+    public void add(Contact object) {
+        contacts.add(object);
+    }
+
+    @Override
+    public void notifyDataSetChanged() {
+        Collections.sort(contacts, comparator);
+        super.notifyDataSetChanged();
+    }
+
+    @Override
+    public int getCount() {
+        return contacts.size();
+    }
+
+    @Override
+    public Contact getItem(int position) {
+        return contacts.get(position);
     }
 
     @Override
@@ -119,6 +117,8 @@ public abstract class ContactsAdapter extends ArrayAdapter<Contact> {
         return convertView;
     }
 
+    public abstract void handleContactClick(String number);
+
     public class ContactHolder {
         @Bind(R.id.contact_name) TextView name;
         @Bind(R.id.contact_add) View add;
@@ -127,6 +127,4 @@ public abstract class ContactsAdapter extends ArrayAdapter<Contact> {
             ButterKnife.bind(this, view);
         }
     }
-
-    public abstract void handleContactClick(String number);
 }

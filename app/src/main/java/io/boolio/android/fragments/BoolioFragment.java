@@ -1,12 +1,7 @@
 package io.boolio.android.fragments;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 
 import io.boolio.android.MainActivity;
 
@@ -28,6 +23,9 @@ public class BoolioFragment extends Fragment {
         clearFocus();
     }
 
-    public void refreshPage() {}
-    public void clearFocus() {}
+    public void clearFocus() {
+    }
+
+    public void refreshPage() {
+    }
 }

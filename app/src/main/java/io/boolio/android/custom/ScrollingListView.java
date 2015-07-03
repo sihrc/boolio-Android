@@ -8,9 +8,9 @@ import android.widget.AbsListView;
  * Created by Chris on 4/24/15.
  */
 public class ScrollingListView extends EnhancedListView {
+    final static private int QUESTION_THRESHOLD = 8;
     ScrollChangeListener scrollChangeListener;
     PullQuestionListener pullQuestionListener;
-    final static private int QUESTION_THRESHOLD = 8;
 
     public ScrollingListView(Context context) {
         super(context);

@@ -13,7 +13,6 @@ import android.widget.ListAdapter;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnTouch;
-import butterknife.internal.ButterKnifeProcessor;
 import io.boolio.android.MainActivity;
 import io.boolio.android.R;
 import io.boolio.android.custom.ScrollingListView;
@@ -42,8 +41,7 @@ public class BoolioListFragment extends BoolioFragment {
         context = (MainActivity) activity;
     }
 
-    @OnTouch(R.id.profile_asked_feed)
-    boolean onTouch(View v, MotionEvent event) {
+    @OnTouch(R.id.profile_asked_feed) boolean onTouch(View v, MotionEvent event) {
         return false;
     }
 

@@ -2,7 +2,6 @@ package io.boolio.android.fragments.tutorials;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -55,21 +54,6 @@ public class TutorialPagerFragment extends BoolioFragment {
         return tutorialPagerFragment;
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putIntArray("tutorials", args);
-    }
-
-    @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-        if (savedInstanceState == null)
-            return;
-        args = savedInstanceState.getIntArray("tutorials");
-        setTutorials(args);
-    }
-
     // Set the Tutorial Fragments
     private void setTutorials(int[] args) {
         this.args = args;
@@ -97,6 +81,21 @@ public class TutorialPagerFragment extends BoolioFragment {
         setupViewPager();
 
         return rootView;
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState == null)
+            return;
+        args = savedInstanceState.getIntArray("tutorials");
+        setTutorials(args);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putIntArray("tutorials", args);
     }
 
     private void setupIndicators() {

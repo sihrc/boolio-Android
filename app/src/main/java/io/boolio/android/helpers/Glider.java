@@ -47,6 +47,7 @@ public class Glider {
     public static void getBitmap(final String image, final int width, final int height, final BoolioCallback<Bitmap> bmCallback) {
         new AsyncTask<Void, Void, Void>() {
             Bitmap bitmap;
+
             @Override
             protected Void doInBackground(Void... voids) {
                 try {

@@ -8,8 +8,6 @@ import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
-
-
 import io.boolio.android.MainActivity;
 import io.boolio.android.R;
 import io.boolio.android.helpers.Glider;
@@ -25,7 +23,7 @@ public class GalleryAdapter extends ArrayAdapter<SearchImage> {
     public GalleryAdapter(Context context) {
         super(context, -1);
         this.context = context;
-        layoutParams = new AbsListView.LayoutParams(MainActivity.SCREEN_WIDTH/3, MainActivity.SCREEN_WIDTH/3);
+        layoutParams = new AbsListView.LayoutParams(MainActivity.SCREEN_WIDTH / 3, MainActivity.SCREEN_WIDTH / 3);
     }
 
     @Override

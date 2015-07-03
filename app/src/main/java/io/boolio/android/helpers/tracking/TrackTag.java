@@ -9,6 +9,7 @@ public enum TrackTag {
     DATE("date");
 
     String name;
+
     TrackTag(String name) {
         this.name = name;
     }

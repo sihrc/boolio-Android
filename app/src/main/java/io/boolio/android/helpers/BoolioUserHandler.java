@@ -22,6 +22,7 @@ public class BoolioUserHandler {
             instance = new BoolioUserHandler(context);
         }
     }
+
     public static BoolioUserHandler getInstance() {
         return instance;
     }
@@ -32,16 +33,17 @@ public class BoolioUserHandler {
     public User getUser() {
         return user;
     }
-    public String getUserId() {
-        if (user == null)
-            return null;
-        return user._id;
-    }
 
     /**
      * Setters *
      */
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getUserId() {
+        if (user == null)
+            return null;
+        return user._id;
     }
 }

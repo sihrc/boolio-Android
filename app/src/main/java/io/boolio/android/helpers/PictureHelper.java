@@ -34,6 +34,10 @@ public class PictureHelper {
         this.context = context;
     }
 
+    public static boolean isRequest(int code) {
+        return code == PictureHelper.REQUEST_PICK_PHOTO || code == PictureHelper.REQUEST_TAKE_PHOTO || code == Crop.REQUEST_CROP;
+    }
+
     public void dispatchTakePictureIntent(Activity activity, Fragment fragment) {
         savedUri = Uri.fromFile(Utils.getTempFile(activity));
 
@@ -57,18 +61,6 @@ public class PictureHelper {
         }
     }
 
-    public void dispatchCropPictureIntent(Fragment fragment , View view, Uri inputUri) {
-        Uri croppedUri = Uri.fromFile(new File(context.getFilesDir() + String.valueOf(System.currentTimeMillis()) + ".png"));
-        Crop crop = new Crop(inputUri).output(croppedUri);
-        if (view.getWidth() != 0)
-            crop.withAspect(view.getWidth(), view.getHeight());
-        Intent cropIntent = (Intent) Utils.callPrivateMethod(crop, "getIntent", Context.class, context);
-        fragment.startActivityForResult(cropIntent, Crop.REQUEST_CROP);
-
-        savedUri = croppedUri;
-
-    }
-
     public boolean onActivityResult(Fragment fragment, int requestCode, int resultCode, Intent data, final View view, final BitmapCallback callback) {
         if (resultCode != Activity.RESULT_OK) {
             Log.e("PictureHelper", "Intent did not come back successfully");
@@ -88,16 +80,16 @@ public class PictureHelper {
         if (requestCode == Crop.REQUEST_CROP) {
             new AsyncTask<Void, Void, Bitmap>() {
                 @Override
-                protected void onPreExecute() {
-                    super.onPreExecute();
-                    Toast.makeText(context, R.string.loading_picture, Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
                 protected Bitmap doInBackground(Void... params) {
 
                     return Utils.rotateBitmap(
-                            Utils.loadScaledBitmap(context, savedUri, view.getWidth(), view.getHeight()), savedUri);
+                        Utils.loadScaledBitmap(context, savedUri, view.getWidth(), view.getHeight()), savedUri);
+                }
+
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                    Toast.makeText(context, R.string.loading_picture, Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
@@ -110,11 +102,19 @@ public class PictureHelper {
         return false;
     }
 
-    public interface BitmapCallback {
-        void onBitmap(Bitmap bitmap);
+    public void dispatchCropPictureIntent(Fragment fragment, View view, Uri inputUri) {
+        Uri croppedUri = Uri.fromFile(new File(context.getFilesDir() + String.valueOf(System.currentTimeMillis()) + ".png"));
+        Crop crop = new Crop(inputUri).output(croppedUri);
+        if (view.getWidth() != 0)
+            crop.withAspect(view.getWidth(), view.getHeight());
+        Intent cropIntent = (Intent) Utils.callPrivateMethod(crop, "getIntent", Context.class, context);
+        fragment.startActivityForResult(cropIntent, Crop.REQUEST_CROP);
+
+        savedUri = croppedUri;
+
     }
 
-    public static boolean isRequest(int code) {
-        return code == PictureHelper.REQUEST_PICK_PHOTO || code == PictureHelper.REQUEST_TAKE_PHOTO || code == Crop.REQUEST_CROP;
+    public interface BitmapCallback {
+        void onBitmap(Bitmap bitmap);
     }
 }

@@ -10,6 +10,7 @@ public enum ProfileTag {
 
 
     String name;
+
     ProfileTag(String name) {
         this.name = name;
     }
