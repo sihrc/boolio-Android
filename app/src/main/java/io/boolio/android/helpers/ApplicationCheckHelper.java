@@ -11,6 +11,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
  */
 public class ApplicationCheckHelper {
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+
     /**
      * Check the device to make sure it has the Google Play Services APK. If
      * it doesn't, display a dialog that allows users to download the APK from
@@ -21,7 +22,7 @@ public class ApplicationCheckHelper {
         if (resultCode != ConnectionResult.SUCCESS) {
             if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
                 GooglePlayServicesUtil.getErrorDialog(resultCode, activity,
-                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
+                    PLAY_SERVICES_RESOLUTION_REQUEST).show();
             } else {
                 Log.e("GCM Play Services", "This device is not supported.");
             }

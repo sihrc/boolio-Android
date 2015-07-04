@@ -46,6 +46,10 @@ public class MainFragment extends BoolioFragment {
     List<BoolioFragment> fragmentList;
     View curNavButton;
 
+    public static MainFragment newInstance() {
+        return newInstance(FeedFragment.ORDER);
+    }
+
     public static MainFragment newInstance(int startFrag) {
         MainFragment fragment = new MainFragment();
 
@@ -56,34 +60,12 @@ public class MainFragment extends BoolioFragment {
         return fragment;
     }
 
-    public static MainFragment newInstance() {
-        return newInstance(FeedFragment.ORDER);
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PictureHelper.REQUEST_TAKE_PHOTO || requestCode == PictureHelper.REQUEST_PICK_PHOTO || requestCode == Crop.REQUEST_CROP) {
             fragmentList.get(2).onActivityResult(requestCode, resultCode, data);
         }
-    }
-
-    @Override
-    public void onAttach(final Activity activity) {
-        super.onAttach(activity);
-        fragmentList = new ArrayList<BoolioFragment>() {{
-            add(FeedFragment.getInstance());
-            // breaking here because userId is null
-            add(ProfileFragment.newInstance(BoolioUserHandler.getInstance().getUserId()));
-            add(CreateQuestionFragment.newInstance(new Runnable() {
-                @Override
-                public void run() {
-                    navBar.getChildAt(0).callOnClick();
-                }
-            }));
-            add(SearchFragment.getInstance());
-            add(FriendsFragment.getInstance());
-        }};
     }
 
     @Override
@@ -173,7 +155,6 @@ public class MainFragment extends BoolioFragment {
         viewPager.setCurrentItem(getArguments().getInt("start"));
     }
 
-
     private View.OnClickListener getNavClickListener(final int index, final Runnable callback) {
         return new View.OnClickListener() {
             @Override
@@ -213,5 +194,23 @@ public class MainFragment extends BoolioFragment {
             AnimationHelper.getInstance(activity).animateViewBottomOut(navBarAdd);
 
         }
+    }
+
+    @Override
+    public void onAttach(final Activity activity) {
+        super.onAttach(activity);
+        fragmentList = new ArrayList<BoolioFragment>() {{
+            add(FeedFragment.getInstance());
+            // breaking here because userId is null
+            add(ProfileFragment.newInstance(BoolioUserHandler.getInstance().getUserId()));
+            add(CreateQuestionFragment.newInstance(new Runnable() {
+                @Override
+                public void run() {
+                    navBar.getChildAt(0).callOnClick();
+                }
+            }));
+            add(SearchFragment.getInstance());
+            add(FriendsFragment.getInstance());
+        }};
     }
 }

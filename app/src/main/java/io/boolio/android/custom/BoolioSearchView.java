@@ -22,12 +22,6 @@ public class BoolioSearchView extends SearchView {
         init();
     }
 
-    public BoolioSearchView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        this.context = context;
-        init();
-    }
-
     private void init() {
         setIconified(false);
         setIconifiedByDefault(false);
@@ -41,7 +35,7 @@ public class BoolioSearchView extends SearchView {
 
         /** Setting the Text Color **/
         int id = context.getResources().getIdentifier("android:id/search_src_text", null,
-                null);
+            null);
         TextView textView = (TextView) findViewById(id);
         textView.setSingleLine();
         textView.setTextColor(context.getResources().getColor(R.color.text_white));
@@ -50,6 +44,12 @@ public class BoolioSearchView extends SearchView {
         /** Other Attributes **/
         setQueryHint(context.getString(R.string.search_bar_text));
         setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+    }
+
+    public BoolioSearchView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        this.context = context;
+        init();
     }
 
 }

@@ -25,9 +25,9 @@
 
         <io.boolio.android.custom.PullToRefreshView
             android:id="@+id/ptr_layout"
-            android:descendantFocusability="beforeDescendants"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:descendantFocusability="beforeDescendants">
 
             <io.boolio.android.custom.ScrollingListView
                 android:id="@+id/question_feed"

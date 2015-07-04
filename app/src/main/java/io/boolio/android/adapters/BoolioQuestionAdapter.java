@@ -15,9 +15,9 @@ import io.boolio.android.R;
 import io.boolio.android.helpers.tracking.EventTracker;
 import io.boolio.android.helpers.tracking.TrackEvent;
 import io.boolio.android.models.Question;
+import io.boolio.android.network.BoolioData;
 import io.boolio.android.network.clients.BoolioQuestionClient;
 import io.boolio.android.network.helpers.BoolioCallback;
-import io.boolio.android.network.BoolioData;
 
 /**
  * Created by james on 4/24/15.
@@ -52,12 +52,12 @@ public class BoolioQuestionAdapter extends BoolioAdapter {
                 holder.rightAnswer.setEnabled(false);
                 EventTracker.getInstance(context).trackQuestion(TrackEvent.ANSWER_QUESTION, question, "right");
                 BoolioQuestionClient.api().postAnswer(BoolioData.keys("questionId", "direction").values(question._id, "right"),
-                        getNewNetworkCallback(holder, question));
+                    getNewNetworkCallback(holder, question));
             }
         });
     }
 
-    private BoolioCallback<Question> getNewNetworkCallback(final QuestionHolder holder, final Question question){
+    private BoolioCallback<Question> getNewNetworkCallback(final QuestionHolder holder, final Question question) {
         return new BoolioCallback<Question>() {
             @Override
             public void handle(Question object) {
@@ -92,13 +92,8 @@ public class BoolioQuestionAdapter extends BoolioAdapter {
     }
 
     @Override
-    public Question getItem(int position) {
-        return questions.get(position);
-    }
-
-    @Override
-    public int getCount() {
-        return questions.size();
+    public void add(Question object) {
+        questions.add(object);
     }
 
     @Override
@@ -107,13 +102,13 @@ public class BoolioQuestionAdapter extends BoolioAdapter {
     }
 
     @Override
-    public void add(Question object) {
-        questions.add(object);
+    public void insert(Question object, int index) {
+        questions.add(index, object);
     }
 
     @Override
-    public void insert(Question object, int index) {
-        questions.add(index, object);
+    public void remove(Question object) {
+        questions.remove(object);
     }
 
     @Override
@@ -127,13 +122,19 @@ public class BoolioQuestionAdapter extends BoolioAdapter {
     }
 
     @Override
-    public void remove(Question object) {
-        questions.remove(object);
+    public int getCount() {
+        return questions.size();
+    }
+
+    @Override
+    public Question getItem(int position) {
+        return questions.get(position);
     }
 
     public List<Question> getList() {
         return questions;
     }
+
     public List<String> getQuestionIds() {
         List<String> questionIds = new ArrayList<>(questions.size());
         for (Question question : questions) {

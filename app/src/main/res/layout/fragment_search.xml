@@ -11,9 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/header_height"
         android:background="@color/theme_blue"
-        android:paddingLeft="@dimen/general_padding"
         android:descendantFocusability="beforeDescendants"
-        android:focusableInTouchMode="true">
+        android:focusableInTouchMode="true"
+        android:paddingLeft="@dimen/general_padding">
 
         <io.boolio.android.custom.BoolioSearchView
             android:id="@+id/search_bar"

@@ -15,9 +15,9 @@
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:layout_below="@id/search_bar"
-        android:horizontalSpacing="0dp"
-        android:gravity="center"
         android:layout_gravity="center"
+        android:gravity="center"
+        android:horizontalSpacing="0dp"
         android:padding="@dimen/general_padding"
         android:verticalSpacing="@dimen/grid_spacing"/>
 

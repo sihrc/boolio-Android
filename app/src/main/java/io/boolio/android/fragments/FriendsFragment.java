@@ -21,6 +21,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.boolio.android.R;
 import io.boolio.android.adapters.ContactsAdapter;
 
@@ -32,10 +33,10 @@ public class FriendsFragment extends BoolioFragment {
     Context context;
 
     @Bind(R.id.friends_view_pager) ViewPager friendsViewPager;
-    @Bind(R.id.friend_contacts) TextView facebookTab;
-    @Bind(R.id.friend_facebook) TextView contactsTab;
+    @Bind(R.id.friend_contacts) TextView contactsTab;
+    @Bind(R.id.friend_facebook) TextView facebookTab;
 
-    List<BoolioListFragment> fragmentList;
+    List<BoolioFragment> fragmentList;
     ContactsAdapter contactsAdapter;
 
     public static FriendsFragment getInstance() {
@@ -69,6 +70,16 @@ public class FriendsFragment extends BoolioFragment {
         return rootView;
     }
 
+    @OnClick(R.id.friend_contacts)
+    void onClickContacts() {
+        friendsViewPager.setCurrentItem(0);
+    }
+
+    @OnClick(R.id.friend_facebook)
+    void onClickFacebook() {
+        friendsViewPager.setCurrentItem(1);
+    }
+
     private void setupPager() {
         contactsTab.setAlpha(1f);
         facebookTab.setAlpha(0.25f);
@@ -83,7 +94,7 @@ public class FriendsFragment extends BoolioFragment {
             }
         };
 
-        fragmentList = new ArrayList<BoolioListFragment>() {
+        fragmentList = new ArrayList<BoolioFragment>() {
             {
                 add(BoolioListFragment.newInstance(contactsAdapter, null));
                 add(ComingSoonFragment.newInstance("Facebook friends coming soon!"));

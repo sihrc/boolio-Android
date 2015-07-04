@@ -47,7 +47,7 @@ public class SearchFragment extends BoolioFragment {
 
     boolean isEmpty;
 
-    List<BoolioListFragment> fragmentList;
+    List<BoolioFragment> fragmentList;
 
     BoolioQuestionAdapter questionsTabAdapter, friendsTabAdapter, categoriesTabAdapter;
     BoolioCallback<List<Question>> questionsCallback = new BoolioCallback<List<Question>>() {
@@ -113,11 +113,6 @@ public class SearchFragment extends BoolioFragment {
         return true;
     }
 
-    private void searchServer(String query) {
-        BoolioQuestionClient.api().searchQuestions(
-            BoolioData.keys("query").values(query), questionsCallback);
-    }
-
     private void setupPager() {
         questionsTab.setAlpha(1f);
         friendsTab.setAlpha(0.25f);
@@ -125,7 +120,7 @@ public class SearchFragment extends BoolioFragment {
         questionsTabAdapter = new BoolioQuestionAdapter(context);
         friendsTabAdapter = new BoolioQuestionAdapter(context);
         categoriesTabAdapter = new BoolioQuestionAdapter(context);
-        fragmentList = new ArrayList<BoolioListFragment>() {
+        fragmentList = new ArrayList<BoolioFragment>() {
             {
                 add(BoolioListFragment.newInstance(questionsTabAdapter, new ScrollingListView.ScrollChangeListener() {
                     @Override
@@ -177,6 +172,11 @@ public class SearchFragment extends BoolioFragment {
                 return fragmentList.size();
             }
         });
+    }
+
+    private void searchServer(String query) {
+        BoolioQuestionClient.api().searchQuestions(
+            BoolioData.keys("query").values(query), questionsCallback);
     }
 
     @OnClick(R.id.search_questions_tab)

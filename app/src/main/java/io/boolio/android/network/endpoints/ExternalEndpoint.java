@@ -13,13 +13,13 @@ public class ExternalEndpoint implements Endpoint {
     }
 
     @Override
-    public String getName() {
-        return "default";
-    }
-
-    @Override
     public String getUrl() {
         if (url == null) throw new IllegalStateException("url not set.");
         return url;
+    }
+
+    @Override
+    public String getName() {
+        return "default";
     }
 }

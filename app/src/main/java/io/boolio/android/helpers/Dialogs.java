@@ -12,14 +12,14 @@ import io.boolio.android.R;
 public class Dialogs {
     public static void messageDialog(Context context, int title, int message, final Runnable runnable) {
         new AlertDialog.Builder(context).setTitle(title).setMessage(message)
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (runnable != null)
-                            runnable.run();
-                        dialog.dismiss();
-                    }
-                }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (runnable != null)
+                        runnable.run();
+                    dialog.dismiss();
+                }
+            }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();

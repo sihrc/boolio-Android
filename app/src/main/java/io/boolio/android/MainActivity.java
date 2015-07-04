@@ -75,7 +75,7 @@ public class MainActivity extends FacebookAuth {
         User user = new User(profile.getId(), profile.getName());
         BoolioUserHandler.getInstance().setUser(user);
         BoolioUserClient.api().getBoolioUserFromFacebook
-                (user, userCallback);
+            (user, userCallback);
     }
 
     @Override

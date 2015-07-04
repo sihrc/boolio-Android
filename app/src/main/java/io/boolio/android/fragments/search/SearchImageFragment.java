@@ -56,19 +56,61 @@ public class SearchImageFragment extends DialogFragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setStyle(STYLE_NO_TITLE, android.R.style.Theme_Holo_Light);
-    }
-
-    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         this.activity = activity;
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setStyle(STYLE_NO_TITLE, android.R.style.Theme_Holo_Light);
+    }
+
     @OnItemClick(R.id.search_grid_view) void onItemSelected(int position) {
         showLargerImage(galleryAdapter.getItem(position).original);
+    }
+
+    private void showLargerImage(final String original) {
+        progress.setVisibility(View.VISIBLE);
+        Glider.getBitmap(original, MainActivity.SCREEN_WIDTH, MainActivity.SCREEN_HEIGHT, new BoolioCallback<Bitmap>() {
+            @Override
+            public void handle(Bitmap resObj) {
+                progress.setVisibility(View.GONE);
+                final ImageView preview = new ImageView(activity);
+                preview.setImageBitmap(resObj);
+                new AlertDialog.Builder(activity)
+                    .setView(preview)
+                    .setPositiveButton("CROP", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Bitmap bm = ((BitmapDrawable) preview.getDrawable()).getBitmap();
+                            if (bm == null) {
+                                return;
+                            }
+                            Utils.saveBitmapToUri(activity, bm, new Runnable() {
+                                @Override
+                                public void run() {
+                                    progress.setVisibility(View.VISIBLE);
+                                }
+                            }, new BoolioCallback<Uri>() {
+                                @Override
+                                public void handle(Uri object) {
+                                    callback.handle(object);
+                                    progress.setVisibility(View.GONE);
+                                    SearchImageFragment.this.dismiss();
+                                }
+                            });
+                            dialog.dismiss();
+                        }
+                    }).setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
+            }
+        });
     }
 
     @Nullable
@@ -131,47 +173,5 @@ public class SearchImageFragment extends DialogFragment {
         asyncGridView.setNumColumns(3);
 
         return rootView;
-    }
-
-    private void showLargerImage(final String original) {
-        progress.setVisibility(View.VISIBLE);
-        Glider.getBitmap(original, MainActivity.SCREEN_WIDTH, MainActivity.SCREEN_HEIGHT, new BoolioCallback<Bitmap>() {
-            @Override
-            public void handle(Bitmap resObj) {
-                progress.setVisibility(View.GONE);
-                final ImageView preview = new ImageView(activity);
-                preview.setImageBitmap(resObj);
-                new AlertDialog.Builder(activity)
-                    .setView(preview)
-                    .setPositiveButton("CROP", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Bitmap bm = ((BitmapDrawable) preview.getDrawable()).getBitmap();
-                            if (bm == null) {
-                                return;
-                            }
-                            Utils.saveBitmapToUri(activity, bm, new Runnable() {
-                                @Override
-                                public void run() {
-                                    progress.setVisibility(View.VISIBLE);
-                                }
-                            }, new BoolioCallback<Uri>() {
-                                @Override
-                                public void handle(Uri object) {
-                                    callback.handle(object);
-                                    progress.setVisibility(View.GONE);
-                                    SearchImageFragment.this.dismiss();
-                                }
-                            });
-                            dialog.dismiss();
-                        }
-                    }).setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
-            }
-        });
     }
 }
