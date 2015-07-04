@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -142,20 +143,24 @@ public class CreateQuestionFragment extends BoolioFragment {
 
         // Upload Image to Server
         progress.setVisibility(View.VISIBLE);
+        final BoolioCallback<Question> callback = new BoolioCallback<Question>() {
+            @Override
+            public void handle(Question resObj) {
+                EventTracker.getInstance(activity).trackQuestion(TrackEvent.CREATE_QUESTION, question, null);
+                progress.setVisibility(View.GONE);
+                reset();
+                if (runnable != null)
+                    runnable.run();
+            }
+        };
+
         BoolioQuestionClient.api().postQuestion(question, new BoolioCallback<Question>() {
             @Override
             public void handle(Question obj) {
                 if (imageSaved != null)
-                    BoolioQuestionClient.api().uploadImage(Utils.getTypedFile(activity, obj._id, imageSaved), new BoolioCallback<Question>() {
-                        @Override
-                        public void handle(Question resObj) {
-                            EventTracker.getInstance(activity).trackQuestion(TrackEvent.CREATE_QUESTION, question, null);
-                            progress.setVisibility(View.GONE);
-                            reset();
-                            if (runnable != null)
-                                runnable.run();
-                        }
-                    });
+                    BoolioQuestionClient.api().uploadImage(Utils.getTypedFile(activity, obj._id, imageSaved), callback);
+                else
+                    callback.handle(obj);
             }
         });
     }
