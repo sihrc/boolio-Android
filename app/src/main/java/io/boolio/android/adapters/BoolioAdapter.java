@@ -106,7 +106,6 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
                     @Override
                     public void run() {
                         BoolioQuestionClient.api().reportQuestion(BoolioData.keys("questionId").values(question._id), new DefaultBoolioCallback());
-                        BoolioUserClient.api().skipQuestion(BoolioData.keys("questionId").values(question._id), new DefaultBoolioCallback());
 
                         remove(question);
                         notifyDataSetChanged();
