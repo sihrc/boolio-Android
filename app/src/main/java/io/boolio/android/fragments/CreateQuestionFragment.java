@@ -106,18 +106,18 @@ public class CreateQuestionFragment extends BoolioFragment {
         super.onCreate(new Bundle());
     }
 
-    @OnClick(R.id.create_question_image)
-    public void onClick() {
-        if (imageAlertDialog != null)
-            imageAlertDialog.show();
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_create_question, container, false);
         ButterKnife.bind(this, rootView);
 
         return rootView;
+    }
+
+    @OnClick(R.id.create_question_image)
+    public void onClick() {
+        if (imageAlertDialog != null)
+            imageAlertDialog.show();
     }
 
     public void submitOnClickSetup() {

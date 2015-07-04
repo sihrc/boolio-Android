@@ -8,15 +8,15 @@ import io.boolio.android.network.services.BoolioQuestionService;
 public class BoolioQuestionClient extends BoolioClient<BoolioQuestionService> {
     static BoolioQuestionService apiService;
 
+    public BoolioQuestionClient() {
+        super("/api/questions", BoolioQuestionService.class);
+    }
+
     public static BoolioQuestionService api() {
         if (apiService == null) {
             apiService = new BoolioQuestionClient().api;
         }
 
         return apiService;
-    }
-
-    public BoolioQuestionClient() {
-        super("/api/questions", BoolioQuestionService.class);
     }
 }

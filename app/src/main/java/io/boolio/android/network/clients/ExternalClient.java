@@ -14,24 +14,24 @@ import retrofit.converter.GsonConverter;
 public class ExternalClient {
     private static ExternalService apiService;
 
-    public static void init() {
-        Gson gson = new GsonBuilder()
-                .setDateFormat("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'SSS'Z'")
-                .create();
-
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setLogLevel(RestAdapter.LogLevel.FULL)
-                .setEndpoint(new ExternalEndpoint("https://"))
-                .setConverter(new GsonConverter(gson))
-                .build();
-
-        apiService = restAdapter.create(ExternalService.class);
-    }
-
     public static ExternalService api() {
         if (apiService == null) {
             init();
         }
         return apiService;
+    }
+
+    public static void init() {
+        Gson gson = new GsonBuilder()
+            .setDateFormat("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'SSS'Z'")
+            .create();
+
+        RestAdapter restAdapter = new RestAdapter.Builder()
+            .setLogLevel(RestAdapter.LogLevel.FULL)
+            .setEndpoint(new ExternalEndpoint("https://"))
+            .setConverter(new GsonConverter(gson))
+            .build();
+
+        apiService = restAdapter.create(ExternalService.class);
     }
 }

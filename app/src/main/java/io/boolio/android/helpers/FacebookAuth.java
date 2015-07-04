@@ -3,19 +3,14 @@ package io.boolio.android.helpers;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 import com.facebook.appevents.AppEventsLogger;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
 
 /**
  * Created by Chris on 4/26/15.
@@ -80,10 +75,6 @@ public abstract class FacebookAuth extends FragmentActivity {
         shouldLoginAuth = true;
     }
 
-    public abstract void loggedIn(Profile profile);
-
-    public abstract void loggedOut();
-
     private void getProfileInfo() {
         if (!shouldLoginAuth)
             return;
@@ -96,4 +87,8 @@ public abstract class FacebookAuth extends FragmentActivity {
             loggedOut();
         }
     }
+
+    public abstract void loggedIn(Profile profile);
+
+    public abstract void loggedOut();
 }

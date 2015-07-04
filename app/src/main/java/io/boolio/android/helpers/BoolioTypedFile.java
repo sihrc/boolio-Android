@@ -9,6 +9,7 @@ import retrofit.mime.TypedFile;
  */
 public class BoolioTypedFile extends TypedFile {
     String questionId;
+
     public BoolioTypedFile(String mimeType, String questionId, File file) {
         super(mimeType, file);
         this.questionId = questionId;

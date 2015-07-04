@@ -23,34 +23,26 @@ import io.boolio.android.gcm.GCMService;
 import io.boolio.android.helpers.tracking.EventTracker;
 import io.boolio.android.helpers.tracking.TrackEvent;
 import io.boolio.android.models.Question;
+import io.boolio.android.network.BoolioData;
 import io.boolio.android.network.clients.BoolioQuestionClient;
 import io.boolio.android.network.clients.BoolioUserClient;
 import io.boolio.android.network.helpers.BoolioCallback;
 import io.boolio.android.network.helpers.DefaultBoolioCallback;
-import io.boolio.android.network.BoolioData;
 
 /**
  * Created by Chris on 4/16/15.
  */
 public class FeedFragment extends BoolioFragment {
-    static FeedFragment instance;
-
     final public static int ORDER = 0;
     final private static int REFRESH_DELAY = 500;
     final private static int QUESTION_LIMIT = 10;
-
+    static FeedFragment instance;
     @Bind(R.id.ptr_layout) PullToRefreshView pullToRefreshLayout;
     @Bind(R.id.gif_loading) View gifLoading;
     @Bind(R.id.empty_list_message) View emptyBear;
     @Bind(R.id.question_feed) ScrollingListView listView;
 
     BoolioQuestionAdapter questionAdapter;
-
-    public static FeedFragment getInstance() {
-        instance = new FeedFragment();
-        return instance;
-    }
-
     ScrollingListView.PullQuestionListener pullQuestionListener = new ScrollingListView.PullQuestionListener() {
         @Override
         public void pullQuestion() {
@@ -87,6 +79,11 @@ public class FeedFragment extends BoolioFragment {
                 });
         }
     };
+
+    public static FeedFragment getInstance() {
+        instance = new FeedFragment();
+        return instance;
+    }
 
     @Override
     public void onAttach(Activity activity) {

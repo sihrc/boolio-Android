@@ -50,19 +50,19 @@
 
             <ImageView
                 android:id="@+id/report_button"
-                android:layout_alignParentRight="true"
                 android:layout_width="@dimen/report_button_size"
                 android:layout_height="@dimen/report_button_size"
-                android:padding="@dimen/report_button_padding"
-                android:background="@drawable/flag"/>
+                android:layout_alignParentRight="true"
+                android:background="@drawable/flag"
+                android:padding="@dimen/report_button_padding"/>
 
             <ImageView
                 android:id="@+id/delete_button"
-                android:layout_alignParentRight="true"
                 android:layout_width="@dimen/report_button_size"
                 android:layout_height="@dimen/report_button_size"
-                android:padding="@dimen/report_button_padding"
-                android:background="@drawable/delete"/>
+                android:layout_alignParentRight="true"
+                android:background="@drawable/delete"
+                android:padding="@dimen/report_button_padding"/>
 
         </RelativeLayout>
 

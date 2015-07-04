@@ -25,10 +25,10 @@
             android:id="@+id/profile_setting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingRight="@dimen/profile_settings_padding"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:contentDescription="@string/content_desc_settings"
+            android:paddingRight="@dimen/profile_settings_padding"
             android:scaleType="fitCenter"
             android:src="@drawable/settings"/>
 
@@ -115,24 +115,26 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@color/white"
             android:gravity="center"
             android:padding="@dimen/profile_asked_answered_padding"
             android:text="@string/profile_asked_view_text"
-            android:background="@color/white"
             android:textColor="@color/darker_blue"/>
+
         <View
             android:layout_width="1dp"
             android:layout_height="match_parent"
             android:background="@color/white"/>
+
         <TextView
             android:id="@+id/profile_answered_view"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@color/tab_light_gray"
             android:gravity="center"
             android:padding="@dimen/profile_asked_answered_padding"
             android:text="@string/profile_answered_view_text"
-            android:background="@color/tab_light_gray"
             android:textColor="@color/white"/>
     </LinearLayout>
 

@@ -16,17 +16,14 @@ import retrofit.http.Part;
  */
 public interface BoolioQuestionService {
     // Questions
-    @POST("/")
-    void getQuestionFeed(@Body BoolioData data, Callback<List<Question>> callback);
+    @POST("/") void getQuestionFeed(@Body BoolioData data, Callback<List<Question>> callback);
 
     @POST("/search")
     void searchQuestions(@Body BoolioData query, Callback<List<Question>> callback);
 
-    @POST("/ids")
-    void getQuestions(@Body BoolioData data, Callback<List<Question>> callback);
+    @POST("/ids") void getQuestions(@Body BoolioData data, Callback<List<Question>> callback);
 
-    @POST("/create")
-    void postQuestion(@Body Question question, Callback<Question> callback);
+    @POST("/create") void postQuestion(@Body Question question, Callback<Question> callback);
 
     @POST("/skip")
     void skipQuestion(@Body BoolioData question, Callback<?> callback);
@@ -38,12 +35,9 @@ public interface BoolioQuestionService {
     @POST("/image")
     void uploadImage(@Part("part") BoolioTypedFile image, Callback<Question> callback);
 
-    @POST("/answer")
-    void postAnswer(@Body BoolioData data, Callback<Question> callback);
+    @POST("/answer") void postAnswer(@Body BoolioData data, Callback<Question> callback);
 
-    @POST("/report")
-    void reportQuestion(@Body BoolioData questionId, Callback<?> callback);
+    @POST("/report") void reportQuestion(@Body BoolioData questionId, Callback<?> callback);
 
-    @POST("/delete")
-    void deleteQuestion(@Body BoolioData questionId, Callback<?> callback);
+    @POST("/delete") void deleteQuestion(@Body BoolioData questionId, Callback<?> callback);
 }

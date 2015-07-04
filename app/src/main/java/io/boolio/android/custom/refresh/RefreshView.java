@@ -67,7 +67,7 @@ public class RefreshView extends BaseRefreshView implements Animatable {
     private boolean isRefreshing = false;
 
     public RefreshView(Context context, final PullToRefreshView parent, int[] drawables) {
-        super(context, parent);
+        super(parent);
         mParent = parent;
         mMatrix = new Matrix();
         this.drawables = drawables;
@@ -192,8 +192,8 @@ public class RefreshView extends BaseRefreshView implements Animatable {
 
         float offsetX = -(mScreenWidth * skyScale - mScreenWidth) / 2.0f;
         float offsetY = (1.0f - dragPercent) * mParent.getTotalDragDistance() - mSkyTopOffset // Offset canvas moving
-                - mSkyHeight * (skyScale - 1.0f) / 2 // Offset sky scaling
-                + mSkyMoveOffset * dragPercent; // Give it a little move top -> bottom
+            - mSkyHeight * (skyScale - 1.0f) / 2 // Offset sky scaling
+            + mSkyMoveOffset * dragPercent; // Give it a little move top -> bottom
 
         matrix.postScale(skyScale, skyScale);
         matrix.postTranslate(offsetX, offsetY);
@@ -214,8 +214,8 @@ public class RefreshView extends BaseRefreshView implements Animatable {
 
         float offsetX = mSunLeftOffset;
         float offsetY = mSunTopOffset
-                + (mParent.getTotalDragDistance() / 2) * (1.0f - dragPercent) // Move the sun up
-                - mTop; // Depending on Canvas position
+            + (mParent.getTotalDragDistance() / 2) * (1.0f - dragPercent) // Move the sun up
+            - mTop; // Depending on Canvas position
 
         float scalePercentDelta = dragPercent - SCALE_START_PERCENT;
         if (scalePercentDelta > 0) {
@@ -236,9 +236,9 @@ public class RefreshView extends BaseRefreshView implements Animatable {
         }
 
         matrix.postRotate(
-                (isRefreshing ? -360 : 360) * mRotate * (isRefreshing ? 1 : sunRotateGrowth),
-                offsetX,
-                offsetY);
+            (isRefreshing ? -360 : 360) * mRotate * (isRefreshing ? 1 : sunRotateGrowth),
+            offsetX,
+            offsetY);
 
         canvas.drawBitmap(rotating, matrix, null);
     }
@@ -271,9 +271,9 @@ public class RefreshView extends BaseRefreshView implements Animatable {
 
         float offsetX = -(mScreenWidth * townScale - mScreenWidth) / 2.0f;
         float offsetY = (1.0f - dragPercent) * mParent.getTotalDragDistance() // Offset canvas moving
-                + townTopOffset
-                - mTownHeight * (townScale - 1.0f) / 2 // Offset town scaling
-                + townMoveOffset; // Give it a little move
+            + townTopOffset
+            - mTownHeight * (townScale - 1.0f) / 2 // Offset town scaling
+            + townMoveOffset; // Give it a little move
 
         matrix.postScale(townScale, townScale);
         matrix.postTranslate(offsetX, offsetY);

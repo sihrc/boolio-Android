@@ -37,8 +37,7 @@ public class LoginFragment extends BoolioFragment {
         return rootView;
     }
 
-    @OnClick(R.id.login_button)
-    void onClick() {
+    @OnClick(R.id.login_button) void onClick() {
         fbButton.performClick();
     }
 }

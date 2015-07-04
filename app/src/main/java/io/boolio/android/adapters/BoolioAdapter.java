@@ -75,7 +75,7 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
         holder.date.setText(Utils.formatTimeDifferences(question.dateCreated) + " ago");
 
         // Setup Creator Image and Name
-        if (question.creatorId != null && question.creatorId.equals(BoolioUserHandler.getInstance().getUserId())){
+        if (question.creatorId != null && question.creatorId.equals(BoolioUserHandler.getInstance().getUserId())) {
             holder.delete.setVisibility(View.VISIBLE);
             holder.report.setVisibility(View.GONE);
         } else {
@@ -136,6 +136,16 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
 
     public abstract void fillContent(QuestionHolder holder, Question question);
 
+    public void setOnDataSetChanged(Runnable onDataSetChanged) {
+        this.onDataSetChanged = onDataSetChanged;
+    }
+
+    public void onDataSetChanged() {
+        notifyDataSetChanged();
+        if (onDataSetChanged != null)
+            onDataSetChanged.run();
+    }
+
     public class QuestionHolder {
         public View view;
         @Bind(R.id.question_text) TextView question;
@@ -145,8 +155,8 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
         @Bind(R.id.highlighted_right) TextView highRight;
         @Bind(R.id.question_creator) TextView creator;
         @Bind(R.id.question_date) TextView date;
-        @Bind( R.id.report_button) View report;
-        @Bind( R.id.delete_button) View delete;
+        @Bind(R.id.report_button) View report;
+        @Bind(R.id.delete_button) View delete;
         @Bind(R.id.question_creator_picture) BoolioProfileImage creatorImage;
         @Bind(R.id.question_image) ImageView questionImage;
 
@@ -155,15 +165,5 @@ public abstract class BoolioAdapter extends ArrayAdapter<Question> {
             this.view = view;
             ButterKnife.bind(this, view);
         }
-    }
-
-    public void setOnDataSetChanged(Runnable onDataSetChanged) {
-        this.onDataSetChanged = onDataSetChanged;
-    }
-
-    public void onDataSetChanged() {
-        notifyDataSetChanged();
-        if (onDataSetChanged != null)
-            onDataSetChanged.run();
     }
 }

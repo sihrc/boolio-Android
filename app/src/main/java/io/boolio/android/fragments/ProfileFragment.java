@@ -120,22 +120,6 @@ public class ProfileFragment extends BoolioFragment {
             });
     }
 
-    @Override
-    public void refreshPage() {
-        BoolioUserClient.api().getUserProfile(
-            userId == null ? BoolioUserHandler.getInstance().getUserId() : userId,
-            new BoolioCallback<User>() {
-                @Override
-                public void handle(User user) {
-                    ProfileFragment.this.user = user;
-                    updateViews();
-                    gifLoading.setVisibility(View.VISIBLE);
-                    BoolioQuestionClient.api().getQuestions(BoolioData.keys("ids").values(user.questionsAnswered), answeredCallback);
-                    BoolioQuestionClient.api().getQuestions(BoolioData.keys("ids").values(user.questionsAsked), askedCallback);
-                }
-            });
-    }
-
     /**
      * Update Views with User Information once populated *
      */
@@ -150,6 +134,28 @@ public class ProfileFragment extends BoolioFragment {
         answeredCountIn.setText(String.valueOf(user.questionsAnswered.size()));
         karmaCountIn.setText(String.valueOf(user.questionsAnswered.size() + user.questionsAsked.size()));
         profileUsername.setText(user.name); // FIXME ADD USERNAME
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        GCMService.clearAll(activity);
+    }
+
+    @Override
+    public void refreshPage() {
+        BoolioUserClient.api().getUserProfile(
+            userId == null ? BoolioUserHandler.getInstance().getUserId() : userId,
+            new BoolioCallback<User>() {
+                @Override
+                public void handle(User user) {
+                    ProfileFragment.this.user = user;
+                    updateViews();
+                    gifLoading.setVisibility(View.VISIBLE);
+                    BoolioQuestionClient.api().getQuestions(BoolioData.keys("ids").values(user.questionsAnswered), answeredCallback);
+                    BoolioQuestionClient.api().getQuestions(BoolioData.keys("ids").values(user.questionsAsked), askedCallback);
+                }
+            });
     }
 
     @Override
@@ -275,11 +281,5 @@ public class ProfileFragment extends BoolioFragment {
                     }).show();
             }
         });
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        GCMService.clearAll(activity);
     }
 }

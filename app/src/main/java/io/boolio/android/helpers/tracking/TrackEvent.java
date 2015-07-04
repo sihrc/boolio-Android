@@ -19,10 +19,10 @@ public enum TrackEvent {
     PUSH_NOTIFICATION("push_notification"),
     DELETE_QUESTION("delete_question"),
     REPORT_QUESTION("report_question"),
-    SEARCH("search")
-    ;
+    SEARCH("search");
 
     String name;
+
     TrackEvent(String name) {
         this.name = name;
     }

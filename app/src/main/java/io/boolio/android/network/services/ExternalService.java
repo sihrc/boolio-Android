@@ -14,9 +14,9 @@ public interface ExternalService {
 
     @GET("/www.googleapis.com/customsearch/v1?rights=cc_publicdomain&searchType=image&safe=medium")
     void getImages(
-              @Query("start") int start
-            , @Query("cx") String cx_key
-            , @Query("key") String api_key
-            , @Query("q") String query
-            , Callback<BoolioData> callback);
+        @Query("start") int start
+        , @Query("cx") String cx_key
+        , @Query("key") String api_key
+        , @Query("q") String query
+        , Callback<BoolioData> callback);
 }

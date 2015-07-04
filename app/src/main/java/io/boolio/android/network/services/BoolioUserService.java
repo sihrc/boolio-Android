@@ -11,12 +11,9 @@ import retrofit.http.Path;
  * Created by Chris on 6/9/15.
  */
 public interface BoolioUserService {
-    @POST("/gcm")
-    void updateUserGCM(@Body User user, Callback<?> callback);
+    @POST("/gcm") void updateUserGCM(@Body User user, Callback<?> callback);
+    
+    @GET("/{user}") void getUserProfile(@Path("user") String userId, Callback<User> callback);
 
-    @GET("/{user}")
-    void getUserProfile(@Path("user") String userId, Callback<User> callback);
-
-    @POST("/facebook")
-    void getBoolioUserFromFacebook(@Body User user, Callback<User> callback);
+    @POST("/facebook") void getBoolioUserFromFacebook(@Body User user, Callback<User> callback);
 }
