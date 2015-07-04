@@ -119,7 +119,6 @@ public class FeedFragment extends BoolioFragment {
         questionAdapter = new BoolioQuestionAdapter(activity);
         setupListView(listView);
 
-        pullQuestionListener.pullQuestion();
         return rootView;
     }
 
