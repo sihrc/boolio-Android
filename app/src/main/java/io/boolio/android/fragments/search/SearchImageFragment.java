@@ -121,6 +121,8 @@ public class SearchImageFragment extends DialogFragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                if (!Utils.exists(newText))
+                    galleryAdapter.clear();
                 return false;
             }
         });
