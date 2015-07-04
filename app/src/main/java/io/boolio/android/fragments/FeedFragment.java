@@ -139,14 +139,14 @@ public class FeedFragment extends BoolioFragment {
                 final Question question = questionAdapter.remove(i);
                 questionAdapter.onDataSetChanged();
                 EventTracker.getInstance(activity).trackQuestion(TrackEvent.ANSWER_QUESTION, question, "skipped");
-                BoolioUserClient.api().skipQuestion(BoolioData.create().add("questionId", question._id), new DefaultBoolioCallback());
+                BoolioQuestionClient.api().skipQuestion(BoolioData.create().add("questionId", question._id), new DefaultBoolioCallback());
                 return new EnhancedListView.Undoable() {
                     @Override
                     public void undo() {
                         EventTracker.getInstance(activity).trackQuestion(TrackEvent.ANSWER_QUESTION, question, "undo");
                         questionAdapter.insert(question, i);
                         questionAdapter.onDataSetChanged();
-                        BoolioUserClient.api().unskipQuestion(question, new DefaultBoolioCallback());
+                        BoolioQuestionClient.api().unskipQuestion(question, new DefaultBoolioCallback());
                     }
                 };
             }

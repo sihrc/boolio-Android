@@ -28,6 +28,12 @@ public interface BoolioQuestionService {
     @POST("/create")
     void postQuestion(@Body Question question, Callback<Question> callback);
 
+    @POST("/skip")
+    void skipQuestion(@Body BoolioData question, Callback<?> callback);
+
+    @POST("/unskip")
+    void unskipQuestion(@Body Question question, Callback<?> callback);
+
     @Multipart
     @POST("/image")
     void uploadImage(@Part("part") BoolioTypedFile image, Callback<Question> callback);
