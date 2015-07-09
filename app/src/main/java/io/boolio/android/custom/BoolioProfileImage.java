@@ -9,13 +9,12 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-
-import com.android.volley.toolbox.NetworkImageView;
+import android.widget.ImageView;
 
 /**
  * Created by Chris on 4/17/15.
  */
-public class BoolioProfileImage extends BoolioNetworkImageView {
+public class BoolioProfileImage extends ImageView {
     public BoolioProfileImage(Context context) {
         super(context);
     }
@@ -42,7 +41,7 @@ public class BoolioProfileImage extends BoolioNetworkImageView {
         else
             sbmp = bmp;
         Bitmap output = Bitmap.createBitmap(sbmp.getWidth(),
-                sbmp.getHeight(), Bitmap.Config.ARGB_8888);
+            sbmp.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(output);
 
         final Paint paint = new Paint();
@@ -54,7 +53,7 @@ public class BoolioProfileImage extends BoolioNetworkImageView {
         canvas.drawARGB(0, 0, 0, 0);
         paint.setColor(Color.parseColor("#ffffff"));
         canvas.drawCircle(sbmp.getWidth() / 2 + 0.7f, sbmp.getHeight() / 2 + 0.7f,
-                sbmp.getWidth() / 2 + 0.1f, paint);
+            sbmp.getWidth() / 2 + 0.1f, paint);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
         canvas.drawBitmap(sbmp, rect, rect, paint);
 

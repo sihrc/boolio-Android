@@ -70,8 +70,8 @@
     <dimen name="gallery_image_height">60dp</dimen>
     <dimen name="grid_spacing">3dp</dimen>
 
-	<!-- The bottom offset the undo popup should have -->
-	<dimen name="elv_undo_bottom_offset">15dp</dimen>
-	<!-- The touch slop you need to cause a swipe instead of a scroll -->
-	<dimen name="elv_touch_slop">32dp</dimen>
+    <!-- The bottom offset the undo popup should have -->
+    <dimen name="elv_undo_bottom_offset">15dp</dimen>
+    <!-- The touch slop you need to cause a swipe instead of a scroll -->
+    <dimen name="elv_touch_slop">32dp</dimen>
 </resources>

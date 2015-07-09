@@ -10,10 +10,13 @@ import java.util.Map;
  */
 public class ABTestHelper {
     static ABTestHelper instance;
+    public Map<String, Integer> abtests = new HashMap<>();
     Context context;
 
-    public Map<String, Integer> abtests = new HashMap<>();
 
+    public ABTestHelper(Context context) {
+        this.context = context;
+    }
 
     public static ABTestHelper getInstance(Context context) {
         if (instance == null) {
@@ -22,18 +25,13 @@ public class ABTestHelper {
         return instance;
     }
 
-    public ABTestHelper(Context context) {
-        this.context = context;
-    }
-
-
     public void addTest(String name, int value) {
         abtests.put(name, value);
     }
 
     public int getTest(String key) {
         if (!abtests.containsKey(key)) {
-            return PrefsHelper.getInstance(context).getInt(key);
+            return PrefsHelper.getInstance().getInt(key);
         }
         return abtests.get(key);
     }

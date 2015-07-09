@@ -19,6 +19,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.boolio.android.R;
 import io.boolio.android.adapters.ContactsAdapter;
 
@@ -29,10 +32,11 @@ public class FriendsFragment extends BoolioFragment {
     static FriendsFragment instance;
     Context context;
 
-    ViewPager friendsViewPager;
-    TextView contactsTab, facebookTab;
+    @Bind(R.id.friends_view_pager) ViewPager friendsViewPager;
+    @Bind(R.id.friend_contacts) TextView contactsTab;
+    @Bind(R.id.friend_facebook) TextView facebookTab;
 
-    List<BoolioListFragment> fragmentList;
+    List<BoolioFragment> fragmentList;
     ContactsAdapter contactsAdapter;
 
     public static FriendsFragment getInstance() {
@@ -59,14 +63,21 @@ public class FriendsFragment extends BoolioFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_friends, container, false);
-
-        friendsViewPager = (ViewPager) rootView.findViewById(R.id.friends_view_pager);
-        contactsTab = (TextView) rootView.findViewById(R.id.friend_contacts);
-        facebookTab = (TextView) rootView.findViewById(R.id.friend_facebook);
+        ButterKnife.bind(this, rootView);
 
         setupPager();
 
         return rootView;
+    }
+
+    @OnClick(R.id.friend_contacts)
+    void onClickContacts() {
+        friendsViewPager.setCurrentItem(0);
+    }
+
+    @OnClick(R.id.friend_facebook)
+    void onClickFacebook() {
+        friendsViewPager.setCurrentItem(1);
     }
 
     private void setupPager() {
@@ -83,14 +94,14 @@ public class FriendsFragment extends BoolioFragment {
             }
         };
 
-        fragmentList = new ArrayList<BoolioListFragment>() {
+        fragmentList = new ArrayList<BoolioFragment>() {
             {
                 add(BoolioListFragment.newInstance(contactsAdapter, null));
                 add(ComingSoonFragment.newInstance("Facebook friends coming soon!"));
             }
         };
 
-        friendsViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        friendsViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }

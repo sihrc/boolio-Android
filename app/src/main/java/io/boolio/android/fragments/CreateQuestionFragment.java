@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,30 +17,35 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.boolio.android.R;
 import io.boolio.android.fragments.search.SearchImageFragment;
-import io.boolio.android.helpers.BoolioCallback;
 import io.boolio.android.helpers.BoolioUserHandler;
 import io.boolio.android.helpers.PictureHelper;
+import io.boolio.android.helpers.Utils;
 import io.boolio.android.helpers.tracking.EventTracker;
 import io.boolio.android.helpers.tracking.TrackEvent;
 import io.boolio.android.models.Question;
-import io.boolio.android.network.ServerQuestion;
+import io.boolio.android.models.User;
+import io.boolio.android.network.clients.BoolioQuestionClient;
+import io.boolio.android.network.helpers.BoolioCallback;
 
 /**
  * Created by james on 4/17/15.
  */
 public class CreateQuestionFragment extends BoolioFragment {
-    EditText left;
-    EditText right;
-    EditText questionText;
+    @Bind(R.id.create_question_left_answer) EditText left;
+    @Bind(R.id.create_question_right_answer) EditText right;
+    @Bind(R.id.create_question_text) EditText questionText;
+    @Bind(R.id.progress_bar_saving) View progress;
+    @Bind(R.id.create_question_image) ImageView networkImageView;
 
-    View progress;
-    ImageView networkImageView;
+    Dialog imageAlertDialog;
     PictureHelper helper;
     Runnable runnable;
     Bitmap imageSaved;
-    String imageType = "";
 
     public static CreateQuestionFragment newInstance(Runnable runnable) {
         CreateQuestionFragment fragment = new CreateQuestionFragment();
@@ -48,9 +54,40 @@ public class CreateQuestionFragment extends BoolioFragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(final Activity activity) {
         super.onAttach(activity);
         helper = new PictureHelper(activity);
+        imageAlertDialog = new AlertDialog.Builder(activity).setItems(
+            new CharSequence[]{"Load from Gallery", "Take a picture", "Search", "Cancel"},
+            new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which) {
+                        case 0: // Load from Gallery
+                            EventTracker.getInstance(activity).track(TrackEvent.LOAD_PICTURE);
+                            helper.dispatchChoosePictureIntent(activity, CreateQuestionFragment.this.getParentFragment());
+                            break;
+                        case 1: // Take a picture
+                            EventTracker.getInstance(activity).track(TrackEvent.TAKE_PICTURE);
+                            helper.dispatchTakePictureIntent(activity, CreateQuestionFragment.this.getParentFragment());
+                            break;
+                        case 2: // Search
+                            EventTracker.getInstance(activity).track(TrackEvent.ATTEMPT_IMAGE_SEARCH);
+                            SearchImageFragment.newInstance(new BoolioCallback<Uri>() {
+                                @Override
+                                public void handle(Uri object) {
+                                    helper.dispatchCropPictureIntent(CreateQuestionFragment.this.getParentFragment(), networkImageView, object);
+                                    EventTracker.getInstance(activity).track(TrackEvent.CHOSE_IMAGE_SEARCH);
+                                }
+                            }).show(getChildFragmentManager(), "Search");
+                            break;
+                        case 3:
+                        default:
+                            break;
+                    }
+                    dialog.dismiss();
+                }
+            }).setTitle(R.string.picture).create();
     }
 
     @Override
@@ -59,11 +96,7 @@ public class CreateQuestionFragment extends BoolioFragment {
             @Override
             public void onBitmap(Bitmap bitmap) {
                 networkImageView.setImageBitmap(bitmap);
-                if (imageType.equals("string")) {
-                    imageSaved = bitmap;
-                } else {
-                    // TODO URL
-                }
+                imageSaved = bitmap;
             }
         });
     }
@@ -76,22 +109,20 @@ public class CreateQuestionFragment extends BoolioFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_create_question, container, false);
-
-        // Find Views and Buttons
-        questionText = (EditText) rootView.findViewById(R.id.create_question_text);
-        left = (EditText) rootView.findViewById(R.id.create_question_left_answer);
-        right = (EditText) rootView.findViewById(R.id.create_question_right_answer);
-        progress = rootView.findViewById(R.id.progress_bar_saving);
-
-        networkImageView = (ImageView) rootView.findViewById(R.id.create_question_image);
-        setupImageView();
+        ButterKnife.bind(this, rootView);
 
         return rootView;
     }
 
+    @OnClick(R.id.create_question_image)
+    public void onClick() {
+        if (imageAlertDialog != null)
+            imageAlertDialog.show();
+    }
+
     public void submitOnClickSetup() {
         boolean answersEmpty = left.getText().toString().replace(" ", "").isEmpty()
-                || right.getText().toString().replace(" ", "").isEmpty();
+            || right.getText().toString().replace(" ", "").isEmpty();
         boolean questionEmpty = questionText.getText().length() == 0 && imageSaved == null;
 
         if (answersEmpty && questionEmpty) {
@@ -99,70 +130,37 @@ public class CreateQuestionFragment extends BoolioFragment {
             return;
         }
 
+        User user = BoolioUserHandler.getInstance().getUser();
+
         final Question question = new Question();
         question.question = questionText.getText().toString();
         question.left = left.getText().length() == 0 ? "No" : left.getText().toString();
         question.right = right.getText().length() == 0 ? "Yes" : right.getText().toString();
-        question.creatorName = BoolioUserHandler.getInstance(activity).getUser().name;
-        question.creatorImage = BoolioUserHandler.getInstance(activity).getUser().profilePic;
-        question.creatorId = BoolioUserHandler.getInstance(activity).getUser().userId;
+        question.creatorName = user.name;
+        question.creatorPic = user.profilePic;
+        question.creatorId = user._id;
 
 
         // Upload Image to Server
         progress.setVisibility(View.VISIBLE);
-
-        ServerQuestion.getInstance(activity).postQuestion(question, imageSaved, new Runnable() {
+        final BoolioCallback<Question> callback = new BoolioCallback<Question>() {
             @Override
-            public void run() {
+            public void handle(Question resObj) {
                 EventTracker.getInstance(activity).trackQuestion(TrackEvent.CREATE_QUESTION, question, null);
                 progress.setVisibility(View.GONE);
                 reset();
                 if (runnable != null)
                     runnable.run();
             }
-        });
-    }
+        };
 
-    private void setupImageView() {
-        final Dialog alert = new AlertDialog.Builder(activity).setItems(
-                new CharSequence[]{"Load from Gallery", "Take a picture", "Search", "Cancel"},
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case 0: // Load from Gallery
-                                imageType = "string";
-                                EventTracker.getInstance(activity).track(TrackEvent.LOAD_PICTURE);
-                                helper.dispatchChoosePictureIntent(activity, CreateQuestionFragment.this.getParentFragment());
-                                break;
-                            case 1: // Take a picture
-                                imageType = "string";
-                                EventTracker.getInstance(activity).track(TrackEvent.TAKE_PICTURE);
-                                helper.dispatchTakePictureIntent(activity, CreateQuestionFragment.this.getParentFragment());
-                                break;
-                            case 2: // Search
-                                imageType = "string";
-                                EventTracker.getInstance(activity).track(TrackEvent.ATTEMPT_IMAGE_SEARCH);
-                                SearchImageFragment.newInstance(new BoolioCallback<Uri>() {
-                                    @Override
-                                    public void handle(Uri object) {
-                                        helper.dispatchCropPictureIntent(CreateQuestionFragment.this.getParentFragment(), networkImageView, object);
-                                        EventTracker.getInstance(activity).track(TrackEvent.CHOSE_IMAGE_SEARCH);
-                                    }
-                                }).show(getChildFragmentManager(), "Search");
-                                break;
-                            case 3:
-                            default:
-                                break;
-                        }
-                        dialog.dismiss();
-                    }
-                }).setTitle(R.string.picture).create();
-
-        networkImageView.setOnClickListener(new View.OnClickListener() {
+        BoolioQuestionClient.api().postQuestion(question, new BoolioCallback<Question>() {
             @Override
-            public void onClick(View v) {
-                alert.show();
+            public void handle(Question obj) {
+                if (imageSaved != null)
+                    BoolioQuestionClient.api().uploadImage(Utils.getTypedFile(activity, obj._id, imageSaved), callback);
+                else
+                    callback.handle(obj);
             }
         });
     }

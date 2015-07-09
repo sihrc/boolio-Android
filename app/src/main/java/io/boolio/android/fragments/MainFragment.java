@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import io.boolio.android.R;
 import io.boolio.android.animation.AnimationHelper;
 import io.boolio.android.helpers.BoolioUserHandler;
@@ -36,11 +38,18 @@ public class MainFragment extends BoolioFragment {
     final static float selectedAlpha = .75f;
 
     // Nav-bar views
-    LinearLayout navBar;
-    View curNavButton, navBarAdd, navBarAddSend;
-    ViewPager viewPager;
+    @Bind(R.id.nav_bar) LinearLayout navBar;
+    @Bind(R.id.nav_bar_add) View navBarAdd;
+    @Bind(R.id.nav_bar_add_send) View navBarAddSend;
+    @Bind(R.id.main_view_pager) ViewPager viewPager;
 
     List<BoolioFragment> fragmentList;
+    View curNavButton;
+
+    public static MainFragment newInstance() {
+        return newInstance(FeedFragment.ORDER);
+    }
+
     public static MainFragment newInstance(int startFrag) {
         MainFragment fragment = new MainFragment();
 
@@ -49,10 +58,6 @@ public class MainFragment extends BoolioFragment {
 
         fragment.setArguments(bundle);
         return fragment;
-    }
-
-    public static MainFragment newInstance() {
-        return newInstance(FeedFragment.ORDER);
     }
 
     @Override
@@ -64,38 +69,13 @@ public class MainFragment extends BoolioFragment {
     }
 
     @Override
-    public void onAttach(final Activity activity) {
-        super.onAttach(activity);
-        fragmentList = new ArrayList<BoolioFragment>() {{
-            add(FeedFragment.getInstance());
-            // breaking here because userId is null
-            add(ProfileFragment.newInstance(BoolioUserHandler.getInstance(activity).getUser().userId));
-            add(CreateQuestionFragment.newInstance(new Runnable() {
-                @Override
-                public void run() {
-                    navBar.getChildAt(0).callOnClick();
-                }
-            }));
-            add(SearchFragment.getInstance());
-            add(FriendsFragment.getInstance());
-        }};
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
-        navBar = (LinearLayout) rootView.findViewById(R.id.nav_bar);
-        navBarAdd = rootView.findViewById(R.id.nav_bar_add);
-        navBarAddSend = rootView.findViewById(R.id.nav_bar_add_send);
+        ButterKnife.bind(this, rootView);
 
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
-
-        viewPager = (ViewPager) rootView.findViewById(R.id.main_view_pager);
-
-        ((InputMethodManager)activity.getSystemService(Context.INPUT_METHOD_SERVICE))
-                .hideSoftInputFromWindow(viewPager.getWindowToken(), 0);
+        ((InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE))
+            .hideSoftInputFromWindow(viewPager.getWindowToken(), 0);
 
         setupNavigationBar();
         setupViewPager();
@@ -127,9 +107,10 @@ public class MainFragment extends BoolioFragment {
         // viewPager by default only loads the fragments that are right next to each other.
         // this makes sure that all of our fragments are loaded
         viewPager.setOffscreenPageLimit(fragmentList.size());
-        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(final int position, float positionOffset, int positionOffsetPixels) {}
+            public void onPageScrolled(final int position, float positionOffset, int positionOffsetPixels) {
+            }
 
             @Override
             public void onPageSelected(int position) {
@@ -174,7 +155,6 @@ public class MainFragment extends BoolioFragment {
         viewPager.setCurrentItem(getArguments().getInt("start"));
     }
 
-
     private View.OnClickListener getNavClickListener(final int index, final Runnable callback) {
         return new View.OnClickListener() {
             @Override
@@ -214,5 +194,23 @@ public class MainFragment extends BoolioFragment {
             AnimationHelper.getInstance(activity).animateViewBottomOut(navBarAdd);
 
         }
+    }
+
+    @Override
+    public void onAttach(final Activity activity) {
+        super.onAttach(activity);
+        fragmentList = new ArrayList<BoolioFragment>() {{
+            add(FeedFragment.getInstance());
+            // breaking here because userId is null
+            add(ProfileFragment.newInstance(BoolioUserHandler.getInstance().getUserId()));
+            add(CreateQuestionFragment.newInstance(new Runnable() {
+                @Override
+                public void run() {
+                    navBar.getChildAt(0).callOnClick();
+                }
+            }));
+            add(SearchFragment.getInstance());
+            add(FriendsFragment.getInstance());
+        }};
     }
 }

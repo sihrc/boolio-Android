@@ -16,6 +16,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import io.boolio.android.R;
 import io.boolio.android.models.Contact;
 
@@ -27,6 +29,12 @@ public abstract class ContactsAdapter extends ArrayAdapter<Contact> {
     int resource;
 
     List<Contact> contacts;
+    static Comparator<Contact> comparator = new Comparator<Contact>() {
+        @Override
+        public int compare(Contact lhs, Contact rhs) {
+            return lhs.name.compareTo(rhs.name);
+        }
+    };
 
     public ContactsAdapter(Context context, int resource) {
         super(context, resource);
@@ -36,41 +44,13 @@ public abstract class ContactsAdapter extends ArrayAdapter<Contact> {
         loadContacts();
     }
 
-    @Override
-    public int getCount() {
-        return contacts.size();
-    }
-
-    @Override
-    public Contact getItem(int position) {
-        return contacts.get(position);
-    }
-
-    @Override
-    public void add(Contact object) {
-        contacts.add(object);
-    }
-
-    Comparator<Contact> comparator = new Comparator<Contact>() {
-        @Override
-        public int compare(Contact lhs, Contact rhs) {
-            return lhs.name.compareTo(rhs.name);
-        }
-    };
-
-    @Override
-    public void notifyDataSetChanged() {
-        Collections.sort(contacts, comparator);
-        super.notifyDataSetChanged();
-    }
-
     private void loadContacts() {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
                 Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
                 String[] projection = new String[]{ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
-                        ContactsContract.CommonDataKinds.Phone.NUMBER};
+                    ContactsContract.CommonDataKinds.Phone.NUMBER};
 
                 Cursor people = context.getContentResolver().query(uri, projection, null, null, null);
 
@@ -94,14 +74,32 @@ public abstract class ContactsAdapter extends ArrayAdapter<Contact> {
     }
 
     @Override
+    public void add(Contact object) {
+        contacts.add(object);
+    }
+
+    @Override
+    public void notifyDataSetChanged() {
+        Collections.sort(contacts, comparator);
+        super.notifyDataSetChanged();
+    }
+
+    @Override
+    public int getCount() {
+        return contacts.size();
+    }
+
+    @Override
+    public Contact getItem(int position) {
+        return contacts.get(position);
+    }
+
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ContactHolder holder;
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.item_contacts, parent, false);
-            holder = new ContactHolder();
-            holder.name = (TextView) convertView.findViewById(R.id.contact_name);
-            holder.add = convertView.findViewById(R.id.contact_add);
-
+            holder = new ContactHolder(convertView);
             convertView.setTag(holder);
         } else {
             holder = (ContactHolder) convertView.getTag();
@@ -119,10 +117,14 @@ public abstract class ContactsAdapter extends ArrayAdapter<Contact> {
         return convertView;
     }
 
-    private class ContactHolder {
-        TextView name;
-        View add;
-    }
-
     public abstract void handleContactClick(String number);
+
+    public class ContactHolder {
+        @Bind(R.id.contact_name) TextView name;
+        @Bind(R.id.contact_add) View add;
+
+        public ContactHolder(View view) {
+            ButterKnife.bind(this, view);
+        }
+    }
 }

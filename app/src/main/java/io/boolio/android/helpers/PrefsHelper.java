@@ -14,12 +14,14 @@ public class PrefsHelper {
 
     SharedPreferences prefs;
 
-    public static PrefsHelper getInstance(Context context) {
+    public static void init(Context context) {
         if (instance == null) {
             instance = new PrefsHelper();
             instance.prefs = context.getSharedPreferences(context.getString(R.string.app_name), Context.MODE_PRIVATE);
         }
+    }
 
+    public static PrefsHelper getInstance() {
         return instance;
     }
 
@@ -29,7 +31,10 @@ public class PrefsHelper {
     public String getString(String key) {
         return prefs.getString(key, "");
     }
-    public int getInt(String key) {return prefs.getInt(key, -1);}
+
+    public int getInt(String key) {
+        return prefs.getInt(key, -1);
+    }
 
     /**
      * Setters *

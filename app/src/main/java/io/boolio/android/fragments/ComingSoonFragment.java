@@ -8,16 +8,20 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import io.boolio.android.R;
 
 /**
  * Created by james on 4/28/15.
  */
-public class ComingSoonFragment extends BoolioListFragment {
+public class ComingSoonFragment extends BoolioFragment {
     static ComingSoonFragment instance;
+
+    @Bind(R.id.comingsoon_text) TextView temp;
     String setTemp;
 
-    public static ComingSoonFragment newInstance(String text){
+    public static ComingSoonFragment newInstance(String text) {
         instance = new ComingSoonFragment();
         instance.setTemp = text;
         return instance;
@@ -26,8 +30,8 @@ public class ComingSoonFragment extends BoolioListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_comingsoon, container, false);
+        ButterKnife.bind(this, rootView);
 
-        TextView temp = (TextView) rootView.findViewById(R.id.comingsoon_text);
         temp.setText(setTemp);
 
         return rootView;

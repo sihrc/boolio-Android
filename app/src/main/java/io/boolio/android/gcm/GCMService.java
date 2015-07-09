@@ -14,12 +14,15 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.util.List;
 
+import io.boolio.android.BuildConfig;
 import io.boolio.android.MainActivity;
 import io.boolio.android.R;
-import io.boolio.android.callbacks.QuestionsCallback;
 import io.boolio.android.models.Question;
-import io.boolio.android.network.ServerFeed;
+import io.boolio.android.network.BoolioData;
+import io.boolio.android.network.clients.BoolioQuestionClient;
+import io.boolio.android.network.helpers.BoolioCallback;
 import io.fabric.sdk.android.Fabric;
+
 
 /**
  * Created by Chris on 5/2/15.
@@ -32,6 +35,35 @@ public class GCMService extends IntentService {
 
     public GCMService() {
         super("GCMService");
+    }
+
+    public static void clearQuestionUpdate(Context context) {
+        clear(context, QUESTION_UPDATE_ID);
+    }
+
+    private static void clear(Context context, int id) {
+        final NotificationManager mNotificationManager = (NotificationManager)
+            context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        mNotificationManager.cancel(id);
+    }
+
+    public static void clearFeedUpdate(Context context) {
+        clear(context, FEED_UPDATE_ID);
+    }
+
+    public static void clearAll(Context context) {
+        final NotificationManager mNotificationManager = (NotificationManager)
+            context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        mNotificationManager.cancelAll();
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        if (!BuildConfig.DEBUG)
+            Fabric.with(this, new Crashlytics());
     }
 
     @Override
@@ -52,16 +84,16 @@ public class GCMService extends IntentService {
              */
                 switch (messageType) {
                     case GoogleCloudMessaging.
-                            MESSAGE_TYPE_SEND_ERROR:
+                        MESSAGE_TYPE_SEND_ERROR:
                         Log.e("GCM Error Message", "Error message received");
                         break;
                     case GoogleCloudMessaging.
-                            MESSAGE_TYPE_DELETED:
+                        MESSAGE_TYPE_DELETED:
                         Log.w("GCM Unknown message", "Never seen this kind before");
                         // If it's a regular GCM message, do some work.
                         break;
                     case GoogleCloudMessaging.
-                            MESSAGE_TYPE_MESSAGE:
+                        MESSAGE_TYPE_MESSAGE:
                         sendNotification(extras);
                         break;
                 }
@@ -69,7 +101,9 @@ public class GCMService extends IntentService {
             // Release the wake lock provided by the WakefulBroadcastReceiver.
             GCMReceiver.completeWakefulIntent(intent);
         } catch (Exception e) {
-            Crashlytics.getInstance().core.logException(e);
+            if (!BuildConfig.DEBUG) {
+                Crashlytics.getInstance().core.logException(e);
+            }
         }
     }
 
@@ -80,30 +114,30 @@ public class GCMService extends IntentService {
         if (bundle == null || bundle.getString("collapse_key") != null)
             return;
         final NotificationManager mNotificationManager = (NotificationManager)
-                this.getSystemService(Context.NOTIFICATION_SERVICE);
+            this.getSystemService(Context.NOTIFICATION_SERVICE);
 
         final PendingIntent contentIntent;
-        Intent intent =  new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
 
         switch (bundle.getString("collapse_key")) {
             case "new-feed":
                 intent.setAction("new-feed");
                 contentIntent = PendingIntent.getActivity(this, GCM + FEED_UPDATE_ID,
-                        intent, 0);
-                ServerFeed.getInstance(this).getQuestionFeed(QUESTION_LIMIT,null, new QuestionsCallback() {
-                    @Override
-                    public void handleQuestions(List<Question> questionList) {
-                        if (questionList.isEmpty())
-                            return;
-                        buildFeedUpdate(mNotificationManager, contentIntent, questionList.size());
-                    }
-                });
+                    intent, 0);
+                BoolioQuestionClient.api().getQuestionFeed(
+                    BoolioData.keys("count", "prevSeenQuestions").values(QUESTION_LIMIT, null),
+                    new BoolioCallback<List<Question>>() {
+                        @Override
+                        public void handle(List<Question> questionList) {
+                            buildFeedUpdate(mNotificationManager, contentIntent, questionList.size());
+                        }
+                    });
                 break;
             default:
             case "boolio-question":
                 intent.setAction("boolio-question");
                 contentIntent = PendingIntent.getActivity(this, GCM + QUESTION_UPDATE_ID,
-                        intent, 0);
+                    intent, 0);
                 buildQuestionUpdate(mNotificationManager, contentIntent, bundle);
                 break;
         }
@@ -115,11 +149,11 @@ public class GCMService extends IntentService {
     private void buildFeedUpdate(NotificationManager mNotificationManager, PendingIntent contentIntent, int questions) {
         String message = "You've got new questions in your feed!";
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.bear_square)
-                .setContentTitle(questions + " New Questions!")
-                .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText(message))
-                .setContentText(message);
+            .setSmallIcon(R.drawable.bear_square)
+            .setContentTitle(questions + " New Questions!")
+            .setStyle(new NotificationCompat.BigTextStyle()
+                .bigText(message))
+            .setContentText(message);
 
         builder.setContentIntent(contentIntent);
         mNotificationManager.notify(FEED_UPDATE_ID, builder.build());
@@ -132,37 +166,14 @@ public class GCMService extends IntentService {
         String question = bundle.getString("question");
         String message = bundle.getString("leftCount") + " say " + bundle.getString("left") + " |\n" + bundle.getString("rightCount") + " say " + bundle.getString("right");
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.bear_square)
-                .setContentTitle(question)
-                .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText(message))
-                .setContentText(message);
+            .setSmallIcon(R.drawable.bear_square)
+            .setContentTitle(question)
+            .setStyle(new NotificationCompat.BigTextStyle()
+                .bigText(message))
+            .setContentText(message);
 
         builder.setContentIntent(contentIntent);
         mNotificationManager.notify(bundle.getString("id"), QUESTION_UPDATE_ID, builder.build());
-    }
-
-
-    public static void clearQuestionUpdate(Context context) {
-        clear(context, QUESTION_UPDATE_ID);
-    }
-
-    public static void clearFeedUpdate(Context context) {
-        clear(context, FEED_UPDATE_ID);
-    }
-
-    private static void clear(Context context, int id) {
-        final NotificationManager mNotificationManager = (NotificationManager)
-                context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-        mNotificationManager.cancel(id);
-    }
-
-    public static void clearAll(Context context) {
-        final NotificationManager mNotificationManager = (NotificationManager)
-                context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-        mNotificationManager.cancelAll();
     }
 
 }

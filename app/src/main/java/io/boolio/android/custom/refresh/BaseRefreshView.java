@@ -12,18 +12,13 @@ import io.boolio.android.custom.PullToRefreshView;
 public abstract class BaseRefreshView extends Drawable implements Drawable.Callback, Animatable {
 
     private PullToRefreshView mRefreshLayout;
-    private boolean mEndOfRefreshing;
 
-    public BaseRefreshView(Context context, PullToRefreshView layout) {
+    public BaseRefreshView(PullToRefreshView layout) {
         mRefreshLayout = layout;
     }
 
     public Context getContext() {
         return mRefreshLayout != null ? mRefreshLayout.getContext() : null;
-    }
-
-    public PullToRefreshView getRefreshLayout() {
-        return mRefreshLayout;
     }
 
     public abstract void setPercent(float percent, boolean invalidate);
@@ -69,13 +64,4 @@ public abstract class BaseRefreshView extends Drawable implements Drawable.Callb
         return PixelFormat.TRANSLUCENT;
     }
 
-    /**
-     * Our animation depend on type of current work of refreshing.
-     * We should to do different things when it's end of refreshing
-     *
-     * @param endOfRefreshing - we will check current state of refresh with this
-     */
-    public void setEndOfRefreshing(boolean endOfRefreshing) {
-        mEndOfRefreshing = endOfRefreshing;
-    }
 }

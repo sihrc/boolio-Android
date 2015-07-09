@@ -2,36 +2,38 @@ package io.boolio.android.fragments.search;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.SearchView;
-import android.widget.Toast;
 
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
+import com.google.gson.internal.LinkedTreeMap;
 
 import org.lucasr.smoothie.AsyncGridView;
 
-import java.util.List;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnItemClick;
 import io.boolio.android.MainActivity;
 import io.boolio.android.R;
 import io.boolio.android.custom.BoolioSearchView;
-import io.boolio.android.helpers.BoolioCallback;
+import io.boolio.android.helpers.Glider;
 import io.boolio.android.helpers.Utils;
-import io.boolio.android.network.NetworkCallback;
-import io.boolio.android.network.ServerGoogle;
+import io.boolio.android.network.BoolioData;
+import io.boolio.android.network.clients.ExternalClient;
+import io.boolio.android.network.helpers.BoolioCallback;
 
 /**
  * Created by Chris on 5/5/15.
@@ -42,8 +44,9 @@ public class SearchImageFragment extends DialogFragment {
     GalleryAdapter galleryAdapter;
 
     // Image Loading
-    ImageLoader imageLoader;
-    View progress;
+    @Bind(R.id.progress_bar_saving) View progress;
+    @Bind(R.id.search_bar) BoolioSearchView searchView;
+    @Bind(R.id.search_grid_view) AsyncGridView asyncGridView;
 
 
     public static SearchImageFragment newInstance(BoolioCallback<Uri> savedUri) {
@@ -53,40 +56,106 @@ public class SearchImageFragment extends DialogFragment {
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.activity = activity;
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(STYLE_NO_TITLE, android.R.style.Theme_Holo_Light);
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        this.activity = activity;
-        this.imageLoader = ServerGoogle.getInstance(activity).getImageLoader();
+    @OnItemClick(R.id.search_grid_view) void onItemSelected(int position) {
+        showLargerImage(galleryAdapter.getItem(position).original);
+    }
+
+    private void showLargerImage(final String original) {
+        progress.setVisibility(View.VISIBLE);
+        Glider.getBitmap(original, MainActivity.SCREEN_WIDTH, MainActivity.SCREEN_HEIGHT, new BoolioCallback<Bitmap>() {
+            @Override
+            public void handle(Bitmap resObj) {
+                progress.setVisibility(View.GONE);
+                final ImageView preview = new ImageView(activity);
+                preview.setImageBitmap(resObj);
+                new AlertDialog.Builder(activity)
+                    .setView(preview)
+                    .setPositiveButton("CROP", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Bitmap bm = ((BitmapDrawable) preview.getDrawable()).getBitmap();
+                            if (bm == null) {
+                                return;
+                            }
+                            Utils.saveBitmapToUri(activity, bm, new Runnable() {
+                                @Override
+                                public void run() {
+                                    progress.setVisibility(View.VISIBLE);
+                                }
+                            }, new BoolioCallback<Uri>() {
+                                @Override
+                                public void handle(Uri object) {
+                                    callback.handle(object);
+                                    progress.setVisibility(View.GONE);
+                                    SearchImageFragment.this.dismiss();
+                                }
+                            });
+                            dialog.dismiss();
+                        }
+                    }).setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
+            }
+        });
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.dialog_search_image, container, false);
-        progress = rootView.findViewById(R.id.progress_bar_saving);
-        final BoolioSearchView searchView = (BoolioSearchView) rootView.findViewById(R.id.search_bar);
+        ButterKnife.bind(this, rootView);
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 galleryAdapter.clear();
                 progress.setVisibility(View.VISIBLE);
-                ServerGoogle.getInstance(activity).getImages(query, new NetworkCallback<List<SearchImage>>() {
-                    @Override
-                    public void handle(List<SearchImage> object) {
-                        if (galleryAdapter != null) {
-                            galleryAdapter.addAll(object);
-                            galleryAdapter.notifyDataSetChanged();
-                        }
+                try {
+                    query = URLEncoder.encode(query, "utf-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
 
-                        progress.setVisibility(View.GONE);
-                    }
-                });
+                for (int i = 0; i < 2; i++) {
+                    ExternalClient.api().getImages(
+                        i * 10 + 1,
+                        getString(R.string.google_cx_key),
+                        getString(R.string.google_api_key),
+                        query,
+                        new BoolioCallback<BoolioData>() {
+                            @Override
+                            public void handle(BoolioData objects) {
+                                @SuppressWarnings({"unchecked"})
+                                ArrayList<LinkedTreeMap> items = (ArrayList<LinkedTreeMap>) objects.get("items");
+                                if (items != null) {
+                                    for (LinkedTreeMap obj : items) {
+                                        LinkedTreeMap image = (LinkedTreeMap) obj.get("image");
+                                        if (galleryAdapter != null) {
+                                            galleryAdapter.add(new SearchImage((String) image.get("thumbnailLink"), (String) obj.get("link")));
+                                        }
+                                    }
+                                }
+
+                                galleryAdapter.notifyDataSetChanged();
+                                progress.setVisibility(View.GONE);
+                            }
+                        });
+                }
+
                 searchView.clearFocus();
                 Utils.hideKeyboard(activity, searchView);
                 return false;
@@ -94,69 +163,17 @@ public class SearchImageFragment extends DialogFragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                if (!Utils.exists(newText))
+                    galleryAdapter.clear();
                 return false;
             }
         });
 
         // Setup GridView
         galleryAdapter = new GalleryAdapter(activity);
-        AsyncGridView asyncGridView = (AsyncGridView) rootView.findViewById(R.id.search_grid_view);
         asyncGridView.setAdapter(galleryAdapter);
         asyncGridView.setNumColumns(3);
-        asyncGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                showLargerImage(galleryAdapter.getItem(position).original);
-            }
-        });
 
         return rootView;
-    }
-
-    private void showImagePreviewDialog(final Bitmap currBitmap) {
-        ImageView preview = new ImageView(activity);
-        preview.setImageBitmap(currBitmap);
-        new AlertDialog.Builder(activity)
-                .setView(preview)
-                .setPositiveButton("CROP", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Utils.saveBitmapToUri(activity, currBitmap, new Runnable() {
-                            @Override
-                            public void run() {
-                                progress.setVisibility(View.VISIBLE);
-                            }
-                        }, new BoolioCallback<Uri>() {
-                            @Override
-                            public void handle(Uri object) {
-                                callback.handle(object);
-                                progress.setVisibility(View.GONE);
-                                SearchImageFragment.this.dismiss();
-                            }
-                        });
-                        dialog.dismiss();
-                    }
-                }).setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
-    }
-
-
-    private void showLargerImage(String original) {
-        imageLoader.get(original, new ImageLoader.ImageListener() {
-            @Override
-            public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                if (response.getBitmap() != null)
-                    showImagePreviewDialog(response.getBitmap());
-            }
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(activity, "Sorry, this image is unavailable", Toast.LENGTH_SHORT).show();
-            }
-        }, MainActivity.SCREEN_WIDTH, MainActivity.SCREEN_WIDTH);
     }
 }

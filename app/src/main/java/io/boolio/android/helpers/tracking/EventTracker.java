@@ -10,7 +10,6 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import io.boolio.android.BuildConfig;
 import io.boolio.android.R;
@@ -27,17 +26,6 @@ public class EventTracker {
     Context context;
     MixpanelAPI mixpanel;
 
-
-    /**
-     * Initialize the library with your
-     * Mixpanel project token, MIXPANEL_TOKEN, and a reference
-     * to your application context.
-     */
-    public static EventTracker getInstance(Context context) {
-        if (instance == null)
-            instance = new EventTracker(context);
-        return instance;
-    }
 
     public EventTracker(Context context) {
         this.context = context;
@@ -56,6 +44,17 @@ public class EventTracker {
             e.printStackTrace();
         }
         mixpanel.registerSuperProperties(props);
+    }
+
+    /**
+     * Initialize the library with your
+     * Mixpanel project token, MIXPANEL_TOKEN, and a reference
+     * to your application context.
+     */
+    public static EventTracker getInstance(Context context) {
+        if (instance == null)
+            instance = new EventTracker(context);
+        return instance;
     }
 
     public void attachUser(String userId) {
@@ -95,18 +94,6 @@ public class EventTracker {
         track(event, null);
     }
 
-    public void trackQuestion(TrackEvent event, final Question question, final String answer) {
-       track(event, new HashMap<String, Object>() {{
-           put("tags", question.tags);
-           put("has_image", question.image != null && !question.image.equals(""));
-           put("default_answer", question.left.equals("No"));
-           put("question_id", question.questionId);
-           put("creator_id", question.creatorId);
-           if (answer != null)
-               put("answer", answer);
-       }});
-    }
-
     public void track(TrackEvent event, Map<String, Object> params) {
         JSONObject pack = new JSONObject();
         if (params != null) {
@@ -121,6 +108,18 @@ public class EventTracker {
 
         Debugger.log(EventTracker.class, event.toString() + " " + pack.toString());
         mixpanel.track(event.toString(), pack);
+    }
+
+    public void trackQuestion(TrackEvent event, final Question question, final String answer) {
+        track(event, new HashMap<String, Object>() {{
+            put("tags", question.tags);
+            put("has_image", question.image != null && !question.image.equals(""));
+            put("default_answer", question.left.equals("No"));
+            put("question_id", question._id);
+            put("creator_id", question.creatorId);
+            if (answer != null)
+                put("answer", answer);
+        }});
     }
 
     public void flush() {

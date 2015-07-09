@@ -11,26 +11,28 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+
+import io.boolio.android.network.helpers.BoolioCallback;
 
 /**
  * Created by Chris on 4/17/15.
  */
 public class Utils {
+    public static boolean exists(Object object) {
+        return object != null && !object.toString().isEmpty();
+    }
+
     public static String formatTimeDifferences(String value) {
         long diff = (System.currentTimeMillis() - Long.parseLong(value)) / 1000;
         StringBuilder buf = new StringBuilder();
@@ -60,23 +62,13 @@ public class Utils {
         return Math.round((float) dp * density);
     }
 
-    public static File getTempFile(Context context) {
-        File tempFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separatorChar + "Android/data/" + context.getPackageName() + "/files");
-        if (!tempFile.exists() && !tempFile.mkdirs()) {
-            Log.e("PictureHelper", "Unable to make Temp File");
-            return null;
-        }
-
-        return new File(tempFile, System.currentTimeMillis() + ".jpg");
-    }
-
     /**
      * ACCESS PRIVATE METHOD *
      */
     public static Object callPrivateMethod(Object T, String methodName, Class returnVal, Object... args) {
         try {
             Method privateStringMethod = T.getClass().
-                    getDeclaredMethod(methodName, returnVal);
+                getDeclaredMethod(methodName, returnVal);
             privateStringMethod.setAccessible(true);
 
             return privateStringMethod.invoke(T, args);
@@ -106,35 +98,6 @@ public class Utils {
         return BitmapFactory.decodeStream(streamFromUri(context, uri), null, bmOptions);
     }
 
-    public static void saveBitmapToUri(final Context context, final Bitmap bitmap, final Runnable asyncRunning, final BoolioCallback<Uri> callback) {
-        new AsyncTask<Void, Void, Void>() {
-            Uri uri;
-
-            @Override
-            protected void onPreExecute() {
-                if (asyncRunning != null)
-                    asyncRunning.run();
-                uri = Uri.fromFile(getTempFile(context));
-            }
-
-            @Override
-            protected Void doInBackground(Void... params) {
-                try {
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 90, context.getContentResolver().openOutputStream(uri));
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-                callback.handle(uri);
-            }
-        }.execute();
-    }
-
     private static java.io.InputStream streamFromUri(Context context, Uri uri) {
         try {
             return context.getContentResolver().openInputStream(uri);
@@ -146,7 +109,7 @@ public class Utils {
 
     // Bitmap Loading Helpers
     private static int calculateInSampleSize(
-            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        BitmapFactory.Options options, int reqWidth, int reqHeight) {
         if (reqWidth == 0 || reqHeight == 0)
             Log.e("BitmapHelpers", "calculateInSampleSize was given 0 width or height");
         final int width = options.outWidth;
@@ -162,6 +125,49 @@ public class Utils {
         }
 
         return inSampleSize;
+    }
+
+    public static void saveBitmapToUri(final Context context, final Bitmap bitmap, final Runnable asyncRunning, final BoolioCallback<Uri> callback) {
+        new AsyncTask<Void, Void, Void>() {
+            Uri uri;
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 90, context.getContentResolver().openOutputStream(uri));
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPreExecute() {
+                if (asyncRunning != null)
+                    asyncRunning.run();
+                uri = Uri.fromFile(getTempFile(context));
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                callback.handle(uri);
+            }
+        }.execute();
+    }
+
+    public static File getTempFile(Context context) {
+        File tempFile = new File(getTempDir(context) + "/files");
+        if (!tempFile.exists() && !tempFile.mkdirs()) {
+            Log.e("PictureHelper", "Unable to make Temp File");
+            return null;
+        }
+
+        return new File(tempFile, System.currentTimeMillis() + ".jpg");
+    }
+
+    public static String getTempDir(Context context) {
+        return Environment.getExternalStorageDirectory().getAbsolutePath() + File.separatorChar + "Android/data/" + context.getPackageName();
     }
 
     public static Bitmap rotateBitmap(Bitmap source, Uri file) {
@@ -188,12 +194,41 @@ public class Utils {
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
 
-    public static ArrayToStringBuilder<String> stringArrayToString = new ArrayToStringBuilder<String>() {
-        @Override
-        public String getItem(String object) {
-            return object;
+    /**
+     * Bitmap to Retrofit TypeFile
+     */
+    public static BoolioTypedFile getTypedFile(Context context, String questionId, Bitmap bm) {
+        if (bm == null) {
+            Log.e("TypedFile Error", "Bitmap is null");
+            return null;
         }
-    };
+
+        File imageFileName = getTempFile(context);
+
+        if (imageFileName == null) {
+            Log.e("TypedFile Error", "Temporary File created was null");
+            return null;
+        }
+
+        // Bitmap to jpeg to TypedFile conversion
+        FileOutputStream out = null;
+        try {
+            out = new FileOutputStream(imageFileName);
+            bm.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            out.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (out != null)
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+        }
+        return new BoolioTypedFile("image/jpeg", questionId, imageFileName);
+    }
+
 
     public static void hideKeyboard(Activity activity) {
         View view = activity.getCurrentFocus();
@@ -204,7 +239,7 @@ public class Utils {
         if (view == null)
             return;
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(
-                Context.INPUT_METHOD_SERVICE);
+            Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
@@ -218,25 +253,6 @@ public class Utils {
         }
 
         return false;
-    }
-
-    public static abstract class ArrayToStringBuilder<T> {
-
-        public String build(Collection<T> objects) {
-            if (objects == null) {
-                return "";
-            }
-
-            StringBuilder builder = new StringBuilder();
-            for (T object : objects) {
-                builder.append(getItem(object));
-                builder.append(",");
-            }
-
-            return builder.length() > 1 ? builder.substring(0, builder.length() - 1) : builder.toString();
-        }
-        public abstract String getItem(T object);
-
     }
 
 }

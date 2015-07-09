@@ -5,9 +5,7 @@ import android.view.View;
 
 import io.boolio.android.R;
 import io.boolio.android.helpers.BoolioUserHandler;
-import io.boolio.android.helpers.Dialogs;
 import io.boolio.android.models.Question;
-import io.boolio.android.network.ServerQuestion;
 
 /**
  * Created by james on 4/24/15.
@@ -31,10 +29,10 @@ public class BoolioAnswerAdapter extends BoolioAdapter {
         holder.highLeft.setText(left);
         holder.highRight.setText(right);
 
-        if (question.usersWhoLeft.contains(BoolioUserHandler.getInstance(context).getUser().userId)) {
+        if (question.usersWhoLeft.contains(BoolioUserHandler.getInstance().getUserId())) {
             holder.highLeft.setVisibility(View.VISIBLE);
             holder.highRight.setVisibility(View.GONE);
-        } else if (question.usersWhoRight.contains(BoolioUserHandler.getInstance(context).getUser().userId)) {
+        } else if (question.usersWhoRight.contains(BoolioUserHandler.getInstance().getUserId())) {
             holder.highRight.setVisibility(View.VISIBLE);
             holder.highLeft.setVisibility(View.GONE);
         } else {

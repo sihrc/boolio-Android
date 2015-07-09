@@ -10,7 +10,6 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -18,16 +17,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.boolio.android.R;
 import io.boolio.android.adapters.BoolioQuestionAdapter;
-import io.boolio.android.callbacks.QuestionsCallback;
 import io.boolio.android.custom.BoolioSearchView;
 import io.boolio.android.custom.ScrollingListView;
 import io.boolio.android.helpers.Utils;
 import io.boolio.android.helpers.tracking.EventTracker;
 import io.boolio.android.helpers.tracking.TrackEvent;
 import io.boolio.android.models.Question;
-import io.boolio.android.network.ServerFeed;
+import io.boolio.android.network.BoolioData;
+import io.boolio.android.network.clients.BoolioQuestionClient;
+import io.boolio.android.network.helpers.BoolioCallback;
 
 /**
  * Created by james on 4/21/15.
@@ -36,17 +39,20 @@ public class SearchFragment extends BoolioFragment {
     static SearchFragment instance;
     Context context;
 
-    BoolioSearchView searchBar;
-    ViewPager viewPager;
-    TextView questionsTab, friendsTab, categoriesTab;
+    @Bind(R.id.search_bar) BoolioSearchView searchBar;
+    @Bind(R.id.search_view_pager) ViewPager viewPager;
+    @Bind(R.id.search_questions_tab) TextView questionsTab;
+    @Bind(R.id.search_friends_tab) TextView friendsTab;
+    @Bind(R.id.search_categories_tab) TextView categoriesTab;
+
     boolean isEmpty;
 
-    List<BoolioListFragment> fragmentList;
+    List<BoolioFragment> fragmentList;
 
     BoolioQuestionAdapter questionsTabAdapter, friendsTabAdapter, categoriesTabAdapter;
-    QuestionsCallback questionsCallback = new QuestionsCallback() {
+    BoolioCallback<List<Question>> questionsCallback = new BoolioCallback<List<Question>>() {
         @Override
-        public void handleQuestions(List<Question> questionList) {
+        public void handle(List<Question> questionList) {
             questionsTabAdapter.clear();
             if (!isEmpty)
                 questionsTabAdapter.addAll(questionList);
@@ -70,13 +76,9 @@ public class SearchFragment extends BoolioFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_search, container, false);
+        ButterKnife.bind(this, rootView);
 
-        searchBar = (BoolioSearchView) rootView.findViewById(R.id.search_bar);
-        viewPager = (ViewPager) rootView.findViewById(R.id.search_view_pager);
-        questionsTab = (TextView) rootView.findViewById(R.id.search_questions_tab);
-        friendsTab = (TextView) rootView.findViewById(R.id.search_friends_tab);
-        categoriesTab = (TextView) rootView.findViewById(R.id.search_categories_tab);
-
+        searchBar.clearFocus();
         searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(final String query) {
@@ -95,9 +97,7 @@ public class SearchFragment extends BoolioFragment {
         });
 
         setupPager();
-        setupTabOnClick();
 
-        searchBar.clearFocus();
         return rootView;
     }
 
@@ -113,11 +113,6 @@ public class SearchFragment extends BoolioFragment {
         return true;
     }
 
-    private void searchServer(String query) {
-        ServerFeed.getInstance(context).searchQuestion(
-                query, questionsCallback);
-    }
-
     private void setupPager() {
         questionsTab.setAlpha(1f);
         friendsTab.setAlpha(0.25f);
@@ -125,7 +120,7 @@ public class SearchFragment extends BoolioFragment {
         questionsTabAdapter = new BoolioQuestionAdapter(context);
         friendsTabAdapter = new BoolioQuestionAdapter(context);
         categoriesTabAdapter = new BoolioQuestionAdapter(context);
-        fragmentList = new ArrayList<BoolioListFragment>() {
+        fragmentList = new ArrayList<BoolioFragment>() {
             {
                 add(BoolioListFragment.newInstance(questionsTabAdapter, new ScrollingListView.ScrollChangeListener() {
                     @Override
@@ -138,8 +133,7 @@ public class SearchFragment extends BoolioFragment {
             }
         };
 
-
-        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
@@ -180,26 +174,23 @@ public class SearchFragment extends BoolioFragment {
         });
     }
 
-    private void setupTabOnClick() {
-        questionsTab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewPager.setCurrentItem(0);
-            }
-        });
+    private void searchServer(String query) {
+        BoolioQuestionClient.api().searchQuestions(
+            BoolioData.keys("query").values(query), questionsCallback);
+    }
 
-        friendsTab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewPager.setCurrentItem(1);
-            }
-        });
+    @OnClick(R.id.search_questions_tab)
+    public void onClickQuestionsTab() {
+        viewPager.setCurrentItem(0);
+    }
 
-        categoriesTab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewPager.setCurrentItem(2);
-            }
-        });
+    @OnClick(R.id.search_friends_tab)
+    public void onClickFriendsTab() {
+        viewPager.setCurrentItem(1);
+    }
+
+    @OnClick(R.id.search_categories_tab)
+    public void onClickCategoriesTab() {
+        viewPager.setCurrentItem(2);
     }
 }
