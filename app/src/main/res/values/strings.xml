@@ -4,14 +4,14 @@
     <string name="app_name">Boolio</string>
 
     <!-- Facebook App -->
-    <string name="facebook_app_id">952141981483350</string>
-    <string name="gcm_project_id">744244130696</string>
+    <string name="facebook_app_id">952143318149883</string>
+    <string name="gcm_project_id">825321258464</string>
 
     <!-- Mixpanel-->
-    <string name="mixpanel_token">33daa7896565704894f869bceca83b08</string>
+    <string name="mixpanel_token">729163f26fd10f2f724f263a6d01f0d2</string>
 
     <!-- Google Android API Key -->
-    <string name="google_api_key">AIzaSyCd4ZKm-acJXnOfXiSvhEyPj4OjHN_fYBo</string>
+    <string name="google_api_key">AIzaSyDYYgGwy7mEProLithc-fx9aLLfwb2UBY0</string>
     <string name="google_cx_key">007715071266837083845:nqg2-xtnsga</string>
 
     <!-- Content Descriptions -->
